@@ -41,7 +41,8 @@ function Index() {
           fetchPriority="high"
           className="absolute inset-0 size-full object-cover object-[60%_center]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/70" />
         <div className="absolute inset-x-0 bottom-0 h-48 bg-[image:var(--gradient-fade)]" />
         <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-5 pb-28 pt-40 md:px-8">
           <p className="animate-fade-in text-xs uppercase tracking-[0.5em] text-primary">
