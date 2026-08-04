@@ -15,6 +15,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PlayerProvider } from "@/components/player/player-context";
 import { PlayerBar } from "@/components/player/PlayerBar";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -140,6 +141,7 @@ function RootComponent() {
         </main>
         <SiteFooter />
         <PlayerBar />
+        <Toaster position="bottom-center" />
       </PlayerProvider>
     </QueryClientProvider>
   );
