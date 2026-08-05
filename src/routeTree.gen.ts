@@ -10,16 +10,29 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as MusikRouteImport } from './routes/musik'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as TourRouteImport } from './routes/tour'
 import { Route as UeberMichRouteImport } from './routes/ueber-mich'
 import { Route as VideosRouteImport } from './routes/videos'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedKontoRouteImport } from './routes/_authenticated/konto'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KontaktRoute = KontaktRouteImport.update({
@@ -52,55 +65,99 @@ const VideosRoute = VideosRouteImport.update({
   path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedKontoRoute = AuthenticatedKontoRouteImport.update({
+  id: '/konto',
+  path: '/konto',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/konto': typeof AuthenticatedKontoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/konto': typeof AuthenticatedKontoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/konto': typeof AuthenticatedKontoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/kontakt' | '/musik' | '/shop' | '/tour' | '/ueber-mich' | '/videos'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    '/' | '/kontakt' | '/musik' | '/shop' | '/tour' | '/ueber-mich' | '/videos'
-  id:
-    | '__root__'
     | '/'
+    | '/auth'
     | '/kontakt'
     | '/musik'
     | '/shop'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
+    | '/admin'
+    | '/konto'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/auth'
+    | '/kontakt'
+    | '/musik'
+    | '/shop'
+    | '/tour'
+    | '/ueber-mich'
+    | '/videos'
+    | '/admin'
+    | '/konto'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/kontakt'
+    | '/musik'
+    | '/shop'
+    | '/tour'
+    | '/ueber-mich'
+    | '/videos'
+    | '/_authenticated/admin'
+    | '/_authenticated/konto'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   KontaktRoute: typeof KontaktRoute
   MusikRoute: typeof MusikRoute
   ShopRoute: typeof ShopRoute
@@ -116,6 +173,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kontakt': {
@@ -160,11 +231,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VideosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/konto': {
+      id: '/_authenticated/konto'
+      path: '/konto'
+      fullPath: '/konto'
+      preLoaderRoute: typeof AuthenticatedKontoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedKontoRoute: typeof AuthenticatedKontoRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedKontoRoute: AuthenticatedKontoRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   KontaktRoute: KontaktRoute,
   MusikRoute: MusikRoute,
   ShopRoute: ShopRoute,
