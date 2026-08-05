@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 export function SiteFooter() {
   return (

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Calendar, Play } from "lucide-react";
 import hero from "@/assets/hero-tayo.jpg";
 import { Section } from "@/components/Section";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { SongRow } from "@/components/SongRow";
 import { usePlayer } from "@/components/player/player-context";
 import { ARTIST, PRODUCTS, RELEASES, SONGS, TOUR, VIDEOS, formatDate } from "@/lib/data";
