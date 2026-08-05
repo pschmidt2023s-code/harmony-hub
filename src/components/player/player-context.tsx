@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { SONGS, type Song } from "@/lib/data";
+import { supabase } from "@/integrations/supabase/client";
 
 type PlayerState = {
   queue: Song[];
@@ -46,6 +47,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [repeat, setRepeat] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
   const timer = useRef<number | null>(null);
 
   const current = started ? (queue[index] ?? null) : null;
@@ -80,6 +82,40 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     };
   }, [playing, current, repeat, next]);
 
+  // Favoriten aus dem Fan-Account laden und bei Login/Logout synchron halten.
+  useEffect(() => {
+    const load = async (uid: string | null) => {
+      setUserId(uid);
+      if (!uid) {
+        setFavorites([]);
+        return;
+      }
+      const { data } = await supabase.from("favorites").select("song_id").eq("user_id", uid);
+      setFavorites((data ?? []).map((f) => f.song_id));
+    };
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      void load(session?.user.id ?? null);
+    });
+    void supabase.auth.getSession().then(({ data }) => load(data.session?.user.id ?? null));
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  const toggleFavorite = useCallback(
+    (id: string) => {
+      setFavorites((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
+      if (!userId) return;
+      void (async () => {
+        const isFav = favorites.includes(id);
+        if (isFav) {
+          await supabase.from("favorites").delete().eq("user_id", userId).eq("song_id", id);
+        } else {
+          await supabase.from("favorites").insert({ user_id: userId, song_id: id });
+        }
+      })();
+    },
+    [favorites, userId],
+  );
+
   const value = useMemo<PlayerState>(
     () => ({
       queue,
@@ -112,10 +148,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       toggleShuffle: () => setShuffle((s) => !s),
       toggleRepeat: () => setRepeat((r) => !r),
       setExpanded,
-      toggleFavorite: (id) =>
-        setFavorites((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id])),
+      toggleFavorite,
     }),
-    [queue, current, index, playing, progress, volume, shuffle, repeat, expanded, favorites, next, prev],
+    [queue, current, index, playing, progress, volume, shuffle, repeat, expanded, favorites, next, prev, toggleFavorite],
   );
 
   return <PlayerContext.Provider value={value}>{children}</PlayerContext.Provider>;
