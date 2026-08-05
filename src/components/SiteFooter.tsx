@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 export function SiteFooter() {
   return (
@@ -48,18 +49,12 @@ export function SiteFooter() {
           <p className="mt-3 text-sm text-muted-foreground">
             Releases, Pre-Sales und Ticket-Vorverkauf zuerst.
           </p>
-          <form className="mt-4 flex gap-2" onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="email"
-              required
-              placeholder="deine@mail.de"
-              aria-label="E-Mail-Adresse"
-              className="glass min-w-0 flex-1 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            <button className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-              Go
-            </button>
-          </form>
+          <NewsletterForm
+            className="mt-4 flex gap-2"
+            inputClassName="glass min-w-0 flex-1 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+            buttonClassName="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+            buttonLabel="Go"
+          />
         </div>
       </div>
       <div className="mx-auto mt-12 flex max-w-7xl flex-col gap-2 px-5 text-xs text-muted-foreground md:flex-row md:justify-between md:px-8">

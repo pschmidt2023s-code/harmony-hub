@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Calendar, Play } from "lucide-react";
 import hero from "@/assets/hero-tayo.jpg";
 import { Section } from "@/components/Section";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { SongRow } from "@/components/SongRow";
 import { usePlayer } from "@/components/player/player-context";
 import { ARTIST, PRODUCTS, RELEASES, SONGS, TOUR, VIDEOS, formatDate } from "@/lib/data";
@@ -217,21 +218,11 @@ function Index() {
               <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
                 Release-Alerts, exklusive Pre-Sales, Demos und Backstage-Content — direkt in dein Postfach.
               </p>
-              <form
+              <NewsletterForm
                 className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <input
-                  type="email"
-                  required
-                  placeholder="deine@mail.de"
-                  aria-label="E-Mail-Adresse"
-                  className="glass min-w-0 flex-1 rounded-full px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
-                />
-                <button className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105">
-                  Abonnieren
-                </button>
-              </form>
+                inputClassName="glass min-w-0 flex-1 rounded-full px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                buttonClassName="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
+              />
             </div>
           </div>
         </div>

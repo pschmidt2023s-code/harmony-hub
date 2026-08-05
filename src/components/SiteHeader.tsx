@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const NAV = [
   { to: "/", label: "Start" },
@@ -16,6 +17,7 @@ const NAV = [
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -48,6 +50,12 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
+            to={user ? "/konto" : "/auth"}
+            className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <User className="size-4" /> {user ? "Konto" : "Login"}
+          </Link>
+          <Link
             to="/shop"
             className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
           >
@@ -76,6 +84,13 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <Link
+            to={user ? "/konto" : "/auth"}
+            onClick={() => setOpen(false)}
+            className="rounded-lg px-3 py-3 text-base text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            {user ? "Mein Konto" : "Login / Registrieren"}
+          </Link>
         </nav>
       )}
     </header>
