@@ -52,13 +52,16 @@ function AuthPage() {
         },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       toast.success("Fast geschafft — bestätige deine E-Mail-Adresse.");
       return;
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) toast.error(error.message);
   };
 
   const onGoogle = async () => {
