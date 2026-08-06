@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Play } from "lucide-react";
 import { Section } from "@/components/Section";
 import { SongRow } from "@/components/SongRow";
 import { usePlayer } from "@/components/player/player-context";
-import { SONGS } from "@/lib/data";
+import { contentQueryOptions } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/musik")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
   head: () => ({
     meta: [
       { title: "Musik — TAYO Diskografie & Streaming" },
@@ -27,10 +29,16 @@ const FILTERS = ["Alle", "Single", "EP", "Album"] as const;
 
 function MusicPage() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("Alle");
-  const [selected, setSelected] = useState(SONGS[0]!.id);
+  const { data } = useSuspenseQuery(contentQueryOptions);
+  const songs = data.songs;
+  const [selected, setSelected] = useState<string | null>(null);
   const player = usePlayer();
-  const list = filter === "Alle" ? SONGS : SONGS.filter((s) => s.type === filter);
-  const detail = SONGS.find((s) => s.id === selected)!;
+  const list = filter === "Alle" ? songs : songs.filter((s) => s.type === filter);
+  const detail = songs.find((s) => s.id === selected) ?? songs[0];
+
+  if (!detail) {
+    return <div className="pt-40 text-center text-sm text-muted-foreground">Keine Songs verfügbar.</div>;
+  }
 
   return (
     <div className="pt-32">
@@ -109,7 +117,7 @@ function MusicPage() {
               {Object.entries(detail.links).map(([k, url]) => (
                 <a
                   key={k}
-                  href={url}
+                  href={String(url)}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="glass rounded-full px-4 py-2 text-xs capitalize transition-colors hover:text-primary"
