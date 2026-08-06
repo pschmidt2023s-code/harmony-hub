@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Eye, Play } from "lucide-react";
 import { Section } from "@/components/Section";
-import { VIDEOS, formatDate } from "@/lib/data";
+import { formatDate } from "@/lib/data";
+import { contentQueryOptions } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/videos")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
   head: () => ({
     meta: [
       { title: "Videos — Musikvideos & Visualizer von TAYO" },
@@ -25,7 +28,8 @@ const CATS = ["Alle", "Musikvideo", "Visualizer", "Lyric Video", "Live", "Behind
 
 function VideosPage() {
   const [cat, setCat] = useState<(typeof CATS)[number]>("Alle");
-  const list = cat === "Alle" ? VIDEOS : VIDEOS.filter((v) => v.category === cat);
+  const { data } = useSuspenseQuery(contentQueryOptions);
+  const list = cat === "Alle" ? data.videos : data.videos.filter((v) => v.category === cat);
 
   return (
     <div className="pt-32">
