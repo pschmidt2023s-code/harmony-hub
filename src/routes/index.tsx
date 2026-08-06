@@ -1,13 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowUpRight, Calendar, Play } from "lucide-react";
 import hero from "@/assets/hero-tayo.jpg";
 import { Section } from "@/components/Section";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SongRow } from "@/components/SongRow";
 import { usePlayer } from "@/components/player/player-context";
-import { ARTIST, PRODUCTS, RELEASES, SONGS, TOUR, VIDEOS, formatDate } from "@/lib/data";
+import { ARTIST, PRODUCTS, TOUR, formatDate } from "@/lib/data";
+import { contentQueryOptions } from "@/lib/content";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
   head: () => ({
     meta: [
       { title: "TAYO — Musik, Releases & Merch" },
@@ -28,8 +31,10 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const player = usePlayer();
-  const featured = SONGS[0]!;
-  const upcoming = RELEASES.filter((r) => r.status !== "Veröffentlicht");
+  const { data } = useSuspenseQuery(contentQueryOptions);
+  const songs = data.songs;
+  const featured = songs[0];
+  const upcoming = data.releases.filter((r) => r.status !== "Veröffentlicht");
 
   return (
     <>
@@ -58,7 +63,7 @@ function Index() {
           </p>
           <div className="mt-9 flex animate-fade-up flex-wrap items-center gap-3">
             <button
-              onClick={() => player.play(featured, SONGS)}
+              onClick={() => featured && player.play(featured, songs)}
               className="glow flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
             >
               <Play className="size-4" /> Jetzt hören
@@ -83,8 +88,8 @@ function Index() {
         }
       >
         <div className="glass rounded-2xl p-2 sm:p-4">
-          {SONGS.slice(0, 5).map((song, i) => (
-            <SongRow key={song.id} song={song} list={SONGS} index={i} />
+          {songs.slice(0, 5).map((song, i) => (
+            <SongRow key={song.id} song={song} list={songs} index={i} />
           ))}
         </div>
       </Section>
