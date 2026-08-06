@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Heart, LogOut, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { Section } from "@/components/Section";
 import { supabase } from "@/integrations/supabase/client";
-import { SONGS, formatTime } from "@/lib/data";
+import { formatTime } from "@/lib/data";
+import { contentQueryOptions } from "@/lib/content";
 
 export const Route = createFileRoute("/_authenticated/konto")({
   head: () => ({
@@ -20,6 +22,7 @@ export const Route = createFileRoute("/_authenticated/konto")({
 
 function KontoPage() {
   const navigate = useNavigate();
+  const { data: content } = useQuery(contentQueryOptions);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -60,7 +63,7 @@ function KontoPage() {
     navigate({ to: "/" });
   };
 
-  const favSongs = SONGS.filter((s) => favorites.includes(s.id));
+  const favSongs = (content?.songs ?? []).filter((s) => favorites.includes(s.id));
 
   return (
     <div className="pt-32">
