@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Disc3, Mail, ShieldAlert, Users } from "lucide-react";
 import { Section } from "@/components/Section";
 import { supabase } from "@/integrations/supabase/client";
-import { RELEASES, SONGS, VIDEOS, formatDate } from "@/lib/data";
+import { formatDate } from "@/lib/data";
+import { contentQueryOptions } from "@/lib/content";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -22,6 +24,10 @@ type Subscriber = { id: string; email: string; created_at: string };
 function AdminPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [subs, setSubs] = useState<Subscriber[]>([]);
+  const { data: content } = useQuery(contentQueryOptions);
+  const releases = content?.releases ?? [];
+  const songs = content?.songs ?? [];
+  const videos = content?.videos ?? [];
 
   useEffect(() => {
     void (async () => {
@@ -61,8 +67,8 @@ function AdminPage() {
     <div className="pt-32">
       <Section eyebrow="Intern" title="Admin-Panel">
         <div className="grid gap-4 sm:grid-cols-3">
-          <Stat icon={<Disc3 className="size-4" />} label="Releases" value={RELEASES.length} />
-          <Stat icon={<Users className="size-4" />} label="Songs / Videos" value={`${SONGS.length} / ${VIDEOS.length}`} />
+          <Stat icon={<Disc3 className="size-4" />} label="Releases" value={releases.length} />
+          <Stat icon={<Users className="size-4" />} label="Songs / Videos" value={`${songs.length} / ${videos.length}`} />
           <Stat icon={<Mail className="size-4" />} label="Newsletter" value={subs.length} />
         </div>
 
@@ -70,7 +76,7 @@ function AdminPage() {
           <div className="glass rounded-2xl p-6">
             <p className="text-sm font-semibold">Release-Pipeline</p>
             <ul className="mt-4 space-y-3">
-              {RELEASES.map((r) => (
+              {releases.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="truncate text-sm">{r.title}</p>

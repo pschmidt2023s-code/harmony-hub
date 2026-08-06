@@ -77,6 +77,111 @@ export type Database = {
         }
         Relationships: []
       }
+      releases: {
+        Row: {
+          cover_key: string
+          created_at: string
+          description: string
+          id: string
+          release_date: string
+          status: string
+          title: string
+          tracks: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          cover_key: string
+          created_at?: string
+          description?: string
+          id: string
+          release_date: string
+          status: string
+          title: string
+          tracks?: number
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          cover_key?: string
+          created_at?: string
+          description?: string
+          id?: string
+          release_date?: string
+          status?: string
+          title?: string
+          tracks?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      songs: {
+        Row: {
+          album: string
+          bpm: number
+          cover_key: string
+          created_at: string
+          duration: number
+          explicit: boolean
+          genre: string
+          id: string
+          isrc: string
+          links: Json
+          lyrics: Json
+          mood: string
+          producer: string
+          song_key: string
+          songwriter: string
+          sort_order: number
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          album: string
+          bpm: number
+          cover_key: string
+          created_at?: string
+          duration: number
+          explicit?: boolean
+          genre: string
+          id: string
+          isrc: string
+          links?: Json
+          lyrics?: Json
+          mood: string
+          producer: string
+          song_key: string
+          songwriter: string
+          sort_order?: number
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          album?: string
+          bpm?: number
+          cover_key?: string
+          created_at?: string
+          duration?: number
+          explicit?: boolean
+          genre?: string
+          id?: string
+          isrc?: string
+          links?: Json
+          lyrics?: Json
+          mood?: string
+          producer?: string
+          song_key?: string
+          songwriter?: string
+          sort_order?: number
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -95,6 +200,45 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      videos: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          song: string
+          sort_order: number
+          thumb_key: string
+          title: string
+          updated_at: string
+          video_date: string
+          views: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id: string
+          song?: string
+          sort_order?: number
+          thumb_key: string
+          title: string
+          updated_at?: string
+          video_date: string
+          views?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          song?: string
+          sort_order?: number
+          thumb_key?: string
+          title?: string
+          updated_at?: string
+          video_date?: string
+          views?: string
         }
         Relationships: []
       }
