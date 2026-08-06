@@ -8,7 +8,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { SONGS, type Song } from "@/lib/data";
+import { useQuery } from "@tanstack/react-query";
+import { type Song } from "@/lib/data";
+import { contentQueryOptions } from "@/lib/content";
 import { supabase } from "@/integrations/supabase/client";
 
 type PlayerState = {
@@ -37,7 +39,8 @@ type PlayerState = {
 const PlayerContext = createContext<PlayerState | null>(null);
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
-  const [queue, setQueue] = useState<Song[]>(SONGS);
+  const { data: content } = useQuery(contentQueryOptions);
+  const [queue, setQueue] = useState<Song[]>([]);
   const [index, setIndex] = useState(0);
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -52,9 +55,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const current = started ? (queue[index] ?? null) : null;
 
+  // Standard-Queue mit der Diskografie aus der Datenbank füllen.
+  useEffect(() => {
+    if (!started && content?.songs.length) setQueue(content.songs);
+  }, [content, started]);
+
   const next = useCallback(() => {
     setProgress(0);
     setIndex((i) => {
+      if (!queue.length) return i;
       if (shuffle) return Math.floor(Math.random() * queue.length);
       return (i + 1) % queue.length;
     });
@@ -62,7 +71,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const prev = useCallback(() => {
     setProgress(0);
-    setIndex((i) => (i - 1 + queue.length) % queue.length);
+    setIndex((i) => (queue.length ? (i - 1 + queue.length) % queue.length : i));
   }, [queue.length]);
 
   useEffect(() => {
