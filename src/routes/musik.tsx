@@ -61,9 +61,13 @@ function MusicPage() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <div className="glass rounded-2xl p-2 sm:p-4">
             {list.map((song, i) => (
-              <button key={song.id} onClick={() => setSelected(song.id)} className="block w-full text-left">
+              <div
+                key={song.id}
+                onClick={() => setSelected(song.id)}
+                className="block w-full cursor-pointer text-left"
+              >
                 <SongRow song={song} list={list} index={i} />
-              </button>
+              </div>
             ))}
           </div>
 
