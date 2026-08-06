@@ -167,7 +167,7 @@ function Index() {
         }
       >
         <div className="grid gap-6 md:grid-cols-3">
-          {VIDEOS.slice(0, 3).map((v) => (
+          {data.videos.slice(0, 3).map((v) => (
             <Link key={v.id} to="/videos" className="group relative overflow-hidden rounded-2xl">
               <img
                 src={v.thumb}
