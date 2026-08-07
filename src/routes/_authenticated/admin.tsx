@@ -6,6 +6,7 @@ import { Section } from "@/components/Section";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDate } from "@/lib/data";
 import { contentQueryOptions } from "@/lib/content";
+import { ContentEditor } from "@/components/admin/ContentEditor";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -107,6 +108,10 @@ function AdminPage() {
               </ul>
             )}
           </div>
+        </div>
+
+        <div className="mt-8">
+          <ContentEditor />
         </div>
       </Section>
     </div>
