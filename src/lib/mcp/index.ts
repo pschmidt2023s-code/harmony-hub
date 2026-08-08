@@ -1,4 +1,4 @@
-import { auth, defineMcp } from "@lovable.dev/mcp-js";
+import { auth, defineMcp, type McpDefinitionInput } from "@lovable.dev/mcp-js";
 import listSongsTool from "./tools/list-songs";
 import listReleasesTool from "./tools/list-releases";
 import listVideosTool from "./tools/list-videos";
@@ -20,12 +20,12 @@ export default defineMcp({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
   }),
-  tools: [
+  tools: ([
     listSongsTool,
     listReleasesTool,
     listVideosTool,
     listFavoritesTool,
     addFavoriteTool,
     removeFavoriteTool,
-  ],
+  ] as unknown) as McpDefinitionInput["tools"],
 });
