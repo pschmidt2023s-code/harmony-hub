@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PlayerProvider } from "@/components/player/player-context";
+import { CartProvider } from "@/lib/cart";
 import { PlayerBar } from "@/components/player/PlayerBar";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -133,6 +134,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <CartProvider>
       <PlayerProvider>
         <SiteHeader />
         <main className="min-h-screen">
@@ -143,6 +145,7 @@ function RootComponent() {
         <PlayerBar />
         <Toaster position="bottom-center" />
       </PlayerProvider>
+      </CartProvider>
     </QueryClientProvider>
   );
 }
