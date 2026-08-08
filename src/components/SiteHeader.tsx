@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, User, X } from "lucide-react";
+import { Menu, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/lib/cart";
 
 const NAV = [
   { to: "/", label: "Start" },
@@ -18,6 +19,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const cart = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -55,6 +57,14 @@ export function SiteHeader() {
           >
             <User className="size-4" /> {user ? "Konto" : "Login"}
           </Link>
+          {cart.count > 0 && (
+            <Link
+              to="/checkout"
+              className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ShoppingBag className="size-4" /> {cart.count}
+            </Link>
+          )}
           <Link
             to="/shop"
             className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
