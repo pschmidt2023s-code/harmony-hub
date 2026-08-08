@@ -6,6 +6,12 @@ import { lovable } from "@/integrations/lovable/index";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>): { next?: string } => {
+    const raw = s["next"];
+    return typeof raw === "string" && raw.startsWith("/") && !raw.startsWith("//")
+      ? { next: raw }
+      : {};
+  },
   head: () => ({
     meta: [
       { title: "Fan-Login — TAYO Account" },
@@ -23,6 +29,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,14 +37,21 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    const goHome = () => {
+      if (next) {
+        window.location.href = next;
+        return;
+      }
+      void navigate({ to: "/konto" });
+    };
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate({ to: "/konto" });
+      if (session) goHome();
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/konto" });
+      if (data.session) goHome();
     });
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, next]);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -47,7 +61,7 @@ function AuthPage() {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: next ? `${window.location.origin}${next}` : window.location.origin,
           data: { display_name: displayName },
         },
       });
@@ -66,7 +80,7 @@ function AuthPage() {
 
   const onGoogle = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: next ? `${window.location.origin}${next}` : window.location.origin,
     });
     if (result.error) {
       toast.error("Google-Login fehlgeschlagen.");
