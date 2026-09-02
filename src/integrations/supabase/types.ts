@@ -121,43 +121,73 @@ export type Database = {
       }
       releases: {
         Row: {
+          artist: string
           cover_key: string
           cover_url: string | null
           created_at: string
+          credits: Json
           description: string
+          explicit: boolean
           id: string
+          links: Json
+          publish_at: string | null
           release_date: string
+          seo_description: string
+          seo_title: string
+          short_description: string
+          slug: string | null
           status: string
           title: string
           tracks: number
           type: string
           updated_at: string
+          video_id: string | null
         }
         Insert: {
+          artist?: string
           cover_key: string
           cover_url?: string | null
           created_at?: string
+          credits?: Json
           description?: string
+          explicit?: boolean
           id: string
+          links?: Json
+          publish_at?: string | null
           release_date: string
+          seo_description?: string
+          seo_title?: string
+          short_description?: string
+          slug?: string | null
           status: string
           title: string
           tracks?: number
           type: string
           updated_at?: string
+          video_id?: string | null
         }
         Update: {
+          artist?: string
           cover_key?: string
           cover_url?: string | null
           created_at?: string
+          credits?: Json
           description?: string
+          explicit?: boolean
           id?: string
+          links?: Json
+          publish_at?: string | null
           release_date?: string
+          seo_description?: string
+          seo_title?: string
+          short_description?: string
+          slug?: string | null
           status?: string
           title?: string
           tracks?: number
           type?: string
           updated_at?: string
+          video_id?: string | null
         }
         Relationships: []
       }
