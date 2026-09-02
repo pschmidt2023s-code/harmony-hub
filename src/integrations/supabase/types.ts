@@ -218,74 +218,103 @@ export type Database = {
       songs: {
         Row: {
           album: string
+          artist: string
           audio_url: string | null
           bpm: number
           cover_key: string
           cover_url: string | null
           created_at: string
+          credits: Json
+          description: string
           duration: number
           explicit: boolean
           genre: string
           id: string
           isrc: string
+          language: string
           links: Json
           lyrics: Json
           mood: string
           producer: string
+          release_id: string | null
+          slug: string | null
           song_key: string
           songwriter: string
           sort_order: number
+          status: string
           title: string
           type: string
           updated_at: string
         }
         Insert: {
           album: string
+          artist?: string
           audio_url?: string | null
           bpm: number
           cover_key: string
           cover_url?: string | null
           created_at?: string
+          credits?: Json
+          description?: string
           duration: number
           explicit?: boolean
           genre: string
           id: string
           isrc: string
+          language?: string
           links?: Json
           lyrics?: Json
           mood: string
           producer: string
+          release_id?: string | null
+          slug?: string | null
           song_key: string
           songwriter: string
           sort_order?: number
+          status?: string
           title: string
           type: string
           updated_at?: string
         }
         Update: {
           album?: string
+          artist?: string
           audio_url?: string | null
           bpm?: number
           cover_key?: string
           cover_url?: string | null
           created_at?: string
+          credits?: Json
+          description?: string
           duration?: number
           explicit?: boolean
           genre?: string
           id?: string
           isrc?: string
+          language?: string
           links?: Json
           lyrics?: Json
           mood?: string
           producer?: string
+          release_id?: string | null
+          slug?: string | null
           song_key?: string
           songwriter?: string
           sort_order?: number
+          status?: string
           title?: string
           type?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "songs_release_id_fkey"
+            columns: ["release_id"]
+            isOneToOne: false
+            referencedRelation: "releases"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

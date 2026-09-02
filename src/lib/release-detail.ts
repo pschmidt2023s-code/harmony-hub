@@ -1,9 +1,12 @@
 import type { Product, Release, Song, Video } from "./data";
 
-/** Tracks eines Releases in gespeicherter Reihenfolge. */
+/** Tracks eines Releases in gespeicherter Reihenfolge (Zuordnung über release_id, Fallback Albumtitel). */
 export function releaseTracks(songs: Song[], release: Release) {
-  return songs.filter((s) => s.album === release.title);
+  const assigned = songs.filter((s) => s.releaseId === release.id);
+  if (assigned.length) return assigned;
+  return songs.filter((s) => !s.releaseId && s.album === release.title);
 }
+
 
 export type StreamingService = { id: keyof Song["links"]; label: string; url: string };
 
@@ -42,21 +45,32 @@ export function releaseCredits(tracks: Song[], release?: Release): CreditGroup[]
         .filter(Boolean),
     }));
   }
-  const collect = (pick: (s: Song) => string | null | undefined) => {
-    const set = new Set<string>();
-    for (const t of tracks) {
-      for (const part of (pick(t) ?? "").split(/\s*[,&/]\s*/)) {
-        const name = part.trim();
-        if (name) set.add(name);
-      }
+  // Song-Credits (Phase 7) zusammenführen, sonst auf die klassischen Felder zurückfallen.
+  const grouped = new Map<string, Set<string>>();
+  const add = (role: string, raw: string) => {
+    const key = role.trim();
+    if (!key) return;
+    for (const part of raw.split(/\s*[,&/]\s*/)) {
+      const name = part.trim();
+      if (!name) continue;
+      if (!grouped.has(key)) grouped.set(key, new Set());
+      grouped.get(key)!.add(name);
     }
-    return [...set];
   };
-  return [
-    { role: "Songwriting", names: collect((s) => s.songwriter) },
-    { role: "Produktion", names: collect((s) => s.producer) },
-  ].filter((g) => g.names.length > 0);
+  for (const t of tracks) {
+    for (const c of t.credits ?? []) add(c.role, c.names);
+  }
+  if (grouped.size === 0) {
+    for (const t of tracks) {
+      add("Songwriting", t.songwriter ?? "");
+      add("Produktion", t.producer ?? "");
+    }
+  }
+  return [...grouped.entries()]
+    .map(([role, names]) => ({ role, names: [...names] }))
+    .filter((g) => g.names.length > 0);
 }
+
 
 /** Genres der enthaltenen Tracks. */
 export function releaseGenres(tracks: Song[]) {

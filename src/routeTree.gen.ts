@@ -32,16 +32,19 @@ import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin/products'
 import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated/admin/seo'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
-import { Route as AuthenticatedAdminSongsRouteImport } from './routes/_authenticated/admin/songs'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminVideosRouteImport } from './routes/_authenticated/admin/videos'
 import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_authenticated/admin/releases.index'
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
 import { Route as AuthenticatedAdminReleasesNewRouteImport } from './routes/_authenticated/admin/releases.new'
 import { Route as AuthenticatedAdminReleasesPipelineRouteImport } from './routes/_authenticated/admin/releases.pipeline'
+import { Route as AuthenticatedAdminSongsIndexRouteImport } from './routes/_authenticated/admin/songs.index'
+import { Route as AuthenticatedAdminSongsNewRouteImport } from './routes/_authenticated/admin/songs.new'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 import { Route as AuthenticatedAdminReleasesIdEditRouteImport } from './routes/_authenticated/admin/releases.$id.edit'
 import { Route as AuthenticatedAdminReleasesIdPreviewRouteImport } from './routes/_authenticated/admin/releases.$id.preview'
+import { Route as AuthenticatedAdminSongsIdEditRouteImport } from './routes/_authenticated/admin/songs.$id.edit'
+import { Route as AuthenticatedAdminSongsIdPreviewRouteImport } from './routes/_authenticated/admin/songs.$id.preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -162,11 +165,6 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminSongsRoute = AuthenticatedAdminSongsRouteImport.update({
-  id: '/songs',
-  path: '/songs',
-  getParentRoute: () => AuthenticatedAdminRouteRoute,
-} as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -202,6 +200,18 @@ const AuthenticatedAdminReleasesPipelineRoute =
     path: '/releases/pipeline',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSongsIndexRoute =
+  AuthenticatedAdminSongsIndexRouteImport.update({
+    id: '/songs/',
+    path: '/songs/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminSongsNewRoute =
+  AuthenticatedAdminSongsNewRouteImport.update({
+    id: '/songs/new',
+    path: '/songs/new',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -217,6 +227,18 @@ const AuthenticatedAdminReleasesIdPreviewRoute =
   AuthenticatedAdminReleasesIdPreviewRouteImport.update({
     id: '/releases/$id/preview',
     path: '/releases/$id/preview',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminSongsIdEditRoute =
+  AuthenticatedAdminSongsIdEditRouteImport.update({
+    id: '/songs/$id/edit',
+    path: '/songs/$id/edit',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminSongsIdPreviewRoute =
+  AuthenticatedAdminSongsIdPreviewRouteImport.update({
+    id: '/songs/$id/preview',
+    path: '/songs/$id/preview',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
@@ -242,17 +264,20 @@ export interface FileRoutesByFullPath {
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/admin/songs': typeof AuthenticatedAdminSongsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
+  '/admin/songs/': typeof AuthenticatedAdminSongsIndexRoute
   '/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
   '/admin/releases/$id/preview': typeof AuthenticatedAdminReleasesIdPreviewRoute
+  '/admin/songs/$id/edit': typeof AuthenticatedAdminSongsIdEditRoute
+  '/admin/songs/$id/preview': typeof AuthenticatedAdminSongsIdPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -275,17 +300,20 @@ export interface FileRoutesByTo {
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/admin/songs': typeof AuthenticatedAdminSongsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases': typeof AuthenticatedAdminReleasesIndexRoute
+  '/admin/songs': typeof AuthenticatedAdminSongsIndexRoute
   '/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
   '/admin/releases/$id/preview': typeof AuthenticatedAdminReleasesIdPreviewRoute
+  '/admin/songs/$id/edit': typeof AuthenticatedAdminSongsIdEditRoute
+  '/admin/songs/$id/preview': typeof AuthenticatedAdminSongsIdPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -311,17 +339,20 @@ export interface FileRoutesById {
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
-  '/_authenticated/admin/songs': typeof AuthenticatedAdminSongsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/_authenticated/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/_authenticated/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/_authenticated/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
+  '/_authenticated/admin/songs/': typeof AuthenticatedAdminSongsIndexRoute
   '/_authenticated/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
   '/_authenticated/admin/releases/$id/preview': typeof AuthenticatedAdminReleasesIdPreviewRoute
+  '/_authenticated/admin/songs/$id/edit': typeof AuthenticatedAdminSongsIdEditRoute
+  '/_authenticated/admin/songs/$id/preview': typeof AuthenticatedAdminSongsIdPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -347,17 +378,20 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/seo'
     | '/admin/settings'
-    | '/admin/songs'
     | '/admin/users'
     | '/admin/videos'
     | '/admin/'
     | '/admin/releases/calendar'
     | '/admin/releases/new'
     | '/admin/releases/pipeline'
+    | '/admin/songs/new'
     | '/api/public/media/$'
     | '/admin/releases/'
+    | '/admin/songs/'
     | '/admin/releases/$id/edit'
     | '/admin/releases/$id/preview'
+    | '/admin/songs/$id/edit'
+    | '/admin/songs/$id/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -380,17 +414,20 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/seo'
     | '/admin/settings'
-    | '/admin/songs'
     | '/admin/users'
     | '/admin/videos'
     | '/admin'
     | '/admin/releases/calendar'
     | '/admin/releases/new'
     | '/admin/releases/pipeline'
+    | '/admin/songs/new'
     | '/api/public/media/$'
     | '/admin/releases'
+    | '/admin/songs'
     | '/admin/releases/$id/edit'
     | '/admin/releases/$id/preview'
+    | '/admin/songs/$id/edit'
+    | '/admin/songs/$id/preview'
   id:
     | '__root__'
     | '/'
@@ -415,17 +452,20 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/seo'
     | '/_authenticated/admin/settings'
-    | '/_authenticated/admin/songs'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/videos'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/releases/calendar'
     | '/_authenticated/admin/releases/new'
     | '/_authenticated/admin/releases/pipeline'
+    | '/_authenticated/admin/songs/new'
     | '/api/public/media/$'
     | '/_authenticated/admin/releases/'
+    | '/_authenticated/admin/songs/'
     | '/_authenticated/admin/releases/$id/edit'
     | '/_authenticated/admin/releases/$id/preview'
+    | '/_authenticated/admin/songs/$id/edit'
+    | '/_authenticated/admin/songs/$id/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -607,13 +647,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/songs': {
-      id: '/_authenticated/admin/songs'
-      path: '/songs'
-      fullPath: '/admin/songs'
-      preLoaderRoute: typeof AuthenticatedAdminSongsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/users'
@@ -656,6 +689,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReleasesPipelineRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/songs/': {
+      id: '/_authenticated/admin/songs/'
+      path: '/songs'
+      fullPath: '/admin/songs/'
+      preLoaderRoute: typeof AuthenticatedAdminSongsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/songs/new': {
+      id: '/_authenticated/admin/songs/new'
+      path: '/songs/new'
+      fullPath: '/admin/songs/new'
+      preLoaderRoute: typeof AuthenticatedAdminSongsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -677,6 +724,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReleasesIdPreviewRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/songs/$id/edit': {
+      id: '/_authenticated/admin/songs/$id/edit'
+      path: '/songs/$id/edit'
+      fullPath: '/admin/songs/$id/edit'
+      preLoaderRoute: typeof AuthenticatedAdminSongsIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/songs/$id/preview': {
+      id: '/_authenticated/admin/songs/$id/preview'
+      path: '/songs/$id/preview'
+      fullPath: '/admin/songs/$id/preview'
+      preLoaderRoute: typeof AuthenticatedAdminSongsIdPreviewRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
@@ -689,16 +750,19 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminSeoRoute: typeof AuthenticatedAdminSeoRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
-  AuthenticatedAdminSongsRoute: typeof AuthenticatedAdminSongsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminVideosRoute: typeof AuthenticatedAdminVideosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminReleasesCalendarRoute: typeof AuthenticatedAdminReleasesCalendarRoute
   AuthenticatedAdminReleasesNewRoute: typeof AuthenticatedAdminReleasesNewRoute
   AuthenticatedAdminReleasesPipelineRoute: typeof AuthenticatedAdminReleasesPipelineRoute
+  AuthenticatedAdminSongsNewRoute: typeof AuthenticatedAdminSongsNewRoute
   AuthenticatedAdminReleasesIndexRoute: typeof AuthenticatedAdminReleasesIndexRoute
+  AuthenticatedAdminSongsIndexRoute: typeof AuthenticatedAdminSongsIndexRoute
   AuthenticatedAdminReleasesIdEditRoute: typeof AuthenticatedAdminReleasesIdEditRoute
   AuthenticatedAdminReleasesIdPreviewRoute: typeof AuthenticatedAdminReleasesIdPreviewRoute
+  AuthenticatedAdminSongsIdEditRoute: typeof AuthenticatedAdminSongsIdEditRoute
+  AuthenticatedAdminSongsIdPreviewRoute: typeof AuthenticatedAdminSongsIdPreviewRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
@@ -711,7 +775,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
     AuthenticatedAdminSeoRoute: AuthenticatedAdminSeoRoute,
     AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
-    AuthenticatedAdminSongsRoute: AuthenticatedAdminSongsRoute,
     AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
     AuthenticatedAdminVideosRoute: AuthenticatedAdminVideosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -720,11 +783,16 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminReleasesNewRoute: AuthenticatedAdminReleasesNewRoute,
     AuthenticatedAdminReleasesPipelineRoute:
       AuthenticatedAdminReleasesPipelineRoute,
+    AuthenticatedAdminSongsNewRoute: AuthenticatedAdminSongsNewRoute,
     AuthenticatedAdminReleasesIndexRoute: AuthenticatedAdminReleasesIndexRoute,
+    AuthenticatedAdminSongsIndexRoute: AuthenticatedAdminSongsIndexRoute,
     AuthenticatedAdminReleasesIdEditRoute:
       AuthenticatedAdminReleasesIdEditRoute,
     AuthenticatedAdminReleasesIdPreviewRoute:
       AuthenticatedAdminReleasesIdPreviewRoute,
+    AuthenticatedAdminSongsIdEditRoute: AuthenticatedAdminSongsIdEditRoute,
+    AuthenticatedAdminSongsIdPreviewRoute:
+      AuthenticatedAdminSongsIdPreviewRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =

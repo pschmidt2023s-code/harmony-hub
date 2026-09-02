@@ -106,14 +106,14 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
   const tracks = useMemo(
     () =>
       (songs.data ?? [])
-        .filter((s) => s.album === form.title && form.title.trim().length > 0)
+        .filter((s) => (s.release_id ? s.release_id === form.id : s.album === form.title && form.title.trim().length > 0))
         .sort((a, b) => a.sort_order - b.sort_order),
     [songs.data, form.title],
   );
 
   const otherSongs = useMemo(
-    () => (songs.data ?? []).filter((s) => s.album !== form.title),
-    [songs.data, form.title],
+    () => (songs.data ?? []).filter((s) => s.release_id !== form.id),
+    [songs.data, form.id],
   );
 
   const links = (form.links ?? {}) as Record<string, string>;
@@ -167,7 +167,11 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
   }
 
   async function setSongAlbum(id: string, album: string) {
-    const { error } = await supabase.from("songs").update({ album }).eq("id", id);
+    // Zuordnung über release_id; der Albumtitel bleibt als Anzeigefeld synchron.
+    const { error } = await supabase
+      .from("songs")
+      .update({ album, release_id: album ? form.id : null })
+      .eq("id", id);
     if (error) {
       toast.error(error.message);
       return;
