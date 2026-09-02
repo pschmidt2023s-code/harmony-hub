@@ -112,12 +112,13 @@ export async function extractAccentFromImage(src: string): Promise<AccentOklch |
   return normalizeAccent({ l: best.l / best.weight, c: best.c / best.weight, h: hue });
 }
 
-function loadImage(src: string): Promise<HTMLImageElement | null> {
+function loadImage(src: string, cors = true): Promise<HTMLImageElement | null> {
   return new Promise((resolve) => {
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    if (cors) img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
+    // Ohne CORS-Header schlägt der anonyme Ladeversuch fehl -> einmal ohne probieren.
+    img.onerror = () => (cors ? loadImage(src, false).then(resolve) : resolve(null));
     img.src = src;
   });
 }
