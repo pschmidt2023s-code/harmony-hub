@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Check, Share2 } from "lucide-react";
 
 /** Teilen über die native Share-API, sonst Link kopieren. */
-export function ShareButton({ title, text }: { title: string; text?: string }) {
+export function ShareButton({ title, text }: { title: string; text?: string | undefined }) {
   const [copied, setCopied] = useState(false);
 
   const share = async () => {
