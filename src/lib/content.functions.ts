@@ -33,10 +33,23 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
   if (videos.error) throw videos.error;
 
   const now = new Date();
+  const releaseRows = (releases.data ?? []).map((r) => ({ ...r, is_public: isPublic(r, now) }));
+  const publicReleases = new Map(releaseRows.map((r) => [r.id, r.is_public] as const));
+
+  /**
+   * Song-Sichtbarkeit: Der Song selbst muss veröffentlicht sein UND — falls er
+   * zu einem Release gehört — das Release muss öffentlich sein (Release-Day-Unlock).
+   */
+  const songVisible = (s: { status: string; release_id: string | null }) => {
+    if (s.status !== "Veröffentlicht") return false;
+    if (s.release_id) return publicReleases.get(s.release_id) ?? false;
+    return true;
+  };
 
   return {
-    songs: songs.data,
-    releases: (releases.data ?? []).map((r) => ({ ...r, is_public: isPublic(r, now) })),
+    songs: (songs.data ?? []).filter(songVisible),
+    releases: releaseRows,
     videos: videos.data,
   };
 });
+
