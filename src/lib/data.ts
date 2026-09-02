@@ -28,6 +28,7 @@ export type Song = {
 };
 
 export type ReleaseStatus =
+  | "Entwurf"
   | "Idee"
   | "In Produktion"
   | "Mixing"
@@ -37,16 +38,33 @@ export type ReleaseStatus =
   | "Veröffentlicht"
   | "Archiviert";
 
+/** Frei definierbare Credit-Zeile eines Releases. */
+export type ReleaseCredit = { role: string; names: string };
+
 export type Release = {
   id: string;
+  slug: string;
   title: string;
-  type: "Single" | "EP" | "Album" | "Deluxe";
+  artist: string;
+  type: "Single" | "EP" | "Album" | "Deluxe" | "Mixtape";
   cover: string;
   date: string;
+  publishAt: string | null;
   status: ReleaseStatus;
   description: string;
+  shortDescription: string;
+  explicit: boolean;
+  links: Record<string, string>;
+  credits: ReleaseCredit[];
+  videoId: string | null;
+  seoTitle: string;
+  seoDescription: string;
   tracks: number;
+  /** Serverseitig berechnete öffentliche Sichtbarkeit. */
+  isPublic: boolean;
+  updatedAt: string | null;
 };
+
 
 export type Video = {
   id: string;

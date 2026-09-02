@@ -37,7 +37,11 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminVideosRouteImport } from './routes/_authenticated/admin/videos'
 import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_authenticated/admin/releases.index'
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
+import { Route as AuthenticatedAdminReleasesNewRouteImport } from './routes/_authenticated/admin/releases.new'
 import { Route as AuthenticatedAdminReleasesPipelineRouteImport } from './routes/_authenticated/admin/releases.pipeline'
+import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
+import { Route as AuthenticatedAdminReleasesIdEditRouteImport } from './routes/_authenticated/admin/releases.$id.edit'
+import { Route as AuthenticatedAdminReleasesIdPreviewRouteImport } from './routes/_authenticated/admin/releases.$id.preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -186,10 +190,33 @@ const AuthenticatedAdminReleasesCalendarRoute =
     path: '/releases/calendar',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminReleasesNewRoute =
+  AuthenticatedAdminReleasesNewRouteImport.update({
+    id: '/releases/new',
+    path: '/releases/new',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminReleasesPipelineRoute =
   AuthenticatedAdminReleasesPipelineRouteImport.update({
     id: '/releases/pipeline',
     path: '/releases/pipeline',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
+  id: '/api/public/media/$',
+  path: '/api/public/media/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminReleasesIdEditRoute =
+  AuthenticatedAdminReleasesIdEditRouteImport.update({
+    id: '/releases/$id/edit',
+    path: '/releases/$id/edit',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminReleasesIdPreviewRoute =
+  AuthenticatedAdminReleasesIdPreviewRouteImport.update({
+    id: '/releases/$id/preview',
+    path: '/releases/$id/preview',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 
@@ -220,8 +247,12 @@ export interface FileRoutesByFullPath {
   '/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
+  '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
+  '/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
+  '/admin/releases/$id/preview': typeof AuthenticatedAdminReleasesIdPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -249,8 +280,12 @@ export interface FileRoutesByTo {
   '/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
+  '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases': typeof AuthenticatedAdminReleasesIndexRoute
+  '/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
+  '/admin/releases/$id/preview': typeof AuthenticatedAdminReleasesIdPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -281,8 +316,12 @@ export interface FileRoutesById {
   '/_authenticated/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
+  '/_authenticated/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/_authenticated/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
+  '/_authenticated/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
+  '/_authenticated/admin/releases/$id/preview': typeof AuthenticatedAdminReleasesIdPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -313,8 +352,12 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin/'
     | '/admin/releases/calendar'
+    | '/admin/releases/new'
     | '/admin/releases/pipeline'
+    | '/api/public/media/$'
     | '/admin/releases/'
+    | '/admin/releases/$id/edit'
+    | '/admin/releases/$id/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -342,8 +385,12 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin'
     | '/admin/releases/calendar'
+    | '/admin/releases/new'
     | '/admin/releases/pipeline'
+    | '/api/public/media/$'
     | '/admin/releases'
+    | '/admin/releases/$id/edit'
+    | '/admin/releases/$id/preview'
   id:
     | '__root__'
     | '/'
@@ -373,8 +420,12 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/videos'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/releases/calendar'
+    | '/_authenticated/admin/releases/new'
     | '/_authenticated/admin/releases/pipeline'
+    | '/api/public/media/$'
     | '/_authenticated/admin/releases/'
+    | '/_authenticated/admin/releases/$id/edit'
+    | '/_authenticated/admin/releases/$id/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -390,6 +441,7 @@ export interface RootRouteChildren {
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRoute
   ReleasesSlugRoute: typeof ReleasesSlugRoute
+  ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -590,11 +642,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReleasesCalendarRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/releases/new': {
+      id: '/_authenticated/admin/releases/new'
+      path: '/releases/new'
+      fullPath: '/admin/releases/new'
+      preLoaderRoute: typeof AuthenticatedAdminReleasesNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/releases/pipeline': {
       id: '/_authenticated/admin/releases/pipeline'
       path: '/releases/pipeline'
       fullPath: '/admin/releases/pipeline'
       preLoaderRoute: typeof AuthenticatedAdminReleasesPipelineRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/api/public/media/$': {
+      id: '/api/public/media/$'
+      path: '/api/public/media/$'
+      fullPath: '/api/public/media/$'
+      preLoaderRoute: typeof ApiPublicMediaSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin/releases/$id/edit': {
+      id: '/_authenticated/admin/releases/$id/edit'
+      path: '/releases/$id/edit'
+      fullPath: '/admin/releases/$id/edit'
+      preLoaderRoute: typeof AuthenticatedAdminReleasesIdEditRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/releases/$id/preview': {
+      id: '/_authenticated/admin/releases/$id/preview'
+      path: '/releases/$id/preview'
+      fullPath: '/admin/releases/$id/preview'
+      preLoaderRoute: typeof AuthenticatedAdminReleasesIdPreviewRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
   }
@@ -614,8 +694,11 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminVideosRoute: typeof AuthenticatedAdminVideosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminReleasesCalendarRoute: typeof AuthenticatedAdminReleasesCalendarRoute
+  AuthenticatedAdminReleasesNewRoute: typeof AuthenticatedAdminReleasesNewRoute
   AuthenticatedAdminReleasesPipelineRoute: typeof AuthenticatedAdminReleasesPipelineRoute
   AuthenticatedAdminReleasesIndexRoute: typeof AuthenticatedAdminReleasesIndexRoute
+  AuthenticatedAdminReleasesIdEditRoute: typeof AuthenticatedAdminReleasesIdEditRoute
+  AuthenticatedAdminReleasesIdPreviewRoute: typeof AuthenticatedAdminReleasesIdPreviewRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
@@ -634,9 +717,14 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
     AuthenticatedAdminReleasesCalendarRoute:
       AuthenticatedAdminReleasesCalendarRoute,
+    AuthenticatedAdminReleasesNewRoute: AuthenticatedAdminReleasesNewRoute,
     AuthenticatedAdminReleasesPipelineRoute:
       AuthenticatedAdminReleasesPipelineRoute,
     AuthenticatedAdminReleasesIndexRoute: AuthenticatedAdminReleasesIndexRoute,
+    AuthenticatedAdminReleasesIdEditRoute:
+      AuthenticatedAdminReleasesIdEditRoute,
+    AuthenticatedAdminReleasesIdPreviewRoute:
+      AuthenticatedAdminReleasesIdPreviewRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
@@ -670,6 +758,7 @@ const rootRouteChildren: RootRouteChildren = {
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRoute,
   ReleasesSlugRoute: ReleasesSlugRoute,
+  ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

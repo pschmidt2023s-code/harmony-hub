@@ -16,10 +16,7 @@ export function slugify(value: string) {
 
 /** Öffentlich sichtbar: bereits erschienen. */
 export function publishedReleases(releases: Release[]) {
-  const t = today();
-  return releases
-    .filter((r) => r.status === "Veröffentlicht" && r.date <= t)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+  return releases.filter((r) => r.isPublic).sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 /** Neuestes veröffentlichtes Release oder null. */
@@ -33,6 +30,7 @@ export function upcomingReleases(releases: Release[]) {
   return releases
     .filter(
       (r) =>
+        !r.isPublic &&
         r.date > t &&
         (r.status === "Geplant" || r.status === "Vorbestellung" || r.status === "Veröffentlicht"),
     )

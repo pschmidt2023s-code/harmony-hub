@@ -3,7 +3,7 @@ import { ArrowUpRight, Play } from "lucide-react";
 import heroFallback from "@/assets/hero-tayo.jpg";
 import { usePlayer } from "@/components/player/player-context";
 import { ARTIST, formatDate, type Release, type Song } from "@/lib/data";
-import { slugify } from "@/lib/release";
+
 
 /**
  * Cinematischer Hero. Zeigt das neueste veröffentlichte Release aus der Datenbank
@@ -69,7 +69,7 @@ export function Hero({
               )}
               <Link
                 to="/releases/$slug"
-                params={{ slug: slugify(release.title) }}
+                params={{ slug: release.slug }}
                 className="glass flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors hover:text-primary"
               >
                 Release ansehen <ArrowUpRight className="size-4" />

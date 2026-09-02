@@ -1,5 +1,4 @@
 import type { Product, Release, Song, Video } from "./data";
-import { slugify } from "./release";
 
 /** Tracks eines Releases in gespeicherter Reihenfolge. */
 export function releaseTracks(songs: Song[], release: Release) {
@@ -17,10 +16,13 @@ const SERVICE_LABELS: { id: keyof Song["links"]; label: string }[] = [
 ];
 
 /** Nur tatsächlich hinterlegte Streaming-Links, pro Dienst der erste Treffer. */
-export function streamingServices(tracks: Song[]): StreamingService[] {
+export function streamingServices(tracks: Song[], release?: Release): StreamingService[] {
   const out: StreamingService[] = [];
+  const releaseLinks = release?.links ?? {};
   for (const { id, label } of SERVICE_LABELS) {
-    const url = tracks.map((t) => t.links?.[id]).find((u) => typeof u === "string" && u.trim().length > 0);
+    const url =
+      (typeof releaseLinks[id] === "string" && releaseLinks[id]!.trim() ? releaseLinks[id] : undefined) ??
+      tracks.map((t) => t.links?.[id]).find((u) => typeof u === "string" && u.trim().length > 0);
     if (url) out.push({ id, label, url: url.trim() });
   }
   return out;
@@ -29,7 +31,17 @@ export function streamingServices(tracks: Song[]): StreamingService[] {
 export type CreditGroup = { role: string; names: string[] };
 
 /** Credits aus den gespeicherten Track-Feldern, ohne Duplikate. */
-export function releaseCredits(tracks: Song[]): CreditGroup[] {
+export function releaseCredits(tracks: Song[], release?: Release): CreditGroup[] {
+  const manual = (release?.credits ?? []).filter((c) => c.role.trim() && c.names.trim());
+  if (manual.length) {
+    return manual.map((c) => ({
+      role: c.role.trim(),
+      names: c.names
+        .split(/\s*,\s*/)
+        .map((n) => n.trim())
+        .filter(Boolean),
+    }));
+  }
   const collect = (pick: (s: Song) => string | null | undefined) => {
     const set = new Set<string>();
     for (const t of tracks) {
@@ -53,6 +65,10 @@ export function releaseGenres(tracks: Song[]) {
 
 /** Videos, die zu diesem Release oder einem seiner Tracks gehören. */
 export function releaseVideos(videos: Video[], release: Release, tracks: Song[]) {
+  if (release.videoId) {
+    const linked = videos.find((v) => v.id === release.videoId);
+    if (linked) return [linked];
+  }
   const titles = new Set([release.title.toLowerCase(), ...tracks.map((t) => t.title.toLowerCase())]);
   return videos.filter((v) => titles.has((v.song ?? "").toLowerCase()));
 }
@@ -68,4 +84,4 @@ export function totalDuration(tracks: Song[]) {
   return tracks.reduce((sum, t) => sum + (t.duration || 0), 0);
 }
 
-export const releaseHref = (release: Release) => `/releases/${slugify(release.title)}`;
+export const releaseHref = (release: Release) => `/releases/${release.slug}`;
