@@ -108,7 +108,7 @@ export function SongEditor({ mode, initial }: { mode: "new" | "edit"; initial?: 
   const player = usePlayer();
   const [form, setForm] = useState<SongRow>(() => initial ?? emptySong());
   const [lyricsText, setLyricsText] = useState(() =>
-    lyricsToText(((initial?.lyrics ?? []) as unknown as { time: number; line: string }[]) ?? []),
+    lyricsToText((initial?.lyrics ?? []) as unknown as { time: number; line: string }[]),
   );
   const [tab, setTab] = useState<TabId>("overview");
   const [dirty, setDirty] = useState(false);
