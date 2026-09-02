@@ -120,13 +120,5 @@ export async function deleteRelease(id: string) {
   if (error) throw error;
 }
 
-/** Datei in den privaten media-Bucket laden; liefert die Auslieferungs-URL. */
-export async function uploadMedia(file: File, folder: string) {
-  const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
-  const path = `${folder}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage
-    .from("media")
-    .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type });
-  if (error) throw error;
-  return { path, url: `/api/public/media/${path}` };
-}
+/** Zentraler Upload aus der Medienbibliothek – es gibt nur dieses eine System. */
+export { uploadMedia } from "@/lib/admin/media";

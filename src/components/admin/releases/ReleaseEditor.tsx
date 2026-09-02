@@ -449,6 +449,13 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
                     }}
                   />
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(true)}
+                  className="glass inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm hover:text-primary"
+                >
+                  <ImagePlus className="size-4" /> Aus Mediathek wählen
+                </button>
                 <Field label="Artwork-URL">
                   <input
                     value={form.cover_url ?? ""}
