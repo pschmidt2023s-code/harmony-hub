@@ -10,6 +10,7 @@ import {
 } from "@/lib/accent";
 import { contentQueryOptions } from "@/lib/content";
 import { siteSettingsQueryOptions } from "@/lib/site-settings";
+import { newestRelease } from "@/lib/release";
 import type { Release } from "@/lib/data";
 
 /** Neuestes tatsächlich veröffentlichtes Release (Datum in der Vergangenheit, Status "Veröffentlicht"). */
