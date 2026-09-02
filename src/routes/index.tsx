@@ -8,34 +8,37 @@ import { TourDates } from "@/components/home/TourDates";
 import { MerchHighlights } from "@/components/home/MerchHighlights";
 import { NewsletterCta } from "@/components/home/NewsletterCta";
 import { TOUR } from "@/lib/data";
-import { shopQueryOptions } from "@/lib/shop";
+import { shopCatalogQueryOptions, shopQueryOptions } from "@/lib/shop";
 import { contentQueryOptions } from "@/lib/content";
+import { jsonLd, musicGroupLd, seoHead, canonicalUrl, normalizeSettings } from "@/lib/seo";
 import { newestRelease, songsByRecency, upcomingReleases, videosByRecency } from "@/lib/release";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    await Promise.all([
+    const [content] = await Promise.all([
       context.queryClient.ensureQueryData(contentQueryOptions),
-      context.queryClient.ensureQueryData(shopQueryOptions),
+      context.queryClient.ensureQueryData(shopCatalogQueryOptions),
     ]);
+    return { settings: content.settings };
   },
-  head: () => ({
-    meta: [
-      { title: "TAYO — Musik, Releases & Merch" },
-      {
-        name: "description",
-        content:
-          "Offizielle Plattform von TAYO: aktuelle Releases, Musikvideos, Tourdaten und limitiertes Merch.",
-      },
-      { property: "og:title", content: "TAYO — Musik, Releases & Merch" },
-      {
-        property: "og:description",
-        content: "Aktuelle Releases, Musikvideos, Tourdaten und limitiertes Merch von TAYO.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const s = normalizeSettings(loaderData?.settings);
+    const head = seoHead({
+      title: s.site_title,
+      description: s.site_description,
+      path: "/",
+      settings: s,
+      type: "website",
+    });
+    const url = canonicalUrl("/", s.canonical_base_url);
+    return {
+      ...head,
+      scripts: [
+        jsonLd({ "@context": "https://schema.org", "@type": "WebSite", name: s.site_name, url }),
+        jsonLd(musicGroupLd(s, url)),
+      ],
+    };
+  },
   component: Index,
 });
 
