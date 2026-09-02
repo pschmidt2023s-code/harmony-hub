@@ -20,10 +20,17 @@ export function NewsletterForm({
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (busy) return;
+    const value = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+      toast.error("Bitte gib eine gültige E-Mail-Adresse ein.");
+      return;
+    }
     setBusy(true);
+    // Explizite Einwilligung: nur dieser Weg legt ein Abo an.
+    // Bereits abgemeldete Adressen werden NICHT automatisch reaktiviert (Unique-Konflikt).
     const { error } = await supabase
       .from("newsletter_subscribers")
-      .insert({ email: email.trim().toLowerCase() });
+      .insert({ email: value, source, consent_at: new Date().toISOString() });
     setBusy(false);
     if (error) {
       toast[error.code === "23505" ? "info" : "error"](
