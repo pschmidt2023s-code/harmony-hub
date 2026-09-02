@@ -76,12 +76,20 @@ export type Release = {
 
 export type Video = {
   id: string;
+  slug: string;
   title: string;
   category: "Musikvideo" | "Visualizer" | "Lyric Video" | "Live" | "Behind the Scenes" | "Short";
   thumb: string;
   date: string;
   views: string;
   song: string;
+  description: string;
+  source: string;
+  url: string | null;
+  releaseId: string | null;
+  songId: string | null;
+  seoTitle: string;
+  seoDescription: string;
 };
 
 export type Product = {
