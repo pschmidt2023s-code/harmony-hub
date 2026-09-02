@@ -19,8 +19,8 @@ const toDraft = (s: typeof DEFAULT_SETTINGS): Draft => ({
   site_name: s.site_name,
   default_locale: s.default_locale,
   theme_color: s.theme_color,
-  logo_url: s.logo_url ?? "",
-  favicon_url: s.favicon_url ?? "",
+  logo_url: s.logo_url,
+  favicon_url: s.favicon_url,
 });
 
 export function BrandSettings() {
@@ -43,8 +43,8 @@ export function BrandSettings() {
         site_name: draft.site_name.trim() || DEFAULT_SETTINGS.site_name,
         default_locale: draft.default_locale,
         theme_color: draft.theme_color,
-        logo_url: draft.logo_url.trim() || null,
-        favicon_url: draft.favicon_url.trim() || null,
+        logo_url: draft.logo_url.trim(),
+        favicon_url: draft.favicon_url.trim(),
       }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["site-settings"] });
@@ -96,7 +96,7 @@ export function BrandSettings() {
             value={draft.default_locale}
             onChange={(e) => set("default_locale", e.target.value)}
           >
-            {LOCALES.map((l) => (
+            {LOCALES.map((l: { value: string; label: string }) => (
               <option key={l.value} value={l.value}>
                 {l.label}
               </option>

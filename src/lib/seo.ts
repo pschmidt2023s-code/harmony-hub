@@ -34,8 +34,16 @@ export const DEFAULT_SEO: PublicSiteSettings = {
   theme_color: "#0a0a0a",
 };
 
+export const LOCALES = [
+  { value: "de", label: "Deutsch (de)" },
+  { value: "en", label: "English (en)" },
+] as const;
+
 export function normalizeSettings(row: Partial<PublicSiteSettings> | null | undefined): PublicSiteSettings {
-  return { ...DEFAULT_SEO, ...(row ?? {}) } as PublicSiteSettings;
+  const clean = Object.fromEntries(
+    Object.entries(row ?? {}).filter(([, v]) => v !== null && v !== undefined && v !== ""),
+  );
+  return { ...DEFAULT_SEO, ...clean } as PublicSiteSettings;
 }
 
 const isAbsolute = (url: string) => /^https?:\/\//i.test(url);
