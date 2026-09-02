@@ -24,6 +24,7 @@ import {
   releaseSongs,
   sameDay,
   stageOf,
+  type ReleaseContext,
   type StageId,
 } from "@/lib/admin/pipeline";
 
@@ -310,7 +311,7 @@ function AgendaList({
   emptyText,
 }: {
   items: ReleaseRow[];
-  ctx: { songs: ReturnType<typeof releaseSongs>; videos: never[] } | Parameters<typeof releaseReadiness>[1];
+  ctx: ReleaseContext;
   onOpen: (r: ReleaseRow) => void;
   emptyText: string;
 }) {
@@ -322,7 +323,7 @@ function AgendaList({
   return (
     <div className="grid gap-3">
       {items.map((r) => {
-        const readiness = releaseReadiness(r, ctx as Parameters<typeof releaseReadiness>[1]);
+        const readiness = releaseReadiness(r, ctx);
         const when = effectiveDate(r);
         return (
           <div key={r.id} className="glass min-w-0 rounded-2xl p-4">
