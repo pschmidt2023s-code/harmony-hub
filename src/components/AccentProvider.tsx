@@ -14,11 +14,7 @@ import type { Release } from "@/lib/data";
 
 /** Neuestes tatsächlich veröffentlichtes Release (Datum in der Vergangenheit, Status "Veröffentlicht"). */
 export function newestPublishedRelease(releases: Release[]): Release | null {
-  const today = new Date().toISOString().slice(0, 10);
-  const published = releases
-    .filter((r) => r.status === "Veröffentlicht" && r.date <= today)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
-  return published[0] ?? null;
+  return newestRelease(releases);
 }
 
 /**
