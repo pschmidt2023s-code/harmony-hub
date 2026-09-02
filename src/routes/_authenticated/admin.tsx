@@ -73,41 +73,26 @@ function AdminPage() {
           <Stat icon={<Mail className="size-4" />} label="Newsletter" value={subs.length} />
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <div className="glass rounded-2xl p-6">
-            <p className="text-sm font-semibold">Release-Pipeline</p>
-            <ul className="mt-4 space-y-3">
-              {releases.map((r) => (
-                <li key={r.id} className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm">{r.title}</p>
-                    <p className="text-xs text-muted-foreground">{formatDate(r.date)} · {r.type}</p>
-                  </div>
-                  <span className="shrink-0 rounded-full border border-border px-3 py-1 text-[11px] text-primary">
-                    {r.status}
+        <div className="mt-8 glass rounded-2xl p-6">
+          <p className="text-sm font-semibold">Newsletter-Abonnenten</p>
+          {subs.length === 0 ? (
+            <p className="mt-4 text-sm text-muted-foreground">Noch keine Anmeldungen.</p>
+          ) : (
+            <ul className="mt-4 space-y-2">
+              {subs.map((s) => (
+                <li key={s.id} className="flex items-center justify-between gap-3 text-sm">
+                  <span className="truncate">{s.email}</span>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {new Date(s.created_at).toLocaleDateString("de-DE")}
                   </span>
                 </li>
               ))}
             </ul>
-          </div>
+          )}
+        </div>
 
-          <div className="glass rounded-2xl p-6">
-            <p className="text-sm font-semibold">Newsletter-Abonnenten</p>
-            {subs.length === 0 ? (
-              <p className="mt-4 text-sm text-muted-foreground">Noch keine Anmeldungen.</p>
-            ) : (
-              <ul className="mt-4 space-y-2">
-                {subs.map((s) => (
-                  <li key={s.id} className="flex items-center justify-between gap-3 text-sm">
-                    <span className="truncate">{s.email}</span>
-                    <span className="shrink-0 text-xs text-muted-foreground">
-                      {new Date(s.created_at).toLocaleDateString("de-DE")}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+        <div className="mt-8">
+          <OrdersPanel />
         </div>
 
         <div className="mt-8">
