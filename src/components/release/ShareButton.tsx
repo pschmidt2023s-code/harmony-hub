@@ -9,7 +9,7 @@ export function ShareButton({ title, text }: { title: string; text?: string }) {
     const url = typeof window !== "undefined" ? window.location.href : "";
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        await navigator.share({ title, text, url });
+        await navigator.share(text ? { title, text, url } : { title, url });
         return;
       } catch {
         /* abgebrochen – auf Kopieren zurückfallen */
