@@ -368,23 +368,53 @@ export type Database = {
       site_settings: {
         Row: {
           accent_mode: string
+          artist_name: string
+          canonical_base_url: string
           created_at: string
+          default_locale: string
+          default_og_image: string
+          favicon_url: string
           id: number
+          logo_url: string
           manual_accent: string
+          site_description: string
+          site_name: string
+          site_title: string
+          theme_color: string
           updated_at: string
         }
         Insert: {
           accent_mode?: string
+          artist_name?: string
+          canonical_base_url?: string
           created_at?: string
+          default_locale?: string
+          default_og_image?: string
+          favicon_url?: string
           id?: number
+          logo_url?: string
           manual_accent?: string
+          site_description?: string
+          site_name?: string
+          site_title?: string
+          theme_color?: string
           updated_at?: string
         }
         Update: {
           accent_mode?: string
+          artist_name?: string
+          canonical_base_url?: string
           created_at?: string
+          default_locale?: string
+          default_og_image?: string
+          favicon_url?: string
           id?: number
+          logo_url?: string
           manual_accent?: string
+          site_description?: string
+          site_name?: string
+          site_title?: string
+          theme_color?: string
           updated_at?: string
         }
         Relationships: []

@@ -15,7 +15,7 @@ export const getShopCatalog = createServerFn({ method: "GET" }).handler(async ()
     { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
   );
 
-  const [products, variants] = await Promise.all([
+  const [products, variants, settings] = await Promise.all([
     supabasePublic
       .from("products")
       .select(
@@ -27,6 +27,13 @@ export const getShopCatalog = createServerFn({ method: "GET" }).handler(async ()
       .from("product_variants")
       .select("id, product_id, name, sku, price, sale_price, available, stock, image_url, sort_order")
       .order("sort_order", { ascending: true }),
+    supabasePublic
+      .from("site_settings")
+      .select(
+        "artist_name, site_name, site_title, site_description, canonical_base_url, default_og_image, logo_url, favicon_url, default_locale, theme_color",
+      )
+      .eq("id", 1)
+      .maybeSingle(),
   ]);
 
   if (products.error) throw products.error;
@@ -36,5 +43,6 @@ export const getShopCatalog = createServerFn({ method: "GET" }).handler(async ()
   return {
     products: products.data ?? [],
     variants: (variants.data ?? []).filter((v) => ids.has(v.product_id)),
+    settings: settings.data ?? null,
   };
 });

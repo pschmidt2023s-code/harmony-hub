@@ -7,21 +7,20 @@ import { SongRow } from "@/components/SongRow";
 import { usePlayer } from "@/components/player/player-context";
 import { contentQueryOptions } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/musik")({
   loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
-  head: () => ({
-    meta: [
-      { title: "Musik — TAYO Diskografie & Streaming" },
-      {
-        name: "description",
-        content:
-          "Alle Songs von TAYO mit Credits, Lyrics, BPM, Tonart und Links zu Spotify, Apple Music, YouTube und Deezer.",
-      },
-      { property: "og:title", content: "Musik — TAYO Diskografie" },
-      { property: "og:description", content: "Songs, Credits, Lyrics und Streaming-Links von TAYO." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const s = loaderData?.settings;
+    return seoHead({
+      title: `Musik — ${s?.artist_name ?? "TAYO"} Diskografie & Streaming`,
+      description:
+        "Alle Songs von TAYO mit Credits, Lyrics, BPM, Tonart und Links zu Spotify, Apple Music, YouTube und Deezer.",
+      path: "/musik",
+      settings: s ?? null,
+    });
+  },
   component: MusicPage,
 });
 

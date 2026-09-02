@@ -6,21 +6,20 @@ import { Section } from "@/components/Section";
 import { formatDate } from "@/lib/data";
 import { contentQueryOptions } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/videos")({
   loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
-  head: () => ({
-    meta: [
-      { title: "Videos — Musikvideos & Visualizer von TAYO" },
-      {
-        name: "description",
-        content:
-          "Musikvideos, Visualizer, Lyric Videos, Live-Performances und Behind-the-Scenes von TAYO.",
-      },
-      { property: "og:title", content: "Videos — TAYO" },
-      { property: "og:description", content: "Musikvideos, Visualizer und Live-Performances von TAYO." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const s = loaderData?.settings;
+    return seoHead({
+      title: `Videos — Musikvideos & Visualizer von ${s?.artist_name ?? "TAYO"}`,
+      description:
+        "Musikvideos, Visualizer, Lyric Videos, Live-Performances und Behind-the-Scenes von TAYO.",
+      path: "/videos",
+      settings: s ?? null,
+    });
+  },
   component: VideosPage,
 });
 
