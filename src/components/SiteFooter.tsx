@@ -1,8 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { SOCIAL_LINKS } from "@/lib/data";
+
+const ICONS = { instagram: Instagram, youtube: Youtube, tiktok: Music2 } as const;
 
 export function SiteFooter() {
+  // Nur tatsächlich hinterlegte Profile anzeigen – keine erfundenen Links.
+  const socials = SOCIAL_LINKS.filter((s) => s.url);
+
   return (
     <footer className="border-t border-border/60 pb-32 pt-16">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-4 md:px-8">
@@ -11,20 +17,25 @@ export function SiteFooter() {
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             R&B · Synthpop · Pop · Trap. Offizielle Plattform für Musik, Releases und Merch.
           </p>
-          <div className="mt-5 flex gap-3">
-            {[Instagram, Youtube, Music2].map((Icon, i) => (
-              <a
-                key={i}
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="Social Media"
-                className="glass grid size-10 place-items-center rounded-full transition-colors hover:text-primary"
-              >
-                <Icon className="size-4" />
-              </a>
-            ))}
-          </div>
+          {socials.length > 0 && (
+            <div className="mt-5 flex gap-3">
+              {socials.map((s) => {
+                const Icon = ICONS[s.id];
+                return (
+                  <a
+                    key={s.id}
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={s.label}
+                    className="glass grid size-10 place-items-center rounded-full transition-colors hover:text-primary"
+                  >
+                    <Icon className="size-4" />
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </div>
         <FooterCol
           title="Entdecken"
