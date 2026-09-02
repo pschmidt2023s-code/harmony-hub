@@ -20,14 +20,24 @@ export const contentQueryOptions = queryOptions({
   staleTime: 5 * 60 * 1000,
   queryFn: async (): Promise<SiteContent> => {
     const data = await getContent();
+    const releaseCover = new Map(
+      data.releases.map((r) => [r.id, r.cover_url || cover(r.cover_key)] as const),
+    );
     return {
       songs: data.songs.map((s) => ({
         id: s.id,
+        slug: s.slug || s.id,
         title: s.title,
+        artist: s.artist || "TAYO",
         album: s.album,
+        releaseId: s.release_id,
         type: s.type as Song["type"],
-        cover: s.cover_url || cover(s.cover_key),
+        // Fallback-Kette: Song-Artwork → Release-Artwork → lokales Asset
+        cover: s.cover_url || (s.release_id ? releaseCover.get(s.release_id) : undefined) || cover(s.cover_key),
+        audio: s.audio_url,
         duration: s.duration,
+        description: s.description ?? "",
+        language: s.language ?? "",
         genre: s.genre,
         bpm: s.bpm,
         key: s.song_key,
@@ -38,7 +48,9 @@ export const contentQueryOptions = queryOptions({
         explicit: s.explicit,
         links: s.links as unknown as Song["links"],
         lyrics: (s.lyrics ?? []) as unknown as Song["lyrics"],
+        credits: (s.credits ?? []) as unknown as Song["credits"],
       })),
+
       releases: data.releases.map((r) => ({
         id: r.id,
         slug: r.slug || r.id,
