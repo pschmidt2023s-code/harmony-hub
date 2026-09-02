@@ -28,6 +28,7 @@ import {
   type SongRow,
 } from "@/lib/admin/releases";
 import { supabase } from "@/integrations/supabase/client";
+import { MediaPicker } from "@/components/admin/media/MediaPicker";
 
 const TABS = [
   { id: "overview", label: "Übersicht" },
@@ -77,6 +78,7 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
   const [saving, setSaving] = useState(false);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
   const savedRef = useRef(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const songs = useQuery(adminSongsQueryOptions);
   const videos = useQuery(adminVideosQueryOptions);
@@ -449,6 +451,13 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
                     }}
                   />
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(true)}
+                  className="glass inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm hover:text-primary"
+                >
+                  <ImagePlus className="size-4" /> Aus Mediathek wählen
+                </button>
                 <Field label="Artwork-URL">
                   <input
                     value={form.cover_url ?? ""}
@@ -564,6 +573,18 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
           </button>
         )}
       </div>
+
+      {pickerOpen && (
+        <MediaPicker
+          kind="image"
+          title="Artwork aus der Mediathek"
+          onClose={() => setPickerOpen(false)}
+          onSelect={(asset) => {
+            set("cover_url", asset.url);
+            setPickerOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

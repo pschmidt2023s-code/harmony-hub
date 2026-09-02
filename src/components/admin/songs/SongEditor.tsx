@@ -27,6 +27,7 @@ import {
 } from "@/lib/admin/releases";
 import { formatDate, formatTime, type Song } from "@/lib/data";
 import { usePlayer } from "@/components/player/player-context";
+import { MediaPicker } from "@/components/admin/media/MediaPicker";
 
 const TABS = [
   { id: "overview", label: "Übersicht" },
@@ -111,6 +112,7 @@ export function SongEditor({ mode, initial }: { mode: "new" | "edit"; initial?: 
     lyricsToText((initial?.lyrics ?? []) as unknown as { time: number; line: string }[]),
   );
   const [tab, setTab] = useState<TabId>("overview");
+  const [picker, setPicker] = useState<"image" | "audio" | null>(null);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<null | "audio" | "cover">(null);
@@ -407,6 +409,14 @@ export function SongEditor({ mode, initial }: { mode: "new" | "edit"; initial?: 
               )}
             </div>
 
+            <button
+              type="button"
+              onClick={() => setPicker("audio")}
+              className="glass inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm hover:text-primary"
+            >
+              <Music2 className="size-4" /> Aus Mediathek wählen
+            </button>
+
             {uploadError && <p className="text-sm text-destructive">{uploadError}</p>}
 
             <Grid>
@@ -548,6 +558,13 @@ export function SongEditor({ mode, initial }: { mode: "new" | "edit"; initial?: 
                     }}
                   />
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setPicker("image")}
+                  className="glass inline-flex w-fit items-center gap-2 rounded-full px-5 py-2.5 text-sm hover:text-primary"
+                >
+                  <ImagePlus className="size-4" /> Aus Mediathek wählen
+                </button>
                 <Field label="Artwork-URL">
                   <input
                     value={form.cover_url ?? ""}
@@ -689,6 +706,19 @@ export function SongEditor({ mode, initial }: { mode: "new" | "edit"; initial?: 
           <Upload className="size-4" /> Veröffentlichen
         </button>
       </div>
+
+      {picker && (
+        <MediaPicker
+          kind={picker}
+          title={picker === "image" ? "Artwork aus der Mediathek" : "Audio aus der Mediathek"}
+          onClose={() => setPicker(null)}
+          onSelect={(asset) => {
+            if (picker === "image") set("cover_url", asset.url);
+            else set("audio_url", asset.url);
+            setPicker(null);
+          }}
+        />
+      )}
     </div>
   );
 }
