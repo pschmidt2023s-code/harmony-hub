@@ -168,7 +168,10 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
 
   async function setSongAlbum(id: string, album: string) {
     const { error } = await supabase.from("songs").update({ album }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     void qc.invalidateQueries({ queryKey: ["admin", "songs"] });
     void qc.invalidateQueries({ queryKey: ["content"] });
   }
@@ -587,7 +590,10 @@ function LyricsEditor({ tracks, onSaved }: { tracks: SongRow[]; onSaved: () => v
       });
     const { error } = await supabase.from("songs").update({ lyrics }).eq("id", song.id);
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Lyrics gespeichert");
     onSaved();
   }
