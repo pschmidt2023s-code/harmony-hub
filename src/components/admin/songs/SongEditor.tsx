@@ -706,6 +706,19 @@ export function SongEditor({ mode, initial }: { mode: "new" | "edit"; initial?: 
           <Upload className="size-4" /> Veröffentlichen
         </button>
       </div>
+
+      {picker && (
+        <MediaPicker
+          kind={picker}
+          title={picker === "image" ? "Artwork aus der Mediathek" : "Audio aus der Mediathek"}
+          onClose={() => setPicker(null)}
+          onSelect={(asset) => {
+            if (picker === "image") set("cover_url", asset.url);
+            else set("audio_url", asset.url);
+            setPicker(null);
+          }}
+        />
+      )}
     </div>
   );
 }
