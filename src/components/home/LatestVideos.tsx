@@ -7,6 +7,7 @@ import { formatDate, type Video } from "@/lib/data";
 export function LatestVideos({ videos }: { videos: Video[] }) {
   if (!videos.length) return null;
   const [feature, ...rest] = videos.slice(0, 3);
+  if (!feature) return null;
 
   return (
     <Section

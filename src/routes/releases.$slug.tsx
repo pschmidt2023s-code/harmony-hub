@@ -34,6 +34,7 @@ function ReleasePage() {
   if (!release) throw notFound();
 
   const tracks = data.songs.filter((s) => s.album === release.title);
+  const first = tracks[0];
 
   return (
     <div className="mx-auto max-w-5xl px-5 pb-24 pt-32 md:px-8">
@@ -57,9 +58,9 @@ function ReleasePage() {
             {formatDate(release.date)} · {release.tracks} {release.tracks === 1 ? "Track" : "Tracks"}
           </p>
           {release.description && <p className="mt-5 text-muted-foreground">{release.description}</p>}
-          {tracks[0] && (
+          {first && (
             <button
-              onClick={() => player.play(tracks[0], tracks)}
+              onClick={() => player.play(first, tracks)}
               className="glow mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
             >
               <Play className="size-4" /> Jetzt hören

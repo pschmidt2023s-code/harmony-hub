@@ -22,6 +22,7 @@ import { Route as UeberMichRouteImport } from './routes/ueber-mich'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedKontoRouteImport } from './routes/_authenticated/konto'
+import { Route as ReleasesSlugRouteImport } from './routes/releases.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -87,6 +88,11 @@ const AuthenticatedKontoRoute = AuthenticatedKontoRouteImport.update({
   path: '/konto',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ReleasesSlugRoute = ReleasesSlugRouteImport.update({
+  id: '/releases/$slug',
+  path: '/releases/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/videos': typeof VideosRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/konto': typeof AuthenticatedKontoRoute
+  '/releases/$slug': typeof ReleasesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/videos': typeof VideosRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/konto': typeof AuthenticatedKontoRoute
+  '/releases/$slug': typeof ReleasesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/videos': typeof VideosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/konto': typeof AuthenticatedKontoRoute
+  '/releases/$slug': typeof ReleasesSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/admin'
     | '/konto'
+    | '/releases/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/admin'
     | '/konto'
+    | '/releases/$slug'
   id:
     | '__root__'
     | '/'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/_authenticated/admin'
     | '/_authenticated/konto'
+    | '/releases/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   TourRoute: typeof TourRoute
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRoute
+  ReleasesSlugRoute: typeof ReleasesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKontoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/releases/$slug': {
+      id: '/releases/$slug'
+      path: '/releases/$slug'
+      fullPath: '/releases/$slug'
+      preLoaderRoute: typeof ReleasesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -313,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   TourRoute: TourRoute,
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRoute,
+  ReleasesSlugRoute: ReleasesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
