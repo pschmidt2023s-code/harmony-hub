@@ -17,7 +17,6 @@ import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as MusikRouteImport } from './routes/musik'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as TmpadminpreviewRouteImport } from './routes/tmpadminpreview'
 import { Route as TourRouteImport } from './routes/tour'
 import { Route as UeberMichRouteImport } from './routes/ueber-mich'
 import { Route as VideosRouteImport } from './routes/videos'
@@ -77,11 +76,6 @@ const ShopRoute = ShopRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TmpadminpreviewRoute = TmpadminpreviewRouteImport.update({
-  id: '/tmpadminpreview',
-  path: '/tmpadminpreview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TourRoute = TourRouteImport.update({
@@ -207,7 +201,6 @@ export interface FileRoutesByFullPath {
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/tmpadminpreview': typeof TmpadminpreviewRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
@@ -238,7 +231,6 @@ export interface FileRoutesByTo {
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/tmpadminpreview': typeof TmpadminpreviewRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
@@ -270,7 +262,6 @@ export interface FileRoutesById {
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/tmpadminpreview': typeof TmpadminpreviewRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
@@ -303,7 +294,6 @@ export interface FileRouteTypes {
     | '/musik'
     | '/shop'
     | '/sitemap.xml'
-    | '/tmpadminpreview'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
@@ -334,7 +324,6 @@ export interface FileRouteTypes {
     | '/musik'
     | '/shop'
     | '/sitemap.xml'
-    | '/tmpadminpreview'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
@@ -365,7 +354,6 @@ export interface FileRouteTypes {
     | '/musik'
     | '/shop'
     | '/sitemap.xml'
-    | '/tmpadminpreview'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
@@ -398,7 +386,6 @@ export interface RootRouteChildren {
   MusikRoute: typeof MusikRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  TmpadminpreviewRoute: typeof TmpadminpreviewRoute
   TourRoute: typeof TourRoute
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRoute
@@ -461,13 +448,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tmpadminpreview': {
-      id: '/tmpadminpreview'
-      path: '/tmpadminpreview'
-      fullPath: '/tmpadminpreview'
-      preLoaderRoute: typeof TmpadminpreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tour': {
@@ -686,7 +666,6 @@ const rootRouteChildren: RootRouteChildren = {
   MusikRoute: MusikRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  TmpadminpreviewRoute: TmpadminpreviewRoute,
   TourRoute: TourRoute,
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRoute,
