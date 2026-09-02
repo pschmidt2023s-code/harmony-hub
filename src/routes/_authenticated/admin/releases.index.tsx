@@ -1,21 +1,11 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Archive,
-  Copy,
-  Eye,
-  Pencil,
-  Plus,
-  Search,
-  Trash2,
-  Upload,
-} from "lucide-react";
+import { Archive, Copy, Eye, Pencil, Plus, Search, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { AdminError, AdminPageHeader, AdminSkeleton } from "@/components/admin/AdminPageHeader";
 import {
   adminReleasesQueryOptions,
-  deleteRelease,
   isReleasePublic,
   newReleaseId,
   RELEASE_STATUSES,
@@ -38,9 +28,7 @@ function ReleasesPage() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("alle");
   const [sort, setSort] = useState<SortKey>("date-desc");
-  const [confirm, setConfirm] = useState<{ release: ReleaseRow; action: "archive" | "delete" } | null>(
-    null,
-  );
+  const [confirm, setConfirm] = useState<ReleaseRow | null>(null);
 
   const invalidate = () => {
     void qc.invalidateQueries({ queryKey: ["admin", "releases"] });
@@ -227,16 +215,10 @@ function ReleasesPage() {
                       </button>
                     )}
                     <button
-                      onClick={() => setConfirm({ release: r, action: "archive" })}
+                      onClick={() => setConfirm(r)}
                       className="glass inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs transition-colors hover:text-primary"
                     >
                       <Archive className="size-3.5" />
-                    </button>
-                    <button
-                      onClick={() => setConfirm({ release: r, action: "delete" })}
-                      className="glass inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs text-destructive transition-colors"
-                    >
-                      <Trash2 className="size-3.5" />
                     </button>
                   </div>
                 </div>
@@ -249,13 +231,9 @@ function ReleasesPage() {
       {confirm && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-background/80 p-5 backdrop-blur">
           <div className="glass-strong w-full max-w-md rounded-2xl p-6">
-            <h2 className="text-lg font-semibold">
-              {confirm.action === "delete" ? "Release löschen?" : "Release archivieren?"}
-            </h2>
+            <h2 className="text-lg font-semibold">Release archivieren?</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              {confirm.action === "delete"
-                ? `„${confirm.release.title}" wird dauerhaft entfernt. Das lässt sich nicht rückgängig machen.`
-                : `„${confirm.release.title}" wird archiviert und ist danach nicht mehr öffentlich sichtbar.`}
+              {`„${confirm.title}" wird archiviert und ist danach nicht mehr öffentlich sichtbar. Das Release bleibt erhalten und kann jederzeit wiederhergestellt werden.`}
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
@@ -268,18 +246,13 @@ function ReleasesPage() {
                 disabled={mutate.isPending}
                 onClick={() =>
                   mutate.mutate(async () => {
-                    if (confirm.action === "delete") {
-                      await deleteRelease(confirm.release.id);
-                      toast.success("Release gelöscht");
-                    } else {
-                      await saveRelease({ ...confirm.release, status: "Archiviert" }, "update");
-                      toast.success("Release archiviert");
-                    }
+                    await saveRelease({ ...confirm, status: "Archiviert" }, "update");
+                    toast.success("Release archiviert");
                   })
                 }
                 className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
               >
-                {confirm.action === "delete" ? "Löschen" : "Archivieren"}
+                Archivieren
               </button>
             </div>
           </div>
