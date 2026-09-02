@@ -4,6 +4,7 @@ import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { MediaPicker } from "@/components/admin/media/MediaPicker";
 import { ENTITIES, emptyRecord, type EntityDef, type FieldDef } from "./entity-config";
 
 type Row = Record<string, unknown>;
