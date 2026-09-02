@@ -15,7 +15,6 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as MusikRouteImport } from './routes/musik'
-import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TourRouteImport } from './routes/tour'
 import { Route as UeberMichRouteImport } from './routes/ueber-mich'
@@ -23,6 +22,7 @@ import { Route as VideosRouteImport } from './routes/videos'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedKontoRouteImport } from './routes/_authenticated/konto'
 import { Route as ReleasesSlugRouteImport } from './routes/releases.$slug'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as VideosSlugRouteImport } from './routes/videos.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin/analytics'
@@ -82,11 +82,6 @@ const MusikRoute = MusikRouteImport.update({
   path: '/musik',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -120,6 +115,11 @@ const AuthenticatedKontoRoute = AuthenticatedKontoRouteImport.update({
 const ReleasesSlugRoute = ReleasesSlugRouteImport.update({
   id: '/releases/$slug',
   path: '/releases/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosSlugRoute = VideosSlugRouteImport.update({
@@ -296,7 +296,6 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
-  '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
@@ -305,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
   '/videos/$slug': typeof VideosSlugRoute
+  '/shop/': typeof ShopIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/fans': typeof AuthenticatedAdminFansRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -340,7 +340,6 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
-  '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
@@ -348,6 +347,7 @@ export interface FileRoutesByTo {
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
   '/videos/$slug': typeof VideosSlugRoute
+  '/shop': typeof ShopIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/fans': typeof AuthenticatedAdminFansRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -385,7 +385,6 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
-  '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
@@ -394,6 +393,7 @@ export interface FileRoutesById {
   '/_authenticated/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
   '/videos/$slug': typeof VideosSlugRoute
+  '/shop/': typeof ShopIndexRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/fans': typeof AuthenticatedAdminFansRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -431,7 +431,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/kontakt'
     | '/musik'
-    | '/shop'
     | '/sitemap.xml'
     | '/tour'
     | '/ueber-mich'
@@ -440,6 +439,7 @@ export interface FileRouteTypes {
     | '/konto'
     | '/releases/$slug'
     | '/videos/$slug'
+    | '/shop/'
     | '/admin/analytics'
     | '/admin/fans'
     | '/admin/media'
@@ -475,7 +475,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/kontakt'
     | '/musik'
-    | '/shop'
     | '/sitemap.xml'
     | '/tour'
     | '/ueber-mich'
@@ -483,6 +482,7 @@ export interface FileRouteTypes {
     | '/konto'
     | '/releases/$slug'
     | '/videos/$slug'
+    | '/shop'
     | '/admin/analytics'
     | '/admin/fans'
     | '/admin/media'
@@ -519,7 +519,6 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/kontakt'
     | '/musik'
-    | '/shop'
     | '/sitemap.xml'
     | '/tour'
     | '/ueber-mich'
@@ -528,6 +527,7 @@ export interface FileRouteTypes {
     | '/_authenticated/konto'
     | '/releases/$slug'
     | '/videos/$slug'
+    | '/shop/'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/fans'
     | '/_authenticated/admin/media'
@@ -565,12 +565,12 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   KontaktRoute: typeof KontaktRoute
   MusikRoute: typeof MusikRoute
-  ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TourRoute: typeof TourRoute
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRouteWithChildren
   ReleasesSlugRoute: typeof ReleasesSlugRoute
+  ShopIndexRoute: typeof ShopIndexRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
@@ -616,13 +616,6 @@ declare module '@tanstack/react-router' {
       path: '/musik'
       fullPath: '/musik'
       preLoaderRoute: typeof MusikRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -672,6 +665,13 @@ declare module '@tanstack/react-router' {
       path: '/releases/$slug'
       fullPath: '/releases/$slug'
       preLoaderRoute: typeof ReleasesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/videos/$slug': {
@@ -985,12 +985,12 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   KontaktRoute: KontaktRoute,
   MusikRoute: MusikRoute,
-  ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TourRoute: TourRoute,
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRouteWithChildren,
   ReleasesSlugRoute: ReleasesSlugRoute,
+  ShopIndexRoute: ShopIndexRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
