@@ -3,6 +3,7 @@ import merchHoodie from "@/assets/merch-hoodie.jpg";
 import merchVinyl from "@/assets/merch-vinyl.jpg";
 import merchCap from "@/assets/merch-cap.jpg";
 import { getShopCatalog } from "./shop.functions";
+import { normalizeSettings, type PublicSiteSettings } from "./seo";
 
 /** Fallback-Artwork für die bestehenden Bestandsprodukte ohne Mediathek-Bild. */
 const LEGACY_IMAGES: Record<string, string> = {
@@ -59,12 +60,17 @@ export function money(value: number, currency = "EUR") {
   return new Intl.NumberFormat("de-DE", { style: "currency", currency: currency || "EUR" }).format(value);
 }
 
-export const shopQueryOptions = queryOptions({
+/**
+ * Ein Katalog-Query für alles: Produkte und die öffentlichen SEO-Standardwerte
+ * kommen aus derselben Serverantwort. `shopQueryOptions` ist nur eine Sicht darauf,
+ * damit bestehende Aufrufe unverändert weiterarbeiten.
+ */
+export const shopCatalogQueryOptions = queryOptions({
   queryKey: ["shop-catalog"],
   staleTime: 60_000,
-  queryFn: async (): Promise<ShopProduct[]> => {
+  queryFn: async (): Promise<{ products: ShopProduct[]; settings: PublicSiteSettings }> => {
     const data = await getShopCatalog();
-    return data.products.map((p) => {
+    const products = data.products.map((p) => {
       const variants = data.variants
         .filter((v) => v.product_id === p.id)
         .map<ShopVariant>((v) => ({
@@ -102,8 +108,14 @@ export const shopQueryOptions = queryOptions({
         variants,
       } satisfies ShopProduct;
     });
+    return { products, settings: normalizeSettings(data.settings) };
   },
 });
+
+export const shopQueryOptions = {
+  ...shopCatalogQueryOptions,
+  select: (d: { products: ShopProduct[]; settings: PublicSiteSettings }) => d.products,
+};
 
 /** Preis einer Zeile im Warenkorb: Variantenpreis, sonst Produktpreis. */
 export function linePrice(product: ShopProduct | undefined, variantName: string) {

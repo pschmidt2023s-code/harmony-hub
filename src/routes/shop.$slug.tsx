@@ -6,7 +6,7 @@ import { shopQueryOptions } from "@/lib/shop";
 
 export const Route = createFileRoute("/shop/$slug")({
   loader: async ({ context, params }) => {
-    const products = await context.queryClient.ensureQueryData(shopQueryOptions);
+    const { products } = await context.queryClient.ensureQueryData(shopCatalogQueryOptions);
     const product = products.find((p) => p.slug === params.slug);
     if (!product) throw notFound();
     return { product };
