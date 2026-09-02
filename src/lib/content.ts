@@ -4,6 +4,7 @@ import coverNeon from "@/assets/cover-neon.jpg";
 import coverSmoke from "@/assets/cover-smoke.jpg";
 import { getContent } from "./content.functions";
 import type { Release, Song, Video } from "./data";
+import { normalizeSettings, type PublicSiteSettings } from "./seo";
 
 const COVERS: Record<string, string> = {
   midnight: coverMidnight,
@@ -13,7 +14,7 @@ const COVERS: Record<string, string> = {
 
 const cover = (key: string) => COVERS[key] ?? coverMidnight;
 
-export type SiteContent = { songs: Song[]; releases: Release[]; videos: Video[] };
+export type SiteContent = { songs: Song[]; releases: Release[]; videos: Video[]; settings: PublicSiteSettings };
 
 export const contentQueryOptions = queryOptions({
   queryKey: ["site-content"],
@@ -24,6 +25,7 @@ export const contentQueryOptions = queryOptions({
       data.releases.map((r) => [r.id, r.cover_url || cover(r.cover_key)] as const),
     );
     return {
+      settings: normalizeSettings(data.settings),
       songs: data.songs.map((s) => ({
         id: s.id,
         slug: s.slug || s.id,

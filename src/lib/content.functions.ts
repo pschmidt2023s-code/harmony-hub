@@ -22,10 +22,19 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
     { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
   );
 
-  const [songs, releases, videos] = await Promise.all([
+  const [songs, releases, videos, settings] = await Promise.all([
     supabasePublic.from("songs").select("*").order("sort_order", { ascending: true }),
     supabasePublic.from("releases").select("*").order("release_date", { ascending: true }),
     supabasePublic.from("videos").select("*").order("sort_order", { ascending: true }),
+    // Öffentliche Standard-SEO-Werte aus der bestehenden Einstellungstabelle (Phase 2),
+    // bewusst in derselben Abfragerunde — keine zusätzliche Anfrage pro Seitenaufruf.
+    supabasePublic
+      .from("site_settings")
+      .select(
+        "artist_name, site_name, site_title, site_description, canonical_base_url, default_og_image, logo_url, favicon_url, default_locale, theme_color",
+      )
+      .eq("id", 1)
+      .maybeSingle(),
   ]);
 
   if (songs.error) throw songs.error;
@@ -62,6 +71,7 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
     songs: (songs.data ?? []).filter(songVisible),
     releases: releaseRows,
     videos: (videos.data ?? []).filter(videoVisible),
+    settings: settings.data ?? null,
   };
 });
 
