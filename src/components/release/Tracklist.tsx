@@ -1,0 +1,105 @@
+import { useState } from "react";
+import { ChevronDown, Heart, Pause, Play } from "lucide-react";
+import { usePlayer } from "@/components/player/player-context";
+import { formatTime, type Song } from "@/lib/data";
+import { cn } from "@/lib/utils";
+
+/** Premium-Tracklist: Nummer, Titel, Dauer, Play – Wiedergabe über den globalen Player. */
+export function Tracklist({ tracks }: { tracks: Song[] }) {
+  const p = usePlayer();
+  const [openLyrics, setOpenLyrics] = useState<string | null>(null);
+
+  return (
+    <ol className="glass overflow-hidden rounded-2xl">
+      {tracks.map((song, i) => {
+        const active = p.current?.id === song.id;
+        const isPlaying = active && p.playing;
+        const lyrics = song.lyrics ?? [];
+        const open = openLyrics === song.id;
+
+        return (
+          <li
+            key={song.id}
+            className={cn(
+              "border-b border-border/40 last:border-b-0 transition-colors",
+              active && "bg-primary/10",
+            )}
+          >
+            <div className="group grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
+              <button
+                onClick={() => (active ? p.toggle() : p.play(song, tracks))}
+                aria-label={isPlaying ? `${song.title} pausieren` : `${song.title} abspielen`}
+                className={cn(
+                  "grid size-8 place-items-center rounded-full text-xs tabular-nums transition-colors",
+                  active
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-primary hover:text-primary-foreground",
+                )}
+              >
+                {isPlaying ? (
+                  <Pause className="size-3.5" />
+                ) : active ? (
+                  <Play className="size-3.5" />
+                ) : (
+                  <>
+                    <span className="group-hover:hidden">{String(i + 1).padStart(2, "0")}</span>
+                    <Play className="hidden size-3.5 group-hover:block" />
+                  </>
+                )}
+              </button>
+
+              <div className="min-w-0">
+                <p className={cn("truncate text-sm font-medium sm:text-base", active && "text-primary")}>
+                  {song.title}
+                  {song.explicit && (
+                    <span className="ml-2 rounded bg-muted px-1 text-[10px] align-middle text-muted-foreground">
+                      E
+                    </span>
+                  )}
+                </p>
+                {lyrics.length > 0 && (
+                  <button
+                    onClick={() => setOpenLyrics(open ? null : song.id)}
+                    aria-expanded={open}
+                    className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    Lyrics
+                    <ChevronDown className={cn("size-3 transition-transform", open && "rotate-180")} />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex shrink-0 items-center gap-3">
+                <button
+                  onClick={() => p.toggleFavorite(song.id)}
+                  aria-label={`${song.title} zu Favoriten`}
+                  className="hidden sm:block"
+                >
+                  <Heart
+                    className={cn(
+                      "size-4 text-muted-foreground transition-colors hover:text-primary",
+                      p.favorites.includes(song.id) && "fill-primary text-primary",
+                    )}
+                  />
+                </button>
+                {song.duration > 0 && (
+                  <span className="w-10 text-right text-xs tabular-nums text-muted-foreground">
+                    {formatTime(song.duration)}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {open && lyrics.length > 0 && (
+              <div className="animate-fade-in border-t border-border/40 px-5 py-4 sm:px-14">
+                <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                  {lyrics.map((l) => l.line).join("\n")}
+                </p>
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}

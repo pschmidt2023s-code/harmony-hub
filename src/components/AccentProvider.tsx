@@ -11,6 +11,7 @@ import {
 import { contentQueryOptions } from "@/lib/content";
 import { siteSettingsQueryOptions } from "@/lib/site-settings";
 import { newestRelease } from "@/lib/release";
+import { useAccentOverride } from "@/lib/accent-override";
 import type { Release } from "@/lib/data";
 
 /** Neuestes tatsächlich veröffentlichtes Release (Datum in der Vergangenheit, Status "Veröffentlicht"). */
@@ -27,8 +28,10 @@ export function AccentProvider() {
   const { data: settings } = useQuery(siteSettingsQueryOptions);
   const { data: content } = useQuery(contentQueryOptions);
 
+  // Eine Release-Seite kann das Cover überschreiben – dann gilt deren Akzent.
+  const overrideCover = useAccentOverride();
   const release = content ? newestPublishedRelease(content.releases) : null;
-  const cover = release?.cover ?? null;
+  const cover = overrideCover ?? release?.cover ?? null;
   const mode = settings?.accent_mode ?? "auto";
   const manual = settings?.manual_accent ?? "#f59e0b";
 
