@@ -99,3 +99,9 @@ export function formatDate(iso: string) {
     timeZone: "UTC",
   });
 }
+/** Social-Profile des Artists. URL leer lassen, solange kein Profil hinterlegt ist. */
+export const SOCIAL_LINKS: { id: "instagram" | "youtube" | "tiktok"; label: string; url: string }[] = [
+  { id: "instagram", label: "Instagram", url: "" },
+  { id: "youtube", label: "YouTube", url: "" },
+  { id: "tiktok", label: "TikTok", url: "" },
+];
