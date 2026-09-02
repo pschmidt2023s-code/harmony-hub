@@ -9,7 +9,6 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async ({ request }) => {
         const origin = new URL(request.url).origin;
-        const today = new Date().toISOString().slice(0, 10);
 
         let releasePaths: string[] = [];
         let videoPaths: string[] = [];
@@ -40,7 +39,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 ${all
   .map(
     (p) =>
-      `  <url><loc>${origin}/${p}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>${
+      `  <url><loc>${origin}/${p}</loc><changefreq>weekly</changefreq><priority>${
         p === "" ? "1.0" : "0.8"
       }</priority></url>`,
   )

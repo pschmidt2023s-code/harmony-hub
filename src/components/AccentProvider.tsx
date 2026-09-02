@@ -35,6 +35,25 @@ export function AccentProvider() {
   const mode = settings?.accent_mode ?? "auto";
   const manual = settings?.manual_accent ?? "#f59e0b";
 
+  const favicon = settings?.favicon_url ?? "";
+  const themeColor = settings?.theme_color ?? "";
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (favicon) {
+      const link =
+        document.querySelector<HTMLLinkElement>('link[rel="icon"]') ??
+        document.head.appendChild(Object.assign(document.createElement("link"), { rel: "icon" }));
+      link.href = favicon;
+    }
+    if (themeColor) {
+      const meta =
+        document.querySelector<HTMLMetaElement>('meta[name="theme-color"]') ??
+        document.head.appendChild(Object.assign(document.createElement("meta"), { name: "theme-color" }));
+      meta.content = themeColor;
+    }
+  }, [favicon, themeColor]);
+
   useEffect(() => {
     let cancelled = false;
 
