@@ -29,6 +29,7 @@ import {
   releaseSongs,
   releaseVideos,
   stageOf,
+  type ReleaseContext,
   type StageId,
 } from "@/lib/admin/pipeline";
 
@@ -71,7 +72,7 @@ function PipelinePage() {
 
   const schedule = (r: ReleaseRow) => {
     if (!r.publish_at) {
-      toast.error("Kein Veröffentlichungszeitpunkt gesetzt — bitte im Release-Editor unter „Publishing" ergänzen.");
+      toast.error("Kein Veröffentlichungszeitpunkt gesetzt — bitte im Release-Editor unter Publishing ergänzen.");
       return;
     }
     mutate.mutate(setStatus(r, "Geplant"));
@@ -284,7 +285,7 @@ function PipelineCard({
   onArchive,
 }: {
   release: ReleaseRow;
-  ctx: { songs: ReturnType<typeof releaseSongs>; videos: Parameters<typeof releaseVideos>[1] };
+  ctx: ReleaseContext;
   onOpen: () => void;
   onPublish: () => void;
   onSchedule: () => void;
