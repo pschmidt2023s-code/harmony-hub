@@ -2,19 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Section } from "@/components/Section";
+import { seoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/kontakt")({
-  head: () => ({
-    meta: [
-      { title: "Kontakt & Booking — TAYO" },
-      {
-        name: "description",
-        content: "Booking-Anfragen, Presse und Management-Kontakt für TAYO.",
-      },
-      { property: "og:title", content: "Kontakt & Booking — TAYO" },
-      { property: "og:description", content: "Booking, Presse und Management-Anfragen an TAYO." },
-    ],
-  }),
+  head: () =>
+    seoHead({
+      title: "Kontakt & Booking — TAYO",
+      description: "Booking-Anfragen, Presse und Management-Kontakt für TAYO.",
+      path: "/kontakt",
+    }),
   component: ContactPage,
 });
 
