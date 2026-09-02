@@ -38,6 +38,7 @@ import { Route as AuthenticatedAdminVideosRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_authenticated/admin/releases.index'
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
 import { Route as AuthenticatedAdminReleasesPipelineRouteImport } from './routes/_authenticated/admin/releases.pipeline'
+import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -192,6 +193,11 @@ const AuthenticatedAdminReleasesPipelineRoute =
     path: '/releases/pipeline',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
+  id: '/api/public/media/$',
+  path: '/api/public/media/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases': typeof AuthenticatedAdminReleasesIndexRoute
 }
 export interface FileRoutesById {
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/_authenticated/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
 }
 export interface FileRouteTypes {
@@ -314,6 +323,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/releases/calendar'
     | '/admin/releases/pipeline'
+    | '/api/public/media/$'
     | '/admin/releases/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/releases/calendar'
     | '/admin/releases/pipeline'
+    | '/api/public/media/$'
     | '/admin/releases'
   id:
     | '__root__'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/admin/releases/calendar'
     | '/_authenticated/admin/releases/pipeline'
+    | '/api/public/media/$'
     | '/_authenticated/admin/releases/'
   fileRoutesById: FileRoutesById
 }
@@ -390,6 +402,7 @@ export interface RootRouteChildren {
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRoute
   ReleasesSlugRoute: typeof ReleasesSlugRoute
+  ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -597,6 +610,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReleasesPipelineRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/api/public/media/$': {
+      id: '/api/public/media/$'
+      path: '/api/public/media/$'
+      fullPath: '/api/public/media/$'
+      preLoaderRoute: typeof ApiPublicMediaSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -670,6 +690,7 @@ const rootRouteChildren: RootRouteChildren = {
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRoute,
   ReleasesSlugRoute: ReleasesSlugRoute,
+  ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
