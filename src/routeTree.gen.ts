@@ -38,6 +38,7 @@ import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
 import { Route as AuthenticatedAdminReleasesNewRouteImport } from './routes/_authenticated/admin/releases.new'
 import { Route as AuthenticatedAdminReleasesPipelineRouteImport } from './routes/_authenticated/admin/releases.pipeline'
+import { Route as AuthenticatedAdminSongsNewRouteImport } from './routes/_authenticated/admin/songs.new'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 import { Route as AuthenticatedAdminReleasesIdEditRouteImport } from './routes/_authenticated/admin/releases.$id.edit'
 import { Route as AuthenticatedAdminReleasesIdPreviewRouteImport } from './routes/_authenticated/admin/releases.$id.preview'
@@ -196,6 +197,12 @@ const AuthenticatedAdminReleasesPipelineRoute =
     path: '/releases/pipeline',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSongsNewRoute =
+  AuthenticatedAdminSongsNewRouteImport.update({
+    id: '/songs/new',
+    path: '/songs/new',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -242,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
   '/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
@@ -274,6 +282,7 @@ export interface FileRoutesByTo {
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases': typeof AuthenticatedAdminReleasesIndexRoute
   '/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
@@ -309,6 +318,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/_authenticated/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/_authenticated/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
+  '/_authenticated/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
   '/_authenticated/admin/releases/$id/edit': typeof AuthenticatedAdminReleasesIdEditRoute
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/admin/releases/calendar'
     | '/admin/releases/new'
     | '/admin/releases/pipeline'
+    | '/admin/songs/new'
     | '/api/public/media/$'
     | '/admin/releases/'
     | '/admin/releases/$id/edit'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/releases/calendar'
     | '/admin/releases/new'
     | '/admin/releases/pipeline'
+    | '/admin/songs/new'
     | '/api/public/media/$'
     | '/admin/releases'
     | '/admin/releases/$id/edit'
@@ -410,6 +422,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/releases/calendar'
     | '/_authenticated/admin/releases/new'
     | '/_authenticated/admin/releases/pipeline'
+    | '/_authenticated/admin/songs/new'
     | '/api/public/media/$'
     | '/_authenticated/admin/releases/'
     | '/_authenticated/admin/releases/$id/edit'
@@ -637,6 +650,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReleasesPipelineRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/songs/new': {
+      id: '/_authenticated/admin/songs/new'
+      path: '/songs/new'
+      fullPath: '/admin/songs/new'
+      preLoaderRoute: typeof AuthenticatedAdminSongsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -676,6 +696,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminReleasesCalendarRoute: typeof AuthenticatedAdminReleasesCalendarRoute
   AuthenticatedAdminReleasesNewRoute: typeof AuthenticatedAdminReleasesNewRoute
   AuthenticatedAdminReleasesPipelineRoute: typeof AuthenticatedAdminReleasesPipelineRoute
+  AuthenticatedAdminSongsNewRoute: typeof AuthenticatedAdminSongsNewRoute
   AuthenticatedAdminReleasesIndexRoute: typeof AuthenticatedAdminReleasesIndexRoute
   AuthenticatedAdminReleasesIdEditRoute: typeof AuthenticatedAdminReleasesIdEditRoute
   AuthenticatedAdminReleasesIdPreviewRoute: typeof AuthenticatedAdminReleasesIdPreviewRoute
@@ -699,6 +720,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminReleasesNewRoute: AuthenticatedAdminReleasesNewRoute,
     AuthenticatedAdminReleasesPipelineRoute:
       AuthenticatedAdminReleasesPipelineRoute,
+    AuthenticatedAdminSongsNewRoute: AuthenticatedAdminSongsNewRoute,
     AuthenticatedAdminReleasesIndexRoute: AuthenticatedAdminReleasesIndexRoute,
     AuthenticatedAdminReleasesIdEditRoute:
       AuthenticatedAdminReleasesIdEditRoute,
