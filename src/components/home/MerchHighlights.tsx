@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Section } from "@/components/Section";
-import type { Product } from "@/lib/data";
+import { money, type ShopProduct } from "@/lib/shop";
 
 /** Kuratierte Merch-Auswahl (max. 4). Ohne Produkte: keine Sektion. */
-export function MerchHighlights({ products }: { products: Product[] }) {
+export function MerchHighlights({ products }: { products: ShopProduct[] }) {
   if (!products.length) return null;
 
   return (
@@ -18,7 +18,12 @@ export function MerchHighlights({ products }: { products: Product[] }) {
     >
       <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
         {products.slice(0, 4).map((p) => (
-          <Link key={p.id} to="/shop" className="glass group overflow-hidden rounded-2xl">
+          <Link
+            key={p.id}
+            to="/shop/$slug"
+            params={{ slug: p.slug }}
+            className="glass group overflow-hidden rounded-2xl"
+          >
             <div className="aspect-[4/5] overflow-hidden">
               <img
                 src={p.image}
@@ -33,9 +38,9 @@ export function MerchHighlights({ products }: { products: Product[] }) {
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 p-4">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{p.name}</p>
-                <p className="text-xs text-muted-foreground">{p.category}</p>
+                <p className="text-xs text-muted-foreground">{p.type}</p>
               </div>
-              <p className="shrink-0 text-sm font-semibold text-primary">{p.price} €</p>
+              <p className="shrink-0 text-sm font-semibold text-primary">{money(p.price, p.currency)}</p>
             </div>
           </Link>
         ))}
