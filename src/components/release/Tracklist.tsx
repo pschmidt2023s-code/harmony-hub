@@ -25,7 +25,7 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
               active && "bg-primary/10",
             )}
           >
-            <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
+            <div className="group grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
               <button
                 onClick={() => (active ? p.toggle() : p.play(song, tracks))}
                 aria-label={isPlaying ? `${song.title} pausieren` : `${song.title} abspielen`}
@@ -36,15 +36,16 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
                     : "text-muted-foreground hover:bg-primary hover:text-primary-foreground",
                 )}
               >
-                <span className="group-hover:hidden">
-                  {isPlaying ? (
-                    <Pause className="size-3.5" />
-                  ) : active ? (
-                    <Play className="size-3.5" />
-                  ) : (
-                    String(i + 1).padStart(2, "0")
-                  )}
-                </span>
+                {isPlaying ? (
+                  <Pause className="size-3.5" />
+                ) : active ? (
+                  <Play className="size-3.5" />
+                ) : (
+                  <>
+                    <span className="group-hover:hidden">{String(i + 1).padStart(2, "0")}</span>
+                    <Play className="hidden size-3.5 group-hover:block" />
+                  </>
+                )}
               </button>
 
               <div className="min-w-0">
