@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/data";
 import { contentQueryOptions } from "@/lib/content";
 import { ContentEditor } from "@/components/admin/ContentEditor";
 import { OrdersPanel } from "@/components/admin/OrdersPanel";
+import { AccentSettings } from "@/components/admin/AccentSettings";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -90,6 +91,10 @@ function AdminPage() {
               ))}
             </ul>
           )}
+        </div>
+
+        <div className="mt-8">
+          <AccentSettings />
         </div>
 
         <div className="mt-8">

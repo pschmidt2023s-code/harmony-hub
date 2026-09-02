@@ -18,6 +18,7 @@ import { CartProvider } from "@/lib/cart";
 import { PlayerBar } from "@/components/player/PlayerBar";
 import { Toaster } from "@/components/ui/sonner";
 import { PWARegister } from "@/components/PWARegister";
+import { AccentProvider } from "@/components/AccentProvider";
 
 function NotFoundComponent() {
   return (
@@ -148,6 +149,7 @@ function RootComponent() {
         <PlayerBar />
         <Toaster position="bottom-center" />
         <PWARegister />
+        <AccentProvider />
       </PlayerProvider>
       </CartProvider>
     </QueryClientProvider>
