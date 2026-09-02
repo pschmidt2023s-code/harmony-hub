@@ -122,6 +122,7 @@ export type Database = {
       releases: {
         Row: {
           cover_key: string
+          cover_url: string | null
           created_at: string
           description: string
           id: string
@@ -134,6 +135,7 @@ export type Database = {
         }
         Insert: {
           cover_key: string
+          cover_url?: string | null
           created_at?: string
           description?: string
           id: string
@@ -146,6 +148,7 @@ export type Database = {
         }
         Update: {
           cover_key?: string
+          cover_url?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -161,8 +164,10 @@ export type Database = {
       songs: {
         Row: {
           album: string
+          audio_url: string | null
           bpm: number
           cover_key: string
+          cover_url: string | null
           created_at: string
           duration: number
           explicit: boolean
@@ -182,8 +187,10 @@ export type Database = {
         }
         Insert: {
           album: string
+          audio_url?: string | null
           bpm: number
           cover_key: string
+          cover_url?: string | null
           created_at?: string
           duration: number
           explicit?: boolean
@@ -203,8 +210,10 @@ export type Database = {
         }
         Update: {
           album?: string
+          audio_url?: string | null
           bpm?: number
           cover_key?: string
+          cover_url?: string | null
           created_at?: string
           duration?: number
           explicit?: boolean
@@ -253,9 +262,11 @@ export type Database = {
           song: string
           sort_order: number
           thumb_key: string
+          thumb_url: string | null
           title: string
           updated_at: string
           video_date: string
+          video_url: string | null
           views: string
         }
         Insert: {
@@ -265,9 +276,11 @@ export type Database = {
           song?: string
           sort_order?: number
           thumb_key: string
+          thumb_url?: string | null
           title: string
           updated_at?: string
           video_date: string
+          video_url?: string | null
           views?: string
         }
         Update: {
@@ -277,9 +290,11 @@ export type Database = {
           song?: string
           sort_order?: number
           thumb_key?: string
+          thumb_url?: string | null
           title?: string
           updated_at?: string
           video_date?: string
+          video_url?: string | null
           views?: string
         }
         Relationships: []
