@@ -147,6 +147,7 @@ function RootComponent() {
         <SiteFooter />
         <PlayerBar />
         <Toaster position="bottom-center" />
+        <PWARegister />
       </PlayerProvider>
       </CartProvider>
     </QueryClientProvider>
