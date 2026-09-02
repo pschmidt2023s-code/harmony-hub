@@ -46,10 +46,22 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
     return true;
   };
 
+  /**
+   * Video-Sichtbarkeit (Serverzeit): Entwürfe, geplante Videos vor ihrem Zeitpunkt,
+   * Offline- und archivierte Videos werden öffentlich nie ausgeliefert.
+   */
+  const videoVisible = (v: { status: string; publish_at: string | null; video_date: string }) => {
+    const t = now.getTime();
+    if (v.status === "Veröffentlicht")
+      return v.publish_at ? Date.parse(v.publish_at) <= t : Date.parse(`${v.video_date}T00:00:00Z`) <= t;
+    if (v.status === "Geplant" && v.publish_at) return Date.parse(v.publish_at) <= t;
+    return false;
+  };
+
   return {
     songs: (songs.data ?? []).filter(songVisible),
     releases: releaseRows,
-    videos: videos.data,
+    videos: (videos.data ?? []).filter(videoVisible),
   };
 });
 
