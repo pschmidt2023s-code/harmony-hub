@@ -11,6 +11,7 @@ import {
 import { contentQueryOptions } from "@/lib/content";
 import { siteSettingsQueryOptions } from "@/lib/site-settings";
 import { newestRelease } from "@/lib/release";
+import { useAccentOverride } from "@/lib/accent-override";
 import type { Release } from "@/lib/data";
 
 /** Neuestes tatsächlich veröffentlichtes Release (Datum in der Vergangenheit, Status "Veröffentlicht"). */
