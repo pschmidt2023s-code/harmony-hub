@@ -1,4 +1,4 @@
-import type { CreditGroup as _CreditGroup, Product, Release, Song, Video } from "./data";
+import type { Product, Release, Song, Video } from "./data";
 
 /** Tracks eines Releases in gespeicherter Reihenfolge. */
 export function releaseTracks(songs: Song[], release: Release) {
