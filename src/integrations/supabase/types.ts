@@ -341,9 +341,18 @@ export type Database = {
         Row: {
           category: string
           created_at: string
+          description: string
           id: string
+          publish_at: string | null
+          release_id: string | null
+          seo_description: string
+          seo_title: string
+          slug: string | null
           song: string
+          song_id: string | null
           sort_order: number
+          source: string
+          status: string
           thumb_key: string
           thumb_url: string | null
           title: string
@@ -355,9 +364,18 @@ export type Database = {
         Insert: {
           category: string
           created_at?: string
+          description?: string
           id: string
+          publish_at?: string | null
+          release_id?: string | null
+          seo_description?: string
+          seo_title?: string
+          slug?: string | null
           song?: string
+          song_id?: string | null
           sort_order?: number
+          source?: string
+          status?: string
           thumb_key: string
           thumb_url?: string | null
           title: string
@@ -369,9 +387,18 @@ export type Database = {
         Update: {
           category?: string
           created_at?: string
+          description?: string
           id?: string
+          publish_at?: string | null
+          release_id?: string | null
+          seo_description?: string
+          seo_title?: string
+          slug?: string | null
           song?: string
+          song_id?: string | null
           sort_order?: number
+          source?: string
+          status?: string
           thumb_key?: string
           thumb_url?: string | null
           title?: string
@@ -380,7 +407,22 @@ export type Database = {
           video_url?: string | null
           views?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "videos_release_id_fkey"
+            columns: ["release_id"]
+            isOneToOne: false
+            referencedRelation: "releases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "videos_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

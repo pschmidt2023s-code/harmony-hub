@@ -77,8 +77,17 @@ export function releaseGenres(tracks: Song[]) {
   return [...new Set(tracks.map((t) => t.genre).filter(Boolean))];
 }
 
-/** Videos, die zu diesem Release oder einem seiner Tracks gehören. */
+/**
+ * Videos, die zu diesem Release oder einem seiner Tracks gehören.
+ * Zuerst die echten Datenbank-Beziehungen (release_id / song_id),
+ * danach als Rückfalloption die klassische Titelzuordnung.
+ */
 export function releaseVideos(videos: Video[], release: Release, tracks: Song[]) {
+  const trackIds = new Set(tracks.map((t) => t.id));
+  const related = videos.filter(
+    (v) => v.releaseId === release.id || (v.songId && trackIds.has(v.songId)),
+  );
+  if (related.length) return related;
   if (release.videoId) {
     const linked = videos.find((v) => v.id === release.videoId);
     if (linked) return [linked];

@@ -35,7 +35,11 @@ export function LatestVideos({ videos }: { videos: Video[] }) {
 
 function VideoCard({ video, large = false }: { video: Video; large?: boolean }) {
   return (
-    <Link to="/videos" className="group relative block overflow-hidden rounded-2xl">
+    <Link
+      to="/videos/$slug"
+      params={{ slug: video.slug }}
+      className="group relative block overflow-hidden rounded-2xl"
+    >
       <img
         src={video.thumb}
         alt={video.title}
