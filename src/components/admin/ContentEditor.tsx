@@ -239,6 +239,13 @@ function EntityForm({
 const inputCls =
   "mt-1.5 w-full rounded-xl border border-border bg-background/60 px-3 py-2 text-sm outline-none focus:border-primary";
 
+function mediaKindForField(name: string): "image" | "audio" | "video" | null {
+  if (name === "cover_url" || name === "thumb_url") return "image";
+  if (name === "audio_url") return "audio";
+  if (name === "video_url") return "video";
+  return null;
+}
+
 function Field({
   f,
   value,
@@ -250,6 +257,8 @@ function Field({
   disabled?: boolean;
   onChange: (v: unknown) => void;
 }) {
+  const [pickerKind, setPickerKind] = useState<"image" | "audio" | "video" | null>(null);
+  const mediaKind = mediaKindForField(f.name);
   const label = (
     <span className="text-xs uppercase tracking-widest text-muted-foreground">{f.label}</span>
   );
@@ -281,13 +290,35 @@ function Field({
           onChange={(e) => onChange(e.target.value)}
         />
       ) : (
-        <input
-          className={inputCls}
-          type={f.kind === "number" ? "number" : f.kind === "date" ? "date" : "text"}
-          disabled={disabled}
-          value={String(value ?? "")}
-          onChange={(e) => onChange(e.target.value)}
-        />
+        <>
+          <input
+            className={inputCls}
+            type={f.kind === "number" ? "number" : f.kind === "date" ? "date" : "text"}
+            disabled={disabled}
+            value={String(value ?? "")}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          {mediaKind && (
+            <button
+              type="button"
+              onClick={() => setPickerKind(mediaKind)}
+              className="mt-2 rounded-full border border-border px-3 py-1.5 text-[11px] text-muted-foreground hover:text-primary"
+            >
+              Aus Mediathek wählen
+            </button>
+          )}
+          {pickerKind && (
+            <MediaPicker
+              kind={pickerKind}
+              title="Datei aus der Mediathek"
+              onClose={() => setPickerKind(null)}
+              onSelect={(asset) => {
+                onChange(asset.url);
+                setPickerKind(null);
+              }}
+            />
+          )}
+        </>
       )}
     </label>
   );
