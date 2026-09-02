@@ -11,7 +11,8 @@ import {
 import { AdminError, AdminPageHeader, AdminSkeleton } from "@/components/admin/AdminPageHeader";
 import { contentQueryOptions } from "@/lib/content";
 import { newestRelease, upcomingReleases } from "@/lib/release";
-import { formatDate, PRODUCTS, type Release } from "@/lib/data";
+import { formatDate, type Release } from "@/lib/data";
+import { adminProductsQueryOptions } from "@/lib/admin/products";
 import {
   useAdminActivity,
   useAdminOrders,
@@ -27,6 +28,7 @@ const money = (v: number, c = "EUR") =>
 
 function AdminDashboard() {
   const content = useQuery(contentQueryOptions);
+  const products = useQuery(adminProductsQueryOptions);
   const orders = useAdminOrders();
   const subs = useAdminSubscribers();
   const activity = useAdminActivity();
@@ -82,8 +84,8 @@ function AdminDashboard() {
           <CountCard
             icon={<Package className="size-4" />}
             label="Produkte"
-            value={PRODUCTS.length}
-            loading={false}
+            value={products.data?.length ?? 0}
+            loading={products.isLoading}
             to="/admin/products"
           />
         </div>
