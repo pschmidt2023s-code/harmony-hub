@@ -7,7 +7,7 @@ import { PRODUCTS } from "@/lib/data";
 import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/shop/")({
   head: () => ({
     meta: [
       { title: "Shop — Offizielles TAYO Merchandise" },
