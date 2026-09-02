@@ -213,9 +213,10 @@ export function formatMoney(amount: number, currency = "EUR") {
 }
 
 export function toCsv(rows: Record<string, string | number>[]) {
-  if (!rows.length) return "";
-  const headers = Object.keys(rows[0]);
-  const escape = (v: string | number) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const first = rows[0];
+  if (!first) return "";
+  const headers = Object.keys(first);
+  const escape = (v: string | number | undefined) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   return [
     headers.join(","),
     ...rows.map((r) => headers.map((h) => escape(r[h])).join(",")),
