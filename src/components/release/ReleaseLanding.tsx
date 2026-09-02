@@ -17,7 +17,7 @@ import {
 } from "@/lib/release-detail";
 import { useAccentSource } from "@/lib/accent-override";
 import { ARTIST, formatDate, formatTime, type Release } from "@/lib/data";
-import { shopQueryOptions } from "@/lib/shop";
+import { money, shopQueryOptions } from "@/lib/shop";
 
 export function ReleaseLanding({ release, content }: { release: Release; content: SiteContent }) {
   const player = usePlayer();
@@ -216,7 +216,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
           <Block title="Shop the Release">
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {products.map((p) => (
-                <Link key={p.id} to="/shop" className="group min-w-0">
+                <Link key={p.id} to="/shop/$slug" params={{ slug: p.slug }} className="group min-w-0">
                   <div className="overflow-hidden rounded-2xl border border-border/60">
                     <img
                       src={p.image}
@@ -228,7 +228,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                     />
                   </div>
                   <p className="mt-3 truncate text-sm font-medium">{p.name}</p>
-                  <p className="text-sm text-muted-foreground">{p.price} €</p>
+                  <p className="text-sm text-muted-foreground">{money(p.price, p.currency)}</p>
                 </Link>
               ))}
             </div>

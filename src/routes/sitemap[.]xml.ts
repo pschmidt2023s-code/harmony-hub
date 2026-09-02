@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getContent } from "@/lib/content.functions";
+import { getShopCatalog } from "@/lib/shop.functions";
 
 const PATHS = ["", "musik", "videos", "shop", "tour", "ueber-mich", "kontakt"];
 
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         let releasePaths: string[] = [];
         let videoPaths: string[] = [];
+        let productPaths: string[] = [];
         try {
           const content = await getContent();
           releasePaths = content.releases
@@ -24,7 +26,15 @@ export const Route = createFileRoute("/sitemap.xml")({
           videoPaths = [];
         }
 
-        const all = [...PATHS, ...releasePaths, ...videoPaths];
+        try {
+          // getShopCatalog liefert ausschließlich veröffentlichte Produkte.
+          const catalog = await getShopCatalog();
+          productPaths = catalog.products.filter((p) => p.slug).map((p) => `shop/${p.slug}`);
+        } catch {
+          productPaths = [];
+        }
+
+        const all = [...PATHS, ...releasePaths, ...videoPaths, ...productPaths];
         const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${all
