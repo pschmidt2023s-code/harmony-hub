@@ -17,6 +17,7 @@ import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MusikRouteImport } from './routes/musik'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TourRouteImport } from './routes/tour'
 import { Route as UeberMichRouteImport } from './routes/ueber-mich'
 import { Route as VideosRouteImport } from './routes/videos'
@@ -64,6 +65,11 @@ const MusikRoute = MusikRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TourRoute = TourRouteImport.update({
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/musik': typeof MusikRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/musik'
     | '/shop'
+    | '/sitemap.xml'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/musik'
     | '/shop'
+    | '/sitemap.xml'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/musik'
     | '/shop'
+    | '/sitemap.xml'
     | '/tour'
     | '/ueber-mich'
     | '/videos'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   MusikRoute: typeof MusikRoute
   ShopRoute: typeof ShopRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TourRoute: typeof TourRoute
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRoute
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tour': {
@@ -393,6 +413,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   MusikRoute: MusikRoute,
   ShopRoute: ShopRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TourRoute: TourRoute,
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRoute,
