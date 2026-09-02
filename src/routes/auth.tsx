@@ -89,7 +89,7 @@ function AuthPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-5 pb-32 pt-32">
+    <div className="flex min-h-dvh items-center justify-center px-5 pb-32 pt-32">
       <div className="glass w-full max-w-md rounded-3xl p-8">
         <p className="text-xs uppercase tracking-[0.35em] text-primary">Fan Zone</p>
         <h1 className="mt-3 text-3xl font-semibold">

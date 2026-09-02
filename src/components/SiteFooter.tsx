@@ -10,7 +10,7 @@ export function SiteFooter() {
   const socials = SOCIAL_LINKS.filter((s) => s.url);
 
   return (
-    <footer className="border-t border-border/60 pb-32 pt-16">
+    <footer className="safe-bottom border-t border-border/60 pb-28 pt-14 sm:pt-16">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 md:grid-cols-4 md:px-8">
         <div>
           <p className="text-lg font-semibold tracking-[0.35em]">TAYO</p>

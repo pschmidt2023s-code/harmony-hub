@@ -170,6 +170,15 @@
     letter-spacing: -0.03em;
   }
 
+  /* iOS zoomt bei Feldern unter 16px automatisch hinein. */
+  @media (max-width: 640px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
   ::selection {
     background: var(--primary);
     color: var(--primary-foreground);
@@ -200,10 +209,19 @@
 }
 
 @utility section-pad {
-  padding-block: 5rem;
-  @media (min-width: 768px) {
+  /* Mobil kompakter, damit keine unnötig großen Leerflächen entstehen. */
+  padding-block: 3.5rem;
+  @media (min-width: 640px) {
+    padding-block: 5rem;
+  }
+  @media (min-width: 1024px) {
     padding-block: 7rem;
   }
+}
+
+/* Fixierte Leisten (Player, Navigation) auf iOS in der Safe Area halten. */
+@utility safe-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 /* Barrierefreiheit: Bewegungsreduktion respektieren. */

@@ -57,7 +57,7 @@ function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex min-h-dvh w-full bg-background">
       <AdminSidebar open={open} onClose={() => setOpen(false)} />
       <div className="min-w-0 flex-1">
         <AdminTopBar onOpen={() => setOpen(true)} />

@@ -38,7 +38,11 @@ export function SongRow({ song, list, index }: { song: Song; list: Song[]; index
       <p className="hidden text-xs text-muted-foreground sm:block">{song.bpm} BPM</p>
       <p className="hidden text-xs text-muted-foreground sm:block">{song.key}</p>
       <div className="flex items-center gap-3">
-        <button onClick={() => p.toggleFavorite(song.id)} aria-label="Favorit">
+        <button
+          onClick={() => p.toggleFavorite(song.id)}
+          aria-label={`${song.title} zu Favoriten`}
+          className="-m-2 grid min-h-11 min-w-11 place-items-center rounded-full p-2"
+        >
           <Heart
             className={cn(
               "size-4 text-muted-foreground transition-colors hover:text-primary",
