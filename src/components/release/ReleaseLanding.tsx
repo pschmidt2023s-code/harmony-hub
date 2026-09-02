@@ -181,7 +181,8 @@ export function ReleaseLanding({ release, content }: { release: Release; content
               {videos.map((v) => (
                 <Link
                   key={v.id}
-                  to="/videos"
+                  to="/videos/$slug"
+                  params={{ slug: v.slug }}
                   className="group relative block overflow-hidden rounded-2xl border border-border/60"
                 >
                   <img

@@ -23,6 +23,7 @@ import { Route as VideosRouteImport } from './routes/videos'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedKontoRouteImport } from './routes/_authenticated/konto'
 import { Route as ReleasesSlugRouteImport } from './routes/releases.$slug'
+import { Route as VideosSlugRouteImport } from './routes/videos.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin/analytics'
 import { Route as AuthenticatedAdminFansRouteImport } from './routes/_authenticated/admin/fans'
@@ -117,6 +118,11 @@ const ReleasesSlugRoute = ReleasesSlugRouteImport.update({
   id: '/releases/$slug',
   path: '/releases/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const VideosSlugRoute = VideosSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => VideosRoute,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -273,10 +279,11 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
-  '/videos': typeof VideosRoute
+  '/videos': typeof VideosRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
+  '/videos/$slug': typeof VideosSlugRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/fans': typeof AuthenticatedAdminFansRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -313,9 +320,10 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
-  '/videos': typeof VideosRoute
+  '/videos': typeof VideosRouteWithChildren
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
+  '/videos/$slug': typeof VideosSlugRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/fans': typeof AuthenticatedAdminFansRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -354,10 +362,11 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
-  '/videos': typeof VideosRoute
+  '/videos': typeof VideosRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
+  '/videos/$slug': typeof VideosSlugRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/fans': typeof AuthenticatedAdminFansRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/konto'
     | '/releases/$slug'
+    | '/videos/$slug'
     | '/admin/analytics'
     | '/admin/fans'
     | '/admin/media'
@@ -439,6 +449,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/konto'
     | '/releases/$slug'
+    | '/videos/$slug'
     | '/admin/analytics'
     | '/admin/fans'
     | '/admin/media'
@@ -480,6 +491,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/konto'
     | '/releases/$slug'
+    | '/videos/$slug'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/fans'
     | '/_authenticated/admin/media'
@@ -518,7 +530,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TourRoute: typeof TourRoute
   UeberMichRoute: typeof UeberMichRoute
-  VideosRoute: typeof VideosRoute
+  VideosRoute: typeof VideosRouteWithChildren
   ReleasesSlugRoute: typeof ReleasesSlugRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
@@ -622,6 +634,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/releases/$slug'
       preLoaderRoute: typeof ReleasesSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/videos/$slug': {
+      id: '/videos/$slug'
+      path: '/$slug'
+      fullPath: '/videos/$slug'
+      preLoaderRoute: typeof VideosSlugRouteImport
+      parentRoute: typeof VideosRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -880,6 +899,17 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface VideosRouteChildren {
+  VideosSlugRoute: typeof VideosSlugRoute
+}
+
+const VideosRouteChildren: VideosRouteChildren = {
+  VideosSlugRoute: VideosSlugRoute,
+}
+
+const VideosRouteWithChildren =
+  VideosRoute._addFileChildren(VideosRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -891,7 +921,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TourRoute: TourRoute,
   UeberMichRoute: UeberMichRoute,
-  VideosRoute: VideosRoute,
+  VideosRoute: VideosRouteWithChildren,
   ReleasesSlugRoute: ReleasesSlugRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }

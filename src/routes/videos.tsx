@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Eye, Play } from "lucide-react";
@@ -50,7 +50,12 @@ function VideosPage() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((v) => (
-            <article key={v.id} className="glass group overflow-hidden rounded-2xl">
+            <Link
+              key={v.id}
+              to="/videos/$slug"
+              params={{ slug: v.slug }}
+              className="glass group block overflow-hidden rounded-2xl"
+            >
               <div className="relative aspect-video overflow-hidden">
                 <img
                   src={v.thumb}
@@ -77,7 +82,7 @@ function VideosPage() {
                   <span>· {v.song}</span>
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </Section>
