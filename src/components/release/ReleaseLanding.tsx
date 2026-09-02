@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ExternalLink, Pause, Play } from "lucide-react";
+import { ArrowLeft, ExternalLink, Pause, Play } from "lucide-react";
 import { usePlayer } from "@/components/player/player-context";
 import { Tracklist } from "@/components/release/Tracklist";
 import { ShareButton } from "@/components/release/ShareButton";
