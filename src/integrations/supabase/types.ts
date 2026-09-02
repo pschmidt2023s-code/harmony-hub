@@ -161,6 +161,30 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          accent_mode: string
+          created_at: string
+          id: number
+          manual_accent: string
+          updated_at: string
+        }
+        Insert: {
+          accent_mode?: string
+          created_at?: string
+          id?: number
+          manual_accent?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_mode?: string
+          created_at?: string
+          id?: number
+          manual_accent?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       songs: {
         Row: {
           album: string
