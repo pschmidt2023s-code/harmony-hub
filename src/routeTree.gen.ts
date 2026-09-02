@@ -37,6 +37,7 @@ import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminVideosRouteImport } from './routes/_authenticated/admin/videos'
 import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_authenticated/admin/releases.index'
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
+import { Route as AuthenticatedAdminReleasesNewRouteImport } from './routes/_authenticated/admin/releases.new'
 import { Route as AuthenticatedAdminReleasesPipelineRouteImport } from './routes/_authenticated/admin/releases.pipeline'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 
@@ -187,6 +188,12 @@ const AuthenticatedAdminReleasesCalendarRoute =
     path: '/releases/calendar',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminReleasesNewRoute =
+  AuthenticatedAdminReleasesNewRouteImport.update({
+    id: '/releases/new',
+    path: '/releases/new',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminReleasesPipelineRoute =
   AuthenticatedAdminReleasesPipelineRouteImport.update({
     id: '/releases/pipeline',
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
+  '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
@@ -256,6 +264,7 @@ export interface FileRoutesByTo {
   '/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
+  '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/admin/releases': typeof AuthenticatedAdminReleasesIndexRoute
@@ -289,6 +298,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/videos': typeof AuthenticatedAdminVideosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
+  '/_authenticated/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/_authenticated/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/_authenticated/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin/'
     | '/admin/releases/calendar'
+    | '/admin/releases/new'
     | '/admin/releases/pipeline'
     | '/api/public/media/$'
     | '/admin/releases/'
@@ -352,6 +363,7 @@ export interface FileRouteTypes {
     | '/admin/videos'
     | '/admin'
     | '/admin/releases/calendar'
+    | '/admin/releases/new'
     | '/admin/releases/pipeline'
     | '/api/public/media/$'
     | '/admin/releases'
@@ -384,6 +396,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/videos'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/releases/calendar'
+    | '/_authenticated/admin/releases/new'
     | '/_authenticated/admin/releases/pipeline'
     | '/api/public/media/$'
     | '/_authenticated/admin/releases/'
@@ -603,6 +616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReleasesCalendarRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/releases/new': {
+      id: '/_authenticated/admin/releases/new'
+      path: '/releases/new'
+      fullPath: '/admin/releases/new'
+      preLoaderRoute: typeof AuthenticatedAdminReleasesNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/releases/pipeline': {
       id: '/_authenticated/admin/releases/pipeline'
       path: '/releases/pipeline'
@@ -634,6 +654,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminVideosRoute: typeof AuthenticatedAdminVideosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminReleasesCalendarRoute: typeof AuthenticatedAdminReleasesCalendarRoute
+  AuthenticatedAdminReleasesNewRoute: typeof AuthenticatedAdminReleasesNewRoute
   AuthenticatedAdminReleasesPipelineRoute: typeof AuthenticatedAdminReleasesPipelineRoute
   AuthenticatedAdminReleasesIndexRoute: typeof AuthenticatedAdminReleasesIndexRoute
 }
@@ -654,6 +675,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
     AuthenticatedAdminReleasesCalendarRoute:
       AuthenticatedAdminReleasesCalendarRoute,
+    AuthenticatedAdminReleasesNewRoute: AuthenticatedAdminReleasesNewRoute,
     AuthenticatedAdminReleasesPipelineRoute:
       AuthenticatedAdminReleasesPipelineRoute,
     AuthenticatedAdminReleasesIndexRoute: AuthenticatedAdminReleasesIndexRoute,
