@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDate } from "@/lib/data";
 import { contentQueryOptions } from "@/lib/content";
 import { ContentEditor } from "@/components/admin/ContentEditor";
+import { OrdersPanel } from "@/components/admin/OrdersPanel";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
