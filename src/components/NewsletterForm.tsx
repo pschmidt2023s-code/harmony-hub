@@ -8,11 +8,14 @@ export function NewsletterForm({
   inputClassName,
   buttonClassName,
   buttonLabel = "Abonnieren",
+  source = "website",
 }: {
   className?: string;
   inputClassName?: string;
   buttonClassName?: string;
   buttonLabel?: string;
+  /** Herkunft der Anmeldung, wird als Consent-Quelle gespeichert. */
+  source?: string;
 }) {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
