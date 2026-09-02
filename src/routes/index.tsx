@@ -40,7 +40,7 @@ function Index() {
 
   return (
     <>
-      <Hero release={release} songs={songs} />
+      <Hero release={release} songs={data.songs} />
       <LatestMusic songs={songs} />
       <UpcomingReleases releases={upcomingReleases(data.releases)} />
       <LatestVideos videos={videosByRecency(data.videos)} />
