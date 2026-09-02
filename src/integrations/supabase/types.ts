@@ -37,19 +37,34 @@ export type Database = {
       }
       newsletter_subscribers: {
         Row: {
+          consent_at: string | null
           created_at: string
           email: string
           id: string
+          source: string | null
+          status: string
+          unsubscribed_at: string | null
+          updated_at: string
         }
         Insert: {
+          consent_at?: string | null
           created_at?: string
           email: string
           id?: string
+          source?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
         }
         Update: {
+          consent_at?: string | null
           created_at?: string
           email?: string
           id?: string
+          source?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -429,6 +444,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_list_fans: {
+        Args: {
+          _filter?: string
+          _limit?: number
+          _offset?: number
+          _search?: string
+        }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          email: string
+          favorites_count: number
+          id: string
+          is_admin: boolean
+          last_order_at: string
+          last_sign_in_at: string
+          newsletter_consent_at: string
+          newsletter_source: string
+          newsletter_status: string
+          order_count: number
+          order_total: number
+          registered_at: string
+          total_count: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
