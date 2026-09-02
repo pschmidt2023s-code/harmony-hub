@@ -20,6 +20,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TourRouteImport } from './routes/tour'
 import { Route as UeberMichRouteImport } from './routes/ueber-mich'
 import { Route as VideosRouteImport } from './routes/videos'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedKontoRouteImport } from './routes/_authenticated/konto'
 import { Route as ReleasesSlugRouteImport } from './routes/releases.$slug'
 
@@ -77,6 +78,11 @@ const VideosRoute = VideosRouteImport.update({
   path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedKontoRoute = AuthenticatedKontoRouteImport.update({
   id: '/konto',
   path: '/konto',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
+  '/admin': typeof AuthenticatedAdminRouteRoute
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
 }
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
+  '/admin': typeof AuthenticatedAdminRouteRoute
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
 }
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/tour': typeof TourRoute
   '/ueber-mich': typeof UeberMichRoute
   '/videos': typeof VideosRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRoute
   '/_authenticated/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
 }
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/tour'
     | '/ueber-mich'
     | '/videos'
+    | '/admin'
     | '/konto'
     | '/releases/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/tour'
     | '/ueber-mich'
     | '/videos'
+    | '/admin'
     | '/konto'
     | '/releases/$slug'
   id:
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/tour'
     | '/ueber-mich'
     | '/videos'
+    | '/_authenticated/admin'
     | '/_authenticated/konto'
     | '/releases/$slug'
   fileRoutesById: FileRoutesById
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VideosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/konto': {
       id: '/_authenticated/konto'
       path: '/konto'
@@ -290,10 +309,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRoute
   AuthenticatedKontoRoute: typeof AuthenticatedKontoRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRoute,
   AuthenticatedKontoRoute: AuthenticatedKontoRoute,
 }
 
