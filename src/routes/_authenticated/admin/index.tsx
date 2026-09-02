@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Disc3,
   ListMusic,
-  Mail,
   Package,
   Plus,
   ShoppingBag,
@@ -373,5 +372,3 @@ function QuickAction({
 function Empty({ text }: { text: string }) {
   return <p className="text-sm text-muted-foreground">{text}</p>;
 }
-
-export { Mail };

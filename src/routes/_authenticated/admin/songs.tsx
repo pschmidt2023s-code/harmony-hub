@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AdminNotice, AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { ContentEditor } from "@/components/admin/ContentEditor";
 
 export const Route = createFileRoute("/_authenticated/admin/songs")({

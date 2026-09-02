@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AdminNotice, AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AccentSettings } from "@/components/admin/AccentSettings";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({

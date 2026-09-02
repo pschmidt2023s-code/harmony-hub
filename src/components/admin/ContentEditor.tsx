@@ -8,13 +8,13 @@ import { ENTITIES, emptyRecord, type EntityDef, type FieldDef } from "./entity-c
 
 type Row = Record<string, unknown>;
 
-export function ContentEditor() {
-  const [tab, setTab] = useState<EntityDef["key"]>("releases");
-  const def = ENTITIES.find((e) => e.key === tab)!;
+export function ContentEditor({ only }: { only?: EntityDef["key"] } = {}) {
+  const [tab, setTab] = useState<EntityDef["key"]>(only ?? "releases");
+  const def = ENTITIES.find((e) => e.key === (only ?? tab))!;
 
   return (
     <div className="glass rounded-2xl p-6">
-      <div className="flex flex-wrap gap-2">
+      <div className={cn("flex flex-wrap gap-2", only && "hidden")}>
         {ENTITIES.map((e) => (
           <button
             key={e.key}
