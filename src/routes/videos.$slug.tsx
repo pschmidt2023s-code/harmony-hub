@@ -6,30 +6,44 @@ import { Section } from "@/components/Section";
 import { VideoPlayer } from "@/components/video/VideoPlayer";
 import { contentQueryOptions } from "@/lib/content";
 import { formatDate } from "@/lib/data";
+import { canonicalUrl, jsonLd, normalizeSettings, seoHead, socialImage } from "@/lib/seo";
 
 export const Route = createFileRoute("/videos/$slug")({
   loader: async ({ context, params }) => {
     const content = await context.queryClient.ensureQueryData(contentQueryOptions);
     const video = content.videos.find((v) => v.slug === params.slug || v.id === params.slug);
     if (!video) throw notFound();
-    return { video };
+    return { video, settings: content.settings };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const st = normalizeSettings(loaderData?.settings);
+    const path = `/videos/${params.slug}`;
     if (!loaderData) {
-      return { meta: [{ title: "Video nicht verfügbar — TAYO" }, { name: "robots", content: "noindex" }] };
+      return seoHead({
+        title: "Video nicht verfügbar — TAYO",
+        description: "Dieses Video ist nicht öffentlich verfügbar.",
+        path,
+        settings: st,
+        noindex: true,
+      });
     }
     const v = loaderData.video;
-    const title = v.seoTitle || `${v.title} — ${v.category} von TAYO`;
-    const description =
-      v.seoDescription || v.description || `${v.category} von TAYO: ${v.title}.`;
+    const title = v.seoTitle || `${v.title} — ${v.category} von ${st.artist_name}`;
+    const description = v.seoDescription || v.description || `${v.category} von ${st.artist_name}: ${v.title}.`;
+    const image = socialImage(v.thumb, st.default_og_image);
+    const head = seoHead({ title, description, path, settings: st, image: v.thumb, type: "video.other" });
     return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "video.other" },
-        { name: "twitter:card", content: "summary_large_image" },
+      ...head,
+      scripts: [
+        jsonLd({
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: v.title,
+          url: canonicalUrl(path, st.canonical_base_url),
+          uploadDate: v.date,
+          ...(description ? { description } : {}),
+          ...(image ? { thumbnailUrl: image } : {}),
+        }),
       ],
     };
   },
