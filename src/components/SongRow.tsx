@@ -10,7 +10,7 @@ export function SongRow({ song, list, index }: { song: Song; list: Song[]; index
   return (
     <div
       className={cn(
-        "group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-secondary/60 sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto]",
+        "group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-xl px-3 py-3 sm:gap-4 transition-colors hover:bg-secondary/60 sm:grid-cols-[auto_minmax(0,1fr)_auto_auto_auto]",
         active && "bg-secondary/80",
       )}
     >
@@ -38,7 +38,11 @@ export function SongRow({ song, list, index }: { song: Song; list: Song[]; index
       <p className="hidden text-xs text-muted-foreground sm:block">{song.bpm} BPM</p>
       <p className="hidden text-xs text-muted-foreground sm:block">{song.key}</p>
       <div className="flex items-center gap-3">
-        <button onClick={() => p.toggleFavorite(song.id)} aria-label="Favorit">
+        <button
+          onClick={() => p.toggleFavorite(song.id)}
+          aria-label={`${song.title} zu Favoriten`}
+          className="-m-2 hidden min-h-11 min-w-11 place-items-center rounded-full p-2 sm:grid"
+        >
           <Heart
             className={cn(
               "size-4 text-muted-foreground transition-colors hover:text-primary",

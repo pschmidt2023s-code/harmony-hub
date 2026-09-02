@@ -21,6 +21,19 @@ export function SiteHeader() {
   const { user } = useAuth();
   const cart = useCart();
 
+  // Menü bei Escape schließen und Hintergrund-Scroll sperren, solange es offen ist.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -72,16 +85,35 @@ export function SiteHeader() {
             Merch
           </Link>
         </nav>
-        <button
-          className="lg:hidden"
-          onClick={() => setOpen((o) => !o)}
-          aria-label="Menü öffnen"
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
+        <div className="flex items-center gap-1 lg:hidden">
+          {cart.count > 0 && (
+            <Link
+              to="/checkout"
+              aria-label={`Warenkorb, ${cart.count} Artikel`}
+              className="relative grid min-h-11 min-w-11 place-items-center rounded-full text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ShoppingBag className="size-5" />
+              <span className="absolute right-1 top-1 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+                {cart.count}
+              </span>
+            </Link>
+          )}
+          <button
+            className="grid min-h-11 min-w-11 place-items-center rounded-full"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? "Menü schließen" : "Menü öffnen"}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+          >
+            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
+        </div>
       </div>
       {open && (
-        <nav className="glass-strong flex animate-fade-in flex-col gap-1 px-5 pb-6 lg:hidden">
+        <nav
+          id="mobile-nav"
+          className="glass-strong flex max-h-[calc(100dvh-4.5rem)] animate-fade-in flex-col gap-1 overflow-y-auto px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:hidden"
+        >
           {NAV.map((item) => (
             <Link
               key={item.to}
@@ -100,6 +132,13 @@ export function SiteHeader() {
             className="rounded-lg px-3 py-3 text-base text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
             {user ? "Mein Konto" : "Login / Registrieren"}
+          </Link>
+          <Link
+            to="/shop"
+            onClick={() => setOpen(false)}
+            className="mt-2 rounded-full bg-primary px-5 py-3 text-center text-base font-medium text-primary-foreground"
+          >
+            Merch
           </Link>
         </nav>
       )}

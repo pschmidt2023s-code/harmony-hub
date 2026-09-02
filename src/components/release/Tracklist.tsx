@@ -25,12 +25,12 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
               active && "bg-primary/10",
             )}
           >
-            <div className="group grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
+            <div className="group grid grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
               <button
                 onClick={() => (active ? p.toggle() : p.play(song, tracks))}
                 aria-label={isPlaying ? `${song.title} pausieren` : `${song.title} abspielen`}
                 className={cn(
-                  "grid size-8 place-items-center rounded-full text-xs tabular-nums transition-colors",
+                  "grid size-10 place-items-center rounded-full text-xs tabular-nums transition-colors sm:size-9",
                   active
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-primary hover:text-primary-foreground",
@@ -61,7 +61,7 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
                   <button
                     onClick={() => setOpenLyrics(open ? null : song.id)}
                     aria-expanded={open}
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+                    className="-ml-1 mt-0.5 inline-flex min-h-9 items-center gap-1 rounded-lg px-1 text-xs text-muted-foreground transition-colors hover:text-primary"
                   >
                     Lyrics
                     <ChevronDown className={cn("size-3 transition-transform", open && "rotate-180")} />
@@ -73,7 +73,7 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
                 <button
                   onClick={() => p.toggleFavorite(song.id)}
                   aria-label={`${song.title} zu Favoriten`}
-                  className="hidden sm:block"
+                  className="hidden min-h-11 min-w-11 place-items-center sm:grid"
                 >
                   <Heart
                     className={cn(

@@ -22,7 +22,7 @@ export function Hero({
   const playable = queue[0];
 
   return (
-    <section className="relative isolate flex min-h-[88svh] flex-col justify-end overflow-hidden md:min-h-[92vh]">
+    <section className="relative isolate flex min-h-[72svh] flex-col justify-end overflow-hidden sm:min-h-[80svh] md:min-h-[88svh]">
       <img
         src={release?.cover ?? heroFallback}
         alt={release ? `Cover ${release.title}` : "TAYO Porträt"}
@@ -41,7 +41,7 @@ export function Hero({
       />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-[image:var(--gradient-fade)]" />
 
-      <div className="mx-auto w-full max-w-7xl px-5 pb-20 pt-36 md:px-8 md:pb-28 md:pt-44">
+      <div className="mx-auto w-full max-w-7xl px-5 pb-16 pt-32 sm:pb-20 md:px-8 md:pb-28 md:pt-44">
         {release ? (
           <>
             <p className="animate-fade-in text-[11px] uppercase tracking-[0.4em] text-primary sm:text-xs sm:tracking-[0.5em]">
@@ -62,7 +62,7 @@ export function Hero({
               {playable && (
                 <button
                   onClick={() => player.play(playable, queue)}
-                  className="glow flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+                  className="glow flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03] sm:w-auto"
                 >
                   <Play className="size-4" /> Jetzt hören
                 </button>
@@ -70,7 +70,7 @@ export function Hero({
               <Link
                 to="/releases/$slug"
                 params={{ slug: release.slug }}
-                className="glass flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors hover:text-primary"
+                className="glass flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors hover:text-primary sm:w-auto"
               >
                 Release ansehen <ArrowUpRight className="size-4" />
               </Link>

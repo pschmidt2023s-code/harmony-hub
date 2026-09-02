@@ -11,6 +11,7 @@ import {
   SkipForward,
   Volume2,
 } from "lucide-react";
+import { useEffect } from "react";
 import { usePlayer } from "./player-context";
 import { formatTime } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -39,6 +40,17 @@ function Waveform({ progress }: { progress: number }) {
 
 export function PlayerBar() {
   const p = usePlayer();
+
+  // Vollbild-Player mit Escape schließen.
+  useEffect(() => {
+    if (!p.expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") p.setExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [p.expanded, p]);
+
   if (!p.current) return null;
   const song = p.current;
   const ratio = p.progress / song.duration;
@@ -54,8 +66,8 @@ export function PlayerBar() {
         className={cn(
           "glass-strong mx-auto flex flex-col shadow-[var(--shadow-elevated)]",
           p.expanded
-            ? "h-full rounded-none px-6 py-10"
-            : "mb-3 max-w-6xl rounded-2xl px-4 py-3 sm:mb-4 sm:px-5",
+            ? "h-full rounded-none px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] sm:px-6 sm:py-10"
+            : "mx-3 mb-[max(0.75rem,env(safe-area-inset-bottom))] max-w-6xl rounded-2xl px-3 py-3 sm:mx-auto sm:mb-4 sm:px-5",
         )}
         style={
           p.expanded
@@ -64,17 +76,17 @@ export function PlayerBar() {
         }
       >
         {p.expanded && (
-          <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-8">
+          <div className="mx-auto flex w-full max-w-3xl min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto py-4 sm:gap-8">
             <img
               src={song.cover}
               alt={`Cover von ${song.title}`}
               width={800}
               height={800}
               loading="lazy"
-              className="w-64 rounded-3xl shadow-[var(--shadow-glow)] sm:w-80"
+              className="w-44 shrink-0 rounded-3xl shadow-[var(--shadow-glow)] sm:w-72 lg:w-80"
             />
             <div className="text-center">
-              <h2 className="text-3xl font-semibold sm:text-4xl">{song.title}</h2>
+              <h2 className="text-balance text-2xl font-semibold sm:text-3xl lg:text-4xl">{song.title}</h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 {song.album} · {song.bpm} BPM · {song.key}
               </p>
@@ -108,19 +120,19 @@ export function PlayerBar() {
               />
             )}
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">{song.title}</p>
+              <p className="truncate text-xs font-semibold sm:text-sm">{song.title}</p>
               <p className="truncate text-xs text-muted-foreground">{song.album}</p>
             </div>
             <button
               onClick={() => p.toggleFavorite(song.id)}
               aria-label="Zu Favoriten"
-              className="ml-1 hidden shrink-0 text-muted-foreground transition-colors hover:text-primary sm:block"
+              className="ml-1 hidden min-h-11 min-w-11 shrink-0 place-items-center text-muted-foreground transition-colors hover:text-primary sm:grid"
             >
               <Heart className={cn("size-4", p.favorites.includes(song.id) && "fill-primary text-primary")} />
             </button>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2">
             <button
               onClick={p.toggleShuffle}
               aria-label="Shuffle"
@@ -128,17 +140,17 @@ export function PlayerBar() {
             >
               <Shuffle className="size-4" />
             </button>
-            <button onClick={p.prev} aria-label="Vorheriger Track" className="p-2 transition-transform hover:scale-110">
+            <button onClick={p.prev} aria-label="Vorheriger Track" className="grid min-h-11 min-w-9 place-items-center transition-transform hover:scale-110 sm:min-w-11">
               <SkipBack className="size-5" />
             </button>
             <button
               onClick={p.toggle}
               aria-label={p.playing ? "Pause" : "Play"}
-              className="grid size-11 place-items-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
+              className="grid size-12 place-items-center rounded-full bg-primary sm:size-11 text-primary-foreground transition-transform hover:scale-105"
             >
               {p.playing ? <Pause className="size-5" /> : <Play className="size-5 translate-x-[1px]" />}
             </button>
-            <button onClick={p.next} aria-label="Nächster Track" className="p-2 transition-transform hover:scale-110">
+            <button onClick={p.next} aria-label="Nächster Track" className="grid min-h-11 min-w-9 place-items-center transition-transform hover:scale-110 sm:min-w-11">
               <SkipForward className="size-5" />
             </button>
             <button
@@ -186,7 +198,7 @@ export function PlayerBar() {
             <button
               onClick={() => p.setExpanded(!p.expanded)}
               aria-label={p.expanded ? "Player verkleinern" : "Player vergrößern"}
-              className="p-1 text-muted-foreground transition-colors hover:text-foreground"
+              className="grid min-h-11 min-w-11 place-items-center rounded-full text-muted-foreground transition-colors hover:text-foreground"
             >
               {p.expanded ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
             </button>
