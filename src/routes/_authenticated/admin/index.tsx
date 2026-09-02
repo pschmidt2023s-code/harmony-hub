@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { AdminError, AdminPageHeader, AdminSkeleton } from "@/components/admin/AdminPageHeader";
 import { contentQueryOptions } from "@/lib/content";
-import { newestRelease, upcomingReleases, slugify } from "@/lib/release";
+import { newestRelease, upcomingReleases } from "@/lib/release";
 import { formatDate, PRODUCTS, type Release } from "@/lib/data";
 import {
   useAdminActivity,
@@ -232,7 +232,7 @@ function CurrentRelease({ release }: { release: Release | null }) {
           <div className="mt-4 flex flex-wrap gap-2">
             <Link
               to="/releases/$slug"
-              params={{ slug: slugify(release.title) }}
+              params={{ slug: release.slug }}
               className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-primary-foreground"
             >
               Ansehen
