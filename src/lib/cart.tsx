@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { catalogItem, SHIPPING_FEE } from "./catalog";
+import { useQuery } from "@tanstack/react-query";
+import { SHIPPING_FEE } from "./catalog";
+import { linePrice, shopQueryOptions, type ShopProduct } from "./shop";
 
 export type CartLine = { id: string; variant: string; qty: number };
 
@@ -9,6 +11,10 @@ type CartValue = {
   subtotal: number;
   shippingFee: number;
   total: number;
+  currency: string;
+  products: ShopProduct[];
+  productFor: (id: string) => ShopProduct | undefined;
+  priceFor: (id: string, variant: string) => number;
   add: (id: string, variant: string) => void;
   setQty: (id: string, variant: string, qty: number) => void;
   remove: (id: string, variant: string) => void;
@@ -20,6 +26,8 @@ const KEY = "tayo-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
+  // Preise stammen immer aus dem serverseitig gefilterten Katalog.
+  const { data: products = [] } = useQuery(shopQueryOptions);
 
   useEffect(() => {
     try {
@@ -39,11 +47,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [lines]);
 
   const value = useMemo<CartValue>(() => {
-    const subtotal = lines.reduce((sum, l) => sum + (catalogItem(l.id)?.price ?? 0) * l.qty, 0);
+    const productFor = (id: string) => products.find((p) => p.id === id);
+    const priceFor = (id: string, variant: string) => linePrice(productFor(id), variant);
+    const subtotal = lines.reduce((sum, l) => sum + priceFor(l.id, l.variant) * l.qty, 0);
     return {
       lines,
+      products,
+      productFor,
+      priceFor,
+      currency: products[0]?.currency ?? "EUR",
       count: lines.reduce((n, l) => n + l.qty, 0),
-      subtotal,
+      subtotal: Number(subtotal.toFixed(2)),
       shippingFee: SHIPPING_FEE,
       total: subtotal > 0 ? Number((subtotal + SHIPPING_FEE).toFixed(2)) : 0,
       add: (id, variant) =>
@@ -62,7 +76,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove: (id, variant) => setLines((prev) => prev.filter((l) => !(l.id === id && l.variant === variant))),
       clear: () => setLines([]),
     };
-  }, [lines]);
+  }, [lines, products]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

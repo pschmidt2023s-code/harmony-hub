@@ -1,4 +1,5 @@
-import type { Product, Release, Song, Video } from "./data";
+import type { Release, Song, Video } from "./data";
+import type { ShopProduct } from "./shop";
 
 /** Tracks eines Releases in gespeicherter Reihenfolge (Zuordnung über release_id, Fallback Albumtitel). */
 export function releaseTracks(songs: Song[], release: Release) {
@@ -97,9 +98,11 @@ export function releaseVideos(videos: Video[], release: Release, tracks: Song[])
 }
 
 /** Merch, dessen Name auf das Release oder einen Track verweist. */
-export function releaseProducts(products: Product[], release: Release, tracks: Song[]) {
+export function releaseProducts(products: ShopProduct[], release: Release, tracks: Song[]) {
   const terms = [release.title, ...tracks.map((t) => t.title)].map((t) => t.toLowerCase());
-  return products.filter((p) => terms.some((t) => p.name.toLowerCase().includes(t)));
+  return products.filter(
+    (p) => p.releaseId === release.id || terms.some((t) => p.name.toLowerCase().includes(t)),
+  );
 }
 
 /** Gesamtlaufzeit der Tracks in Sekunden (0, wenn keine Tracks). */

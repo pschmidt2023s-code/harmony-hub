@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink, Pause, Play } from "lucide-react";
 import { usePlayer } from "@/components/player/player-context";
@@ -15,7 +16,8 @@ import {
   totalDuration,
 } from "@/lib/release-detail";
 import { useAccentSource } from "@/lib/accent-override";
-import { ARTIST, PRODUCTS, formatDate, formatTime, type Release } from "@/lib/data";
+import { ARTIST, formatDate, formatTime, type Release } from "@/lib/data";
+import { money, shopQueryOptions } from "@/lib/shop";
 
 export function ReleaseLanding({ release, content }: { release: Release; content: SiteContent }) {
   const player = usePlayer();
@@ -27,7 +29,8 @@ export function ReleaseLanding({ release, content }: { release: Release; content
   const credits = releaseCredits(tracks, release);
   const genres = releaseGenres(tracks);
   const videos = releaseVideos(content.videos, release, tracks);
-  const products = releaseProducts(PRODUCTS, release, tracks);
+  const { data: catalog = [] } = useQuery(shopQueryOptions);
+  const products = releaseProducts(catalog, release, tracks);
   const runtime = totalDuration(tracks);
   const playing = player.playing && tracks.some((t) => t.id === player.current?.id);
 
@@ -213,7 +216,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
           <Block title="Shop the Release">
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {products.map((p) => (
-                <Link key={p.id} to="/shop" className="group min-w-0">
+                <Link key={p.id} to="/shop/$slug" params={{ slug: p.slug }} className="group min-w-0">
                   <div className="overflow-hidden rounded-2xl border border-border/60">
                     <img
                       src={p.image}
@@ -225,7 +228,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                     />
                   </div>
                   <p className="mt-3 truncate text-sm font-medium">{p.name}</p>
-                  <p className="text-sm text-muted-foreground">{p.price} €</p>
+                  <p className="text-sm text-muted-foreground">{money(p.price, p.currency)}</p>
                 </Link>
               ))}
             </div>
