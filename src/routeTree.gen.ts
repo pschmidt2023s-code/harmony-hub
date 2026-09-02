@@ -33,6 +33,7 @@ import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated/admin/seo'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
+import { Route as AuthenticatedAdminProductsNewRouteImport } from './routes/_authenticated/admin/products.new'
 import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_authenticated/admin/releases.index'
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
 import { Route as AuthenticatedAdminReleasesNewRouteImport } from './routes/_authenticated/admin/releases.new'
@@ -172,6 +173,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminProductsNewRoute =
+  AuthenticatedAdminProductsNewRouteImport.update({
+    id: '/products/new',
+    path: '/products/new',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminReleasesIndexRoute =
   AuthenticatedAdminReleasesIndexRouteImport.update({
     id: '/releases/',
@@ -286,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
@@ -325,6 +333,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
   '/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
@@ -367,6 +376,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/products/new': typeof AuthenticatedAdminProductsNewRoute
   '/_authenticated/admin/releases/calendar': typeof AuthenticatedAdminReleasesCalendarRoute
   '/_authenticated/admin/releases/new': typeof AuthenticatedAdminReleasesNewRoute
   '/_authenticated/admin/releases/pipeline': typeof AuthenticatedAdminReleasesPipelineRoute
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin/'
+    | '/admin/products/new'
     | '/admin/releases/calendar'
     | '/admin/releases/new'
     | '/admin/releases/pipeline'
@@ -448,6 +459,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin'
+    | '/admin/products/new'
     | '/admin/releases/calendar'
     | '/admin/releases/new'
     | '/admin/releases/pipeline'
@@ -489,6 +501,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/products/new'
     | '/_authenticated/admin/releases/calendar'
     | '/_authenticated/admin/releases/new'
     | '/_authenticated/admin/releases/pipeline'
@@ -692,6 +705,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/products/new': {
+      id: '/_authenticated/admin/products/new'
+      path: '/products/new'
+      fullPath: '/admin/products/new'
+      preLoaderRoute: typeof AuthenticatedAdminProductsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/releases/': {
       id: '/_authenticated/admin/releases/'
       path: '/releases'
@@ -810,6 +830,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminProductsNewRoute: typeof AuthenticatedAdminProductsNewRoute
   AuthenticatedAdminReleasesCalendarRoute: typeof AuthenticatedAdminReleasesCalendarRoute
   AuthenticatedAdminReleasesNewRoute: typeof AuthenticatedAdminReleasesNewRoute
   AuthenticatedAdminReleasesPipelineRoute: typeof AuthenticatedAdminReleasesPipelineRoute
@@ -837,6 +858,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
     AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+    AuthenticatedAdminProductsNewRoute: AuthenticatedAdminProductsNewRoute,
     AuthenticatedAdminReleasesCalendarRoute:
       AuthenticatedAdminReleasesCalendarRoute,
     AuthenticatedAdminReleasesNewRoute: AuthenticatedAdminReleasesNewRoute,
