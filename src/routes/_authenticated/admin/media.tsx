@@ -366,7 +366,7 @@ function MediaInspector({
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-background/85 p-3 sm:p-6">
-      <div className="glass-strong flex max-h-[88vh] w-full max-w-2xl min-w-0 flex-col overflow-y-auto rounded-2xl p-5">
+      <div className="glass-strong flex max-h-[88dvh] w-full max-w-2xl min-w-0 flex-col overflow-y-auto rounded-2xl p-5">
         <div className="flex items-start justify-between gap-3">
           <h2 className="min-w-0 truncate text-lg font-semibold uppercase">{asset.displayName}</h2>
           <button onClick={onClose} aria-label="Schließen" className="glass rounded-full p-2">
@@ -379,7 +379,7 @@ function MediaInspector({
             <img
               src={asset.url}
               alt=""
-              className="max-h-[45vh] w-full object-contain"
+              className="max-h-[45dvh] w-full object-contain"
               onLoad={(e) =>
                 setDimensions(`${e.currentTarget.naturalWidth} × ${e.currentTarget.naturalHeight} px`)
               }
@@ -402,7 +402,7 @@ function MediaInspector({
               controls
               preload="metadata"
               src={asset.url}
-              className="max-h-[45vh] w-full"
+              className="max-h-[45dvh] w-full"
               onLoadedMetadata={(e) => {
                 const v = e.currentTarget;
                 if (Number.isFinite(v.duration))

@@ -66,7 +66,7 @@ export function MediaPicker({ kind, title, onSelect, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-background/85 p-3 sm:p-6">
-      <div className="glass-strong flex max-h-[85vh] w-full max-w-3xl min-w-0 flex-col rounded-2xl p-5">
+      <div className="glass-strong flex max-h-[85dvh] w-full max-w-3xl min-w-0 flex-col rounded-2xl p-5">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold uppercase">{title}</h2>
           <button onClick={onClose} aria-label="Schließen" className="glass rounded-full p-2">

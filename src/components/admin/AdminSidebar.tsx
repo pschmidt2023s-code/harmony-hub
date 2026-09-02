@@ -26,6 +26,19 @@ export function AdminSidebar({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const qc = useQueryClient();
 
+  // Mobile Navigation: Escape schließt, Hintergrund scrollt nicht mit.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, onClose]);
+
   useEffect(() => {
     setCollapsed(localStorage.getItem(STORAGE_KEY) === "1");
   }, []);
@@ -70,7 +83,7 @@ export function AdminSidebar({
           <button
             onClick={onClose}
             aria-label="Menü schließen"
-            className="rounded-lg p-1.5 text-muted-foreground hover:text-foreground lg:hidden"
+            className="grid min-h-11 min-w-11 place-items-center rounded-lg text-muted-foreground hover:text-foreground lg:hidden"
           >
             <X className="size-5" />
           </button>
