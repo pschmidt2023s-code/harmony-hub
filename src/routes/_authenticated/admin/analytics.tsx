@@ -349,7 +349,9 @@ function AnalyticsPage() {
                     ? "Nicht verfügbar"
                     : String(audience.data.customersWithNewsletter)
                 }
-                note={audience.data?.customersWithNewsletter === null ? "zu viele Kunden für eine Sofortauswertung" : undefined}
+                {...(audience.data?.customersWithNewsletter === null
+                  ? { note: "zu viele Kunden für eine Sofortauswertung" }
+                  : {})}
               />
             </div>
           </Section>
