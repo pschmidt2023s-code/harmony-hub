@@ -10,7 +10,12 @@ const findRelease = (content: SiteContent | undefined, slug: string): Release | 
   content ? (publishedReleases(content.releases).find((r) => r.slug === slug) ?? null) : null;
 
 export const Route = createFileRoute("/releases/$slug")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
+  loader: async ({ context, params }) => {
+    const content = await context.queryClient.ensureQueryData(contentQueryOptions);
+    // Unbekannte oder nicht öffentliche Slugs müssen serverseitig 404 liefern.
+    if (!findRelease(content, params.slug)) throw notFound();
+    return content;
+  },
   head: ({ params, loaderData }) => {
     const content = loaderData as SiteContent | undefined;
     const st = normalizeSettings(content?.settings);
