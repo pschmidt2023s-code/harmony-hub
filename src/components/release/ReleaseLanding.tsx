@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink, Pause, Play } from "lucide-react";
 import { usePlayer } from "@/components/player/player-context";
