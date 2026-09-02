@@ -15,7 +15,8 @@ import {
   totalDuration,
 } from "@/lib/release-detail";
 import { useAccentSource } from "@/lib/accent-override";
-import { ARTIST, PRODUCTS, formatDate, formatTime, type Release } from "@/lib/data";
+import { ARTIST, formatDate, formatTime, type Release } from "@/lib/data";
+import { shopQueryOptions } from "@/lib/shop";
 
 export function ReleaseLanding({ release, content }: { release: Release; content: SiteContent }) {
   const player = usePlayer();
@@ -27,7 +28,8 @@ export function ReleaseLanding({ release, content }: { release: Release; content
   const credits = releaseCredits(tracks, release);
   const genres = releaseGenres(tracks);
   const videos = releaseVideos(content.videos, release, tracks);
-  const products = releaseProducts(PRODUCTS, release, tracks);
+  const { data: catalog = [] } = useQuery(shopQueryOptions);
+  const products = releaseProducts(catalog, release, tracks);
   const runtime = totalDuration(tracks);
   const playing = player.playing && tracks.some((t) => t.id === player.current?.id);
 

@@ -7,12 +7,18 @@ import { LatestVideos } from "@/components/home/LatestVideos";
 import { TourDates } from "@/components/home/TourDates";
 import { MerchHighlights } from "@/components/home/MerchHighlights";
 import { NewsletterCta } from "@/components/home/NewsletterCta";
-import { PRODUCTS, TOUR } from "@/lib/data";
+import { TOUR } from "@/lib/data";
+import { shopQueryOptions } from "@/lib/shop";
 import { contentQueryOptions } from "@/lib/content";
 import { newestRelease, songsByRecency, upcomingReleases, videosByRecency } from "@/lib/release";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(contentQueryOptions),
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(contentQueryOptions),
+      context.queryClient.ensureQueryData(shopQueryOptions),
+    ]);
+  },
   head: () => ({
     meta: [
       { title: "TAYO — Musik, Releases & Merch" },
@@ -35,6 +41,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { data } = useSuspenseQuery(contentQueryOptions);
+  const { data: products } = useSuspenseQuery(shopQueryOptions);
   const release = newestRelease(data.releases);
   const songs = songsByRecency(data.songs, data.releases);
 
@@ -45,7 +52,7 @@ function Index() {
       <UpcomingReleases releases={upcomingReleases(data.releases)} />
       <LatestVideos videos={videosByRecency(data.videos)} />
       <TourDates dates={TOUR} />
-      <MerchHighlights products={PRODUCTS} />
+      <MerchHighlights products={products} />
       <NewsletterCta />
     </>
   );

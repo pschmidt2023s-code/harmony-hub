@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedKontoRouteImport } from './routes/_authenticated/konto'
 import { Route as ReleasesSlugRouteImport } from './routes/releases.$slug'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
 import { Route as VideosSlugRouteImport } from './routes/videos.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin/analytics'
@@ -120,6 +121,11 @@ const ReleasesSlugRoute = ReleasesSlugRouteImport.update({
 const ShopIndexRoute = ShopIndexRouteImport.update({
   id: '/shop/',
   path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopSlugRoute = ShopSlugRouteImport.update({
+  id: '/shop/$slug',
+  path: '/shop/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosSlugRoute = VideosSlugRouteImport.update({
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/videos/$slug': typeof VideosSlugRoute
   '/shop/': typeof ShopIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
@@ -346,6 +353,7 @@ export interface FileRoutesByTo {
   '/videos': typeof VideosRouteWithChildren
   '/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/videos/$slug': typeof VideosSlugRoute
   '/shop': typeof ShopIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/konto': typeof AuthenticatedKontoRoute
   '/releases/$slug': typeof ReleasesSlugRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/videos/$slug': typeof VideosSlugRoute
   '/shop/': typeof ShopIndexRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
@@ -438,6 +447,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/konto'
     | '/releases/$slug'
+    | '/shop/$slug'
     | '/videos/$slug'
     | '/shop/'
     | '/admin/analytics'
@@ -481,6 +491,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/konto'
     | '/releases/$slug'
+    | '/shop/$slug'
     | '/videos/$slug'
     | '/shop'
     | '/admin/analytics'
@@ -526,6 +537,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/konto'
     | '/releases/$slug'
+    | '/shop/$slug'
     | '/videos/$slug'
     | '/shop/'
     | '/_authenticated/admin/analytics'
@@ -570,6 +582,7 @@ export interface RootRouteChildren {
   UeberMichRoute: typeof UeberMichRoute
   VideosRoute: typeof VideosRouteWithChildren
   ReleasesSlugRoute: typeof ReleasesSlugRoute
+  ShopSlugRoute: typeof ShopSlugRoute
   ShopIndexRoute: typeof ShopIndexRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
@@ -672,6 +685,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop/'
       preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop/$slug': {
+      id: '/shop/$slug'
+      path: '/shop/$slug'
+      fullPath: '/shop/$slug'
+      preLoaderRoute: typeof ShopSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/videos/$slug': {
@@ -990,6 +1010,7 @@ const rootRouteChildren: RootRouteChildren = {
   UeberMichRoute: UeberMichRoute,
   VideosRoute: VideosRouteWithChildren,
   ReleasesSlugRoute: ReleasesSlugRoute,
+  ShopSlugRoute: ShopSlugRoute,
   ShopIndexRoute: ShopIndexRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }

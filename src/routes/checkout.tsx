@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Section } from "@/components/Section";
 import { useCart } from "@/lib/cart";
-import { PRODUCTS } from "@/lib/data";
 import { getPaypalConfig, createCheckoutOrder, captureCheckoutOrder } from "@/lib/checkout.functions";
 import { cn } from "@/lib/utils";
 
@@ -190,7 +189,7 @@ function CheckoutPage() {
               <>
                 <ul className="mt-4 space-y-3">
                   {cart.lines.map((l) => {
-                    const p = PRODUCTS.find((x) => x.id === l.id);
+                    const p = cart.productFor(l.id);
                     return (
                       <li key={`${l.id}-${l.variant}`} className="flex items-center gap-3">
                         {p && (
