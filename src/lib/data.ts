@@ -10,11 +10,17 @@ export const ARTIST = {
 
 export type Song = {
   id: string;
+  slug: string;
   title: string;
+  artist: string;
   album: string;
+  releaseId: string | null;
   type: "Single" | "EP" | "Album";
   cover: string;
+  audio: string | null;
   duration: number;
+  description: string;
+  language: string;
   genre: string;
   bpm: number;
   key: string;
@@ -25,7 +31,9 @@ export type Song = {
   explicit: boolean;
   links: { spotify: string; apple: string; youtube: string; amazon: string; deezer: string };
   lyrics: { time: number; line: string }[];
+  credits: { role: string; names: string }[];
 };
+
 
 export type ReleaseStatus =
   | "Entwurf"
