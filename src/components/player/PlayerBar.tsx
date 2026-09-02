@@ -120,7 +120,7 @@ export function PlayerBar() {
               />
             )}
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">{song.title}</p>
+              <p className="truncate text-xs font-semibold sm:text-sm">{song.title}</p>
               <p className="truncate text-xs text-muted-foreground">{song.album}</p>
             </div>
             <button
@@ -132,7 +132,7 @@ export function PlayerBar() {
             </button>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2">
             <button
               onClick={p.toggleShuffle}
               aria-label="Shuffle"
@@ -140,7 +140,7 @@ export function PlayerBar() {
             >
               <Shuffle className="size-4" />
             </button>
-            <button onClick={p.prev} aria-label="Vorheriger Track" className="grid min-h-11 min-w-11 place-items-center transition-transform hover:scale-110">
+            <button onClick={p.prev} aria-label="Vorheriger Track" className="grid min-h-11 min-w-9 place-items-center transition-transform hover:scale-110 sm:min-w-11">
               <SkipBack className="size-5" />
             </button>
             <button
@@ -150,7 +150,7 @@ export function PlayerBar() {
             >
               {p.playing ? <Pause className="size-5" /> : <Play className="size-5 translate-x-[1px]" />}
             </button>
-            <button onClick={p.next} aria-label="Nächster Track" className="grid min-h-11 min-w-11 place-items-center transition-transform hover:scale-110">
+            <button onClick={p.next} aria-label="Nächster Track" className="grid min-h-11 min-w-9 place-items-center transition-transform hover:scale-110 sm:min-w-11">
               <SkipForward className="size-5" />
             </button>
             <button
