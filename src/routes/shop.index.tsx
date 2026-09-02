@@ -105,7 +105,7 @@ function ShopPage() {
                               disabled={!v.available}
                               onClick={() => setVariants((s) => ({ ...s, [p.id]: v.name }))}
                               className={cn(
-                                "rounded-md border px-2 py-1 text-[11px] transition-colors disabled:opacity-40",
+                                "grid min-h-11 min-w-11 place-items-center rounded-md border px-3 text-[11px] transition-colors disabled:opacity-40",
                                 selected === v.name
                                   ? "border-primary text-primary"
                                   : "border-border text-muted-foreground hover:text-foreground",
@@ -123,7 +123,7 @@ function ShopPage() {
                             cart.add(p.id, selected);
                             toast.success(`${p.name} in den Warenkorb gelegt`);
                           }}
-                          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105"
+                          className="flex min-h-11 items-center gap-2 rounded-full bg-primary px-4 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105"
                         >
                           <ShoppingBag className="size-3.5" /> In den Warenkorb
                         </button>
