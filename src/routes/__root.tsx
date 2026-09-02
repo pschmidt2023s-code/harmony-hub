@@ -17,6 +17,7 @@ import { PlayerProvider } from "@/components/player/player-context";
 import { CartProvider } from "@/lib/cart";
 import { PlayerBar } from "@/components/player/PlayerBar";
 import { Toaster } from "@/components/ui/sonner";
+import { PWARegister } from "@/components/PWARegister";
 
 function NotFoundComponent() {
   return (
