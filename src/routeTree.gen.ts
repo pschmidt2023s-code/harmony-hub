@@ -33,6 +33,7 @@ import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated/admin/seo'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
+import { Route as AuthenticatedAdminProductsIndexRouteImport } from './routes/_authenticated/admin/products.index'
 import { Route as AuthenticatedAdminProductsNewRouteImport } from './routes/_authenticated/admin/products.new'
 import { Route as AuthenticatedAdminReleasesIndexRouteImport } from './routes/_authenticated/admin/releases.index'
 import { Route as AuthenticatedAdminReleasesCalendarRouteImport } from './routes/_authenticated/admin/releases.calendar'
@@ -175,6 +176,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminProductsIndexRoute =
+  AuthenticatedAdminProductsIndexRouteImport.update({
+    id: '/products/',
+    path: '/products/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminProductsNewRoute =
   AuthenticatedAdminProductsNewRouteImport.update({
     id: '/products/new',
@@ -314,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/admin/videos/new': typeof AuthenticatedAdminVideosNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
+  '/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
   '/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
   '/admin/songs/': typeof AuthenticatedAdminSongsIndexRoute
   '/admin/videos/': typeof AuthenticatedAdminVideosIndexRoute
@@ -356,6 +364,7 @@ export interface FileRoutesByTo {
   '/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/admin/videos/new': typeof AuthenticatedAdminVideosNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
+  '/admin/products': typeof AuthenticatedAdminProductsIndexRoute
   '/admin/releases': typeof AuthenticatedAdminReleasesIndexRoute
   '/admin/songs': typeof AuthenticatedAdminSongsIndexRoute
   '/admin/videos': typeof AuthenticatedAdminVideosIndexRoute
@@ -401,6 +410,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/songs/new': typeof AuthenticatedAdminSongsNewRoute
   '/_authenticated/admin/videos/new': typeof AuthenticatedAdminVideosNewRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
+  '/_authenticated/admin/products/': typeof AuthenticatedAdminProductsIndexRoute
   '/_authenticated/admin/releases/': typeof AuthenticatedAdminReleasesIndexRoute
   '/_authenticated/admin/songs/': typeof AuthenticatedAdminSongsIndexRoute
   '/_authenticated/admin/videos/': typeof AuthenticatedAdminVideosIndexRoute
@@ -446,6 +456,7 @@ export interface FileRouteTypes {
     | '/admin/songs/new'
     | '/admin/videos/new'
     | '/api/public/media/$'
+    | '/admin/products/'
     | '/admin/releases/'
     | '/admin/songs/'
     | '/admin/videos/'
@@ -488,6 +499,7 @@ export interface FileRouteTypes {
     | '/admin/songs/new'
     | '/admin/videos/new'
     | '/api/public/media/$'
+    | '/admin/products'
     | '/admin/releases'
     | '/admin/songs'
     | '/admin/videos'
@@ -532,6 +544,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/songs/new'
     | '/_authenticated/admin/videos/new'
     | '/api/public/media/$'
+    | '/_authenticated/admin/products/'
     | '/_authenticated/admin/releases/'
     | '/_authenticated/admin/songs/'
     | '/_authenticated/admin/videos/'
@@ -731,6 +744,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/products/': {
+      id: '/_authenticated/admin/products/'
+      path: '/products'
+      fullPath: '/admin/products/'
+      preLoaderRoute: typeof AuthenticatedAdminProductsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/products/new': {
       id: '/_authenticated/admin/products/new'
       path: '/products/new'
@@ -876,6 +896,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminReleasesPipelineRoute: typeof AuthenticatedAdminReleasesPipelineRoute
   AuthenticatedAdminSongsNewRoute: typeof AuthenticatedAdminSongsNewRoute
   AuthenticatedAdminVideosNewRoute: typeof AuthenticatedAdminVideosNewRoute
+  AuthenticatedAdminProductsIndexRoute: typeof AuthenticatedAdminProductsIndexRoute
   AuthenticatedAdminReleasesIndexRoute: typeof AuthenticatedAdminReleasesIndexRoute
   AuthenticatedAdminSongsIndexRoute: typeof AuthenticatedAdminSongsIndexRoute
   AuthenticatedAdminVideosIndexRoute: typeof AuthenticatedAdminVideosIndexRoute
@@ -908,6 +929,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminReleasesPipelineRoute,
     AuthenticatedAdminSongsNewRoute: AuthenticatedAdminSongsNewRoute,
     AuthenticatedAdminVideosNewRoute: AuthenticatedAdminVideosNewRoute,
+    AuthenticatedAdminProductsIndexRoute: AuthenticatedAdminProductsIndexRoute,
     AuthenticatedAdminReleasesIndexRoute: AuthenticatedAdminReleasesIndexRoute,
     AuthenticatedAdminSongsIndexRoute: AuthenticatedAdminSongsIndexRoute,
     AuthenticatedAdminVideosIndexRoute: AuthenticatedAdminVideosIndexRoute,
