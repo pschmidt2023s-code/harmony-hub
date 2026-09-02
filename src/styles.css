@@ -138,7 +138,7 @@
   --accent-alpha: oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 12%);
 
   --surface-glass: oklch(1 0 0 / 5%);
-  --gradient-accent: linear-gradient(135deg, oklch(var(--accent-l) var(--accent-c) var(--accent-h)), oklch(0.68 0.17 40));
+  --gradient-accent: linear-gradient(135deg, var(--accent-base), oklch(calc(var(--accent-l) - 0.12) calc(var(--accent-c) * 0.95) calc(var(--accent-h) - 28)));
   --gradient-fade: linear-gradient(to bottom, transparent, oklch(0.09 0.004 60));
   --shadow-glow: 0 24px 80px -24px oklch(var(--accent-l) var(--accent-c) var(--accent-h) / 45%);
   --shadow-elevated: 0 30px 70px -30px oklch(0 0 0 / 80%);
