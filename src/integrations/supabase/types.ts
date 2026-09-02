@@ -74,6 +74,7 @@ export type Database = {
           created_at: string
           currency: string
           email: string
+          fulfillment_status: string
           id: string
           items: Json
           paypal_order_id: string | null
@@ -87,6 +88,7 @@ export type Database = {
           created_at?: string
           currency?: string
           email: string
+          fulfillment_status?: string
           id?: string
           items?: Json
           paypal_order_id?: string | null
@@ -100,6 +102,7 @@ export type Database = {
           created_at?: string
           currency?: string
           email?: string
+          fulfillment_status?: string
           id?: string
           items?: Json
           paypal_order_id?: string | null
@@ -109,6 +112,162 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      product_variants: {
+        Row: {
+          available: boolean
+          created_at: string
+          digital_asset_url: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number | null
+          product_id: string
+          sale_price: number | null
+          sku: string | null
+          sort_order: number
+          stock: number | null
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean
+          created_at?: string
+          digital_asset_url?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number | null
+          product_id: string
+          sale_price?: number | null
+          sku?: string | null
+          sort_order?: number
+          stock?: number | null
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean
+          created_at?: string
+          digital_asset_url?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number | null
+          product_id?: string
+          sale_price?: number | null
+          sku?: string | null
+          sort_order?: number
+          stock?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          badge: string | null
+          base_price: number
+          created_at: string
+          currency: string
+          description: string
+          digital_asset_url: string | null
+          id: string
+          image_url: string | null
+          is_digital: boolean
+          name: string
+          release_id: string | null
+          sale_price: number | null
+          seo_description: string
+          seo_title: string
+          short_description: string
+          slug: string
+          song_id: string | null
+          sort_order: number
+          status: string
+          stock: number | null
+          type: string
+          updated_at: string
+          video_id: string | null
+        }
+        Insert: {
+          badge?: string | null
+          base_price?: number
+          created_at?: string
+          currency?: string
+          description?: string
+          digital_asset_url?: string | null
+          id: string
+          image_url?: string | null
+          is_digital?: boolean
+          name: string
+          release_id?: string | null
+          sale_price?: number | null
+          seo_description?: string
+          seo_title?: string
+          short_description?: string
+          slug: string
+          song_id?: string | null
+          sort_order?: number
+          status?: string
+          stock?: number | null
+          type?: string
+          updated_at?: string
+          video_id?: string | null
+        }
+        Update: {
+          badge?: string | null
+          base_price?: number
+          created_at?: string
+          currency?: string
+          description?: string
+          digital_asset_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_digital?: boolean
+          name?: string
+          release_id?: string | null
+          sale_price?: number | null
+          seo_description?: string
+          seo_title?: string
+          short_description?: string
+          slug?: string
+          song_id?: string | null
+          sort_order?: number
+          status?: string
+          stock?: number | null
+          type?: string
+          updated_at?: string
+          video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_release_id_fkey"
+            columns: ["release_id"]
+            isOneToOne: false
+            referencedRelation: "releases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_song_id_fkey"
+            columns: ["song_id"]
+            isOneToOne: false
+            referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
