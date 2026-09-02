@@ -1,9 +1,12 @@
 import type { Product, Release, Song, Video } from "./data";
 
-/** Tracks eines Releases in gespeicherter Reihenfolge. */
+/** Tracks eines Releases in gespeicherter Reihenfolge (Zuordnung über release_id, Fallback Albumtitel). */
 export function releaseTracks(songs: Song[], release: Release) {
-  return songs.filter((s) => s.album === release.title);
+  const assigned = songs.filter((s) => s.releaseId === release.id);
+  if (assigned.length) return assigned;
+  return songs.filter((s) => !s.releaseId && s.album === release.title);
 }
+
 
 export type StreamingService = { id: keyof Song["links"]; label: string; url: string };
 
