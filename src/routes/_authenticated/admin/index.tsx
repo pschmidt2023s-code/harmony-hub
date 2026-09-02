@@ -28,6 +28,7 @@ const money = (v: number, c = "EUR") =>
 
 function AdminDashboard() {
   const content = useQuery(contentQueryOptions);
+  const products = useQuery(adminProductsQueryOptions);
   const orders = useAdminOrders();
   const subs = useAdminSubscribers();
   const activity = useAdminActivity();
