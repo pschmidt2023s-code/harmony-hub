@@ -5,24 +5,21 @@ import { ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Section } from "@/components/Section";
 import { useCart } from "@/lib/cart";
-import { money, shopQueryOptions } from "@/lib/shop";
+import { money, shopCatalogQueryOptions, shopQueryOptions } from "@/lib/shop";
+import { normalizeSettings, seoHead } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/shop/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(shopQueryOptions),
-  head: () => ({
-    meta: [
-      { title: "Shop — Offizielles TAYO Merchandise" },
-      {
-        name: "description",
-        content: "Limitierte Hoodies, Vinyl, Caps und Bundles aus dem offiziellen TAYO Store.",
-      },
-      { property: "og:title", content: "Shop — Offizielles TAYO Merch" },
-      { property: "og:description", content: "Hoodies, Vinyl, Caps und Bundles — limitiert und offiziell." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(shopCatalogQueryOptions),
+  head: ({ loaderData }) => {
+    const st = normalizeSettings(loaderData?.settings);
+    return seoHead({
+      title: `Shop — Offizielles ${st.artist_name} Merchandise`,
+      description: `Offizieller Store von ${st.artist_name}: Musik, Merch und Bundles direkt vom Artist.`,
+      path: "/shop",
+      settings: st,
+    });
+  },
   errorComponent: () => (
     <div className="pt-32">
       <Section eyebrow="Store" title="Merchandise">

@@ -2,29 +2,56 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Section } from "@/components/Section";
 import { ProductDetail } from "@/components/shop/ProductDetail";
-import { shopQueryOptions } from "@/lib/shop";
+import { money, shopCatalogQueryOptions, shopQueryOptions } from "@/lib/shop";
+import { canonicalUrl, jsonLd, normalizeSettings, seoHead, socialImage } from "@/lib/seo";
 
 export const Route = createFileRoute("/shop/$slug")({
   loader: async ({ context, params }) => {
-    const { products } = await context.queryClient.ensureQueryData(shopCatalogQueryOptions);
+    const { products, settings } = await context.queryClient.ensureQueryData(shopCatalogQueryOptions);
     const product = products.find((p) => p.slug === params.slug);
     if (!product) throw notFound();
-    return { product };
+    return { product, settings };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const st = normalizeSettings(loaderData?.settings);
     const p = loaderData?.product;
-    const title = p ? p.seoTitle || `${p.name} — TAYO Shop` : "Produkt — TAYO Shop";
-    const description = p
-      ? p.seoDescription || p.shortDescription || `${p.name} im offiziellen TAYO Store.`
-      : "Offizielles TAYO Merchandise.";
+    const path = `/shop/${params.slug}`;
+    if (!p) {
+      return seoHead({
+        title: "Produkt nicht verfügbar — TAYO Shop",
+        description: "Dieses Produkt ist nicht öffentlich verfügbar.",
+        path,
+        settings: st,
+        noindex: true,
+      });
+    }
+    const title = p.seoTitle || `${p.name} — ${st.artist_name} Shop`;
+    const description =
+      p.seoDescription || p.shortDescription || p.description || `${p.name} im offiziellen ${st.artist_name} Store.`;
+    const image = socialImage(p.image, st.default_og_image);
+    const head = seoHead({ title, description, path, settings: st, image: p.image, type: "product" });
     return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
+      ...head,
+      scripts: [
+        jsonLd({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: p.name,
+          url: canonicalUrl(path, st.canonical_base_url),
+          ...(description ? { description } : {}),
+          ...(image ? { image } : {}),
+          brand: { "@type": "Brand", name: st.artist_name },
+          offers: {
+            "@type": "Offer",
+            price: p.price.toFixed(2),
+            priceCurrency: p.currency,
+            availability:
+              p.stock === null || p.stock > 0
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+            url: canonicalUrl(path, st.canonical_base_url),
+          },
+        }),
       ],
     };
   },

@@ -1,19 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import hero from "@/assets/hero-tayo.jpg";
 import { Section } from "@/components/Section";
+import { seoHead } from "@/lib/seo";
 import { ARTIST } from "@/lib/data";
 
 export const Route = createFileRoute("/ueber-mich")({
-  head: () => ({
-    meta: [
-      { title: "Über TAYO — Biografie des Artists" },
-      {
-        name: "description",
-        content: "Die Geschichte hinter TAYO: R&B-Vocals, Synthflächen und Trap-Drums aus Berlin.",
-      },
-      { property: "og:title", content: "Über TAYO — Biografie" },
-      { property: "og:description", content: "Die Geschichte hinter TAYO: R&B, Synthpop und Trap aus Berlin." },
-    ],
+  head: () => seoHead({
+    title: "Über TAYO — Biografie des Artists",
+    description: "Die Geschichte hinter TAYO: R&B-Vocals, Synthflächen und Trap-Drums aus Berlin.",
+    path: "/ueber-mich",
   }),
   component: AboutPage,
 });

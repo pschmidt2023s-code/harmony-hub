@@ -1,19 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MapPin } from "lucide-react";
 import { Section } from "@/components/Section";
+import { seoHead } from "@/lib/seo";
 import { TOUR, formatDate } from "@/lib/data";
 
 export const Route = createFileRoute("/tour")({
-  head: () => ({
-    meta: [
-      { title: "Tour 2026 — TAYO Live Tickets" },
-      {
-        name: "description",
-        content: "Alle TAYO Live-Termine 2026 in Berlin, Hamburg, Köln, München, Wien und Zürich.",
-      },
-      { property: "og:title", content: "Tour 2026 — TAYO Live" },
-      { property: "og:description", content: "Alle Live-Termine und Tickets der TAYO Tour 2026." },
-    ],
+  head: () => seoHead({
+    title: "Tour 2026 — TAYO Live Tickets",
+    description: "Alle TAYO Live-Termine 2026 in Berlin, Hamburg, Köln, München, Wien und Zürich.",
+    path: "/tour",
   }),
   component: TourPage,
 });
