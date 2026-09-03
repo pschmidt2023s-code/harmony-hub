@@ -14,17 +14,17 @@ export function SiteHeader() {
   const sections = usePublicSections();
 
   /**
-   * Phase 17: Die öffentliche Navigation zeigt ausschließlich Bereiche mit
-   * echtem, veröffentlichtem Inhalt. Kommen später Videos, Produkte oder
-   * Tourdaten dazu, erscheinen die Einträge automatisch wieder.
+   * Öffentliche Navigation: feste Bereiche der Website. Seiten ohne Inhalt
+   * zeigen einen eigenen Empty State, statt aus dem Menü zu verschwinden.
    */
-  const NAV: { to: "/" | "/musik" | "/videos" | "/shop" | "/tour" | "/ueber-mich"; label: string }[] = [
+  const NAV: { to: "/" | "/musik" | "/videos" | "/shop" | "/tour" | "/ueber-mich" | "/kontakt"; label: string }[] = [
     { to: "/", label: "Start" },
-    ...(sections.hasMusic ? ([{ to: "/musik", label: "Musik" }] as const) : []),
-    ...(sections.hasVideos ? ([{ to: "/videos", label: "Videos" }] as const) : []),
-    ...(sections.hasShop ? ([{ to: "/shop", label: "Shop" }] as const) : []),
-    ...(sections.hasTour ? ([{ to: "/tour", label: "Tour" }] as const) : []),
+    { to: "/musik", label: "Musik" },
+    { to: "/videos", label: "Videos" },
+    { to: "/shop", label: "Shop" },
+    { to: "/tour", label: "Tour" },
     { to: "/ueber-mich", label: "Über" },
+    { to: "/kontakt", label: "Kontakt" },
   ];
 
   // Menü bei Escape schließen und Hintergrund-Scroll sperren, solange es offen ist.
@@ -84,7 +84,7 @@ export function SiteHeader() {
               <ShoppingBag className="size-4" /> {cart.count}
             </Link>
           )}
-          {sections.hasShop && (
+          {true && (
             <Link
               to="/shop"
               className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
@@ -141,7 +141,7 @@ export function SiteHeader() {
           >
             {user ? "Mein Konto" : "Login / Registrieren"}
           </Link>
-          {sections.hasShop && (
+          {true && (
             <Link
               to="/shop"
               onClick={() => setOpen(false)}
