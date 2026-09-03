@@ -120,7 +120,7 @@ export function SiteHeader() {
           id="mobile-nav"
           className="glass-strong flex max-h-[calc(100dvh-4.5rem)] animate-fade-in flex-col gap-1 overflow-y-auto px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:hidden"
         >
-          {NAV.map((item) => (
+          {NAV.filter((item) => item.to !== "/tour").map((item) => (
             <Link
               key={item.to}
               to={item.to}
