@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink, Pause, Play } from "lucide-react";
 import { usePlayer } from "@/components/player/player-context";
 import { Tracklist } from "@/components/release/Tracklist";
 import { ShareButton } from "@/components/release/ShareButton";
 import type { SiteContent } from "@/lib/content";
-import { publishedReleases } from "@/lib/release";
+import { isUpcomingPublic, publishedReleases, releaseMoment } from "@/lib/release";
+import { ReleaseCountdown } from "@/components/release/ReleaseCountdown";
 import {
   releaseCredits,
   releaseGenres,
@@ -21,6 +22,9 @@ import { money, shopQueryOptions } from "@/lib/shop";
 
 export function ReleaseLanding({ release, content }: { release: Release; content: SiteContent }) {
   const player = usePlayer();
+  const queryClient = useQueryClient();
+  // Noch nicht erschienen: keine Wiedergabe, Countdown statt Play.
+  const upcoming = isUpcomingPublic(release);
   // Akzentfarbe dieser Seite = Cover DIESES Releases (Phase-2-System, nur andere Quelle).
   useAccentSource(release.cover);
 
@@ -44,7 +48,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
 
   const details: { label: string; value: string }[] = [
     { label: "Typ", value: release.type },
-    { label: "Erschienen", value: formatDate(release.date) },
+    { label: upcoming ? "Erscheint" : "Erschienen", value: formatDate(release.date) },
     ...(tracks.length ? [{ label: "Tracks", value: String(tracks.length) }] : []),
     ...(runtime ? [{ label: "Laufzeit", value: formatTime(runtime) }] : []),
     ...(genres.length ? [{ label: "Genre", value: genres.join(", ") }] : []),
@@ -89,13 +93,21 @@ export function ReleaseLanding({ release, content }: { release: Release; content
               <h1 className="mt-3 break-words text-4xl font-extrabold uppercase leading-[0.95] sm:text-6xl md:text-7xl">
                 {release.title}
               </h1>
+              {upcoming && (
+                <p className="mt-4">
+                  <ReleaseCountdown
+                    target={releaseMoment(release)}
+                    onExpire={() => void queryClient.invalidateQueries({ queryKey: ["site-content"] })}
+                  />
+                </p>
+              )}
               <p className="mt-4 text-sm text-muted-foreground">
                 {ARTIST.name} · {formatDate(release.date)}
                 {tracks.length > 0 && ` · ${tracks.length} ${tracks.length === 1 ? "Track" : "Tracks"}`}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                {tracks.length > 0 && (
+                {tracks.length > 0 && !upcoming && (
                   <button
                     onClick={playRelease}
                     className="glow inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
@@ -124,7 +136,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
       <div className="mx-auto grid max-w-6xl gap-14 px-5 md:px-8">
         {tracks.length > 0 && (
           <Block title="Tracklist">
-            <Tracklist tracks={tracks} />
+            <Tracklist tracks={tracks} locked={upcoming} />
           </Block>
         )}
 

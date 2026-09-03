@@ -37,6 +37,22 @@ export function upcomingReleases(releases: Release[]) {
     .sort((a, b) => (a.date < b.date ? -1 : 1));
 }
 
+/**
+ * Tatsächlicher Veröffentlichungszeitpunkt aus der bestehenden Scheduling-Architektur:
+ * `publish_at` (UTC-Zeitstempel) wenn gesetzt, sonst das reine Release-Datum um 00:00 UTC.
+ */
+export function releaseMoment(release: Release): Date {
+  const raw = release.publishAt ?? `${release.date}T00:00:00Z`;
+  const d = new Date(raw);
+  return Number.isNaN(d.getTime()) ? new Date(`${release.date}T00:00:00Z`) : d;
+}
+
+/** Ist dieses Release öffentlich angekündigt, aber noch nicht erschienen? */
+export function isUpcomingPublic(release: Release) {
+  return upcomingReleases([release]).length === 1;
+}
+
+
 /** Tage bis zum Release (>= 0) oder null, wenn das Datum erreicht ist. */
 export function daysUntil(date: string) {
   const diff = Date.parse(`${date}T00:00:00Z`) - Date.parse(`${today()}T00:00:00Z`);

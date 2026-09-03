@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { ChevronDown, Heart, Pause, Play } from "lucide-react";
+import { ChevronDown, Heart, Lock, Pause, Play } from "lucide-react";
 import { usePlayer } from "@/components/player/player-context";
 import { formatTime, type Song } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 /** Premium-Tracklist: Nummer, Titel, Dauer, Play – Wiedergabe über den globalen Player. */
-export function Tracklist({ tracks }: { tracks: Song[] }) {
+export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?: boolean }) {
   const p = usePlayer();
   const [openLyrics, setOpenLyrics] = useState<string | null>(null);
 
@@ -27,8 +27,15 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
           >
             <div className="group grid grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
               <button
-                onClick={() => (active ? p.toggle() : p.play(song, tracks))}
-                aria-label={isPlaying ? `${song.title} pausieren` : `${song.title} abspielen`}
+                onClick={() => (locked ? undefined : active ? p.toggle() : p.play(song, tracks))}
+                disabled={locked}
+                aria-label={
+                  locked
+                    ? `${song.title} ist noch nicht verfügbar`
+                    : isPlaying
+                      ? `${song.title} pausieren`
+                      : `${song.title} abspielen`
+                }
                 className={cn(
                   "grid size-10 place-items-center rounded-full text-xs tabular-nums transition-colors sm:size-9",
                   active
@@ -36,7 +43,9 @@ export function Tracklist({ tracks }: { tracks: Song[] }) {
                     : "text-muted-foreground hover:bg-primary hover:text-primary-foreground",
                 )}
               >
-                {isPlaying ? (
+                {locked ? (
+                  <Lock className="size-3.5" />
+                ) : isPlaying ? (
                   <Pause className="size-3.5" />
                 ) : active ? (
                   <Play className="size-3.5" />
