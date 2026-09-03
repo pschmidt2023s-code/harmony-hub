@@ -26,11 +26,13 @@ export function ReleaseCountdown({
   onExpire,
   className = "",
   showSeconds = true,
+  variant = "inline",
 }: {
   target: Date;
   onExpire?: () => void;
   className?: string;
   showSeconds?: boolean;
+  variant?: "inline" | "hero";
 }) {
   const [parts, setParts] = useState(() => countdownTo(target));
 
