@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SOCIAL_LINKS } from "@/lib/data";
+import { usePublicSections } from "@/lib/public-nav";
 
 const ICONS = { instagram: Instagram, youtube: Youtube, tiktok: Music2 } as const;
 
