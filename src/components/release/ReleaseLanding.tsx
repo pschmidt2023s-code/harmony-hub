@@ -8,6 +8,7 @@ import type { SiteContent } from "@/lib/content";
 import { isUpcomingPublic, publishedReleases, releaseMoment } from "@/lib/release";
 import { ReleaseCountdown } from "@/components/release/ReleaseCountdown";
 import { ReleaseNotifyButton } from "@/components/account/ReleaseNotifyButton";
+import { ReleaseDownloads } from "@/components/release/ReleaseDownloads";
 import {
   releaseCredits,
   releaseGenres,
@@ -37,6 +38,10 @@ export function ReleaseLanding({ release, content }: { release: Release; content
   const { data: catalog = [] } = useQuery(shopQueryOptions);
   const products = releaseProducts(catalog, release, tracks);
   const runtime = totalDuration(tracks);
+  // Pre-Save nur mit echtem, konfiguriertem Link — niemals ein Button ohne Funktion.
+  const preSaveUrl = ((release.links ?? {}) as Record<string, string>)["presave"]?.trim() || null;
+  // Pre-Order nur, wenn ein echtes, veröffentlichtes Produkt dem Release zugeordnet ist.
+  const preOrderProduct = upcoming ? (products.find((p) => p.releaseId === release.id) ?? null) : null;
   const playing = player.playing && tracks.some((t) => t.id === player.current?.id);
 
   const playRelease = () => {
@@ -95,12 +100,13 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                 {release.title}
               </h1>
               {upcoming && (
-                <p className="mt-4">
+                <div className="mt-6">
                   <ReleaseCountdown
+                    variant="hero"
                     target={releaseMoment(release)}
                     onExpire={() => void queryClient.invalidateQueries({ queryKey: ["site-content"] })}
                   />
-                </p>
+                </div>
               )}
               <p className="mt-4 text-sm text-muted-foreground">
                 {ARTIST.name} · {formatDate(release.date)}
@@ -127,6 +133,25 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                     Auf {services[0]!.label} hören <ExternalLink className="size-4" />
                   </a>
                 )}
+                {upcoming && preSaveUrl && (
+                  <a
+                    href={preSaveUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="glow inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+                  >
+                    Pre-Save <ExternalLink className="size-4" />
+                  </a>
+                )}
+                {preOrderProduct && (
+                  <Link
+                    to="/shop/$slug"
+                    params={{ slug: preOrderProduct.slug }}
+                    className="glass inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium transition-colors hover:text-primary"
+                  >
+                    Vorbestellen · {money(preOrderProduct.price, preOrderProduct.currency)}
+                  </Link>
+                )}
                 {upcoming && <ReleaseNotifyButton releaseId={release.id} />}
                 <ShareButton title={`${ARTIST.name} — ${release.title}`} text={release.description || undefined} />
               </div>
@@ -139,6 +164,11 @@ export function ReleaseLanding({ release, content }: { release: Release; content
         {tracks.length > 0 && (
           <Block title="Tracklist">
             <Tracklist tracks={tracks} locked={upcoming} />
+            {upcoming && (
+              <p className="mt-3 text-xs text-muted-foreground">
+                Noch nicht verfügbar — die Tracks werden zum Release automatisch freigeschaltet.
+              </p>
+            )}
           </Block>
         )}
 
@@ -246,6 +276,12 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                 </Link>
               ))}
             </div>
+          </Block>
+        )}
+
+        {products.length > 0 && (
+          <Block title="Deine Downloads">
+            <ReleaseDownloads productIds={products.map((p) => p.id)} />
           </Block>
         )}
 
