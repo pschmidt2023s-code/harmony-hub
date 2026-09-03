@@ -4,22 +4,28 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/cart";
-
-const NAV = [
-  { to: "/", label: "Start" },
-  { to: "/musik", label: "Musik" },
-  { to: "/videos", label: "Videos" },
-  { to: "/shop", label: "Shop" },
-  { to: "/tour", label: "Tour" },
-  { to: "/ueber-mich", label: "Über" },
-  { to: "/kontakt", label: "Kontakt" },
-] as const;
+import { usePublicSections } from "@/lib/public-nav";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const cart = useCart();
+  const sections = usePublicSections();
+
+  /**
+   * Phase 17: Die öffentliche Navigation zeigt ausschließlich Bereiche mit
+   * echtem, veröffentlichtem Inhalt. Kommen später Videos, Produkte oder
+   * Tourdaten dazu, erscheinen die Einträge automatisch wieder.
+   */
+  const NAV = [
+    { to: "/", label: "Start" },
+    ...(sections.hasMusic ? [{ to: "/musik", label: "Musik" }] : []),
+    ...(sections.hasVideos ? [{ to: "/videos", label: "Videos" }] : []),
+    ...(sections.hasShop ? [{ to: "/shop", label: "Shop" }] : []),
+    ...(sections.hasTour ? [{ to: "/tour", label: "Tour" }] : []),
+    { to: "/ueber-mich", label: "Über" },
+  ] as const satisfies readonly { to: string; label: string }[];
 
   // Menü bei Escape schließen und Hintergrund-Scroll sperren, solange es offen ist.
   useEffect(() => {
