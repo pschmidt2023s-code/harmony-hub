@@ -5,18 +5,9 @@ import type { Song } from "@/lib/data";
 
 /** Aktuelle Tracks – nutzt den globalen Player über SongRow. */
 export function LatestMusic({ songs }: { songs: Song[] }) {
-  if (!songs.length) {
-    return (
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
-          <div className="glass rounded-2xl px-6 py-10 text-center">
-            <p className="text-xs uppercase tracking-[0.4em] text-primary">Bibliothek</p>
-            <p className="mt-3 text-sm text-muted-foreground">Noch keine Tracks veröffentlicht.</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  // Low Profile: Gibt es keine veröffentlichten Tracks, bleibt die Sektion weg
+  // statt eine leere Fläche zu erzeugen.
+  if (!songs.length) return null;
 
   return (
     <Section
