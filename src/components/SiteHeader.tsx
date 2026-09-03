@@ -18,14 +18,14 @@ export function SiteHeader() {
    * echtem, veröffentlichtem Inhalt. Kommen später Videos, Produkte oder
    * Tourdaten dazu, erscheinen die Einträge automatisch wieder.
    */
-  const NAV = [
+  const NAV: { to: "/" | "/musik" | "/videos" | "/shop" | "/tour" | "/ueber-mich"; label: string }[] = [
     { to: "/", label: "Start" },
-    ...(sections.hasMusic ? [{ to: "/musik", label: "Musik" }] : []),
-    ...(sections.hasVideos ? [{ to: "/videos", label: "Videos" }] : []),
-    ...(sections.hasShop ? [{ to: "/shop", label: "Shop" }] : []),
-    ...(sections.hasTour ? [{ to: "/tour", label: "Tour" }] : []),
+    ...(sections.hasMusic ? ([{ to: "/musik", label: "Musik" }] as const) : []),
+    ...(sections.hasVideos ? ([{ to: "/videos", label: "Videos" }] as const) : []),
+    ...(sections.hasShop ? ([{ to: "/shop", label: "Shop" }] as const) : []),
+    ...(sections.hasTour ? ([{ to: "/tour", label: "Tour" }] as const) : []),
     { to: "/ueber-mich", label: "Über" },
-  ] as const satisfies readonly { to: string; label: string }[];
+  ];
 
   // Menü bei Escape schließen und Hintergrund-Scroll sperren, solange es offen ist.
   useEffect(() => {
