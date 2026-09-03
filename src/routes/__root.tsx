@@ -9,6 +9,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { contentQueryOptions } from "@/lib/content";
+import { shopCatalogQueryOptions } from "@/lib/shop";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
