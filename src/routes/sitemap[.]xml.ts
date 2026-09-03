@@ -7,7 +7,7 @@ import { TOUR } from "@/lib/data";
  * Phase 17: Nur Bereiche mit echtem, öffentlichem Inhalt landen in der Sitemap.
  * `/kontakt` ist bewusst noindex, `/tour` erscheint erst mit bestätigten Terminen.
  */
-const BASE_PATHS = ["", "musik", "ueber-mich"];
+const BASE_PATHS = ["", "ueber-mich"];
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -25,9 +25,11 @@ export const Route = createFileRoute("/sitemap.xml")({
             .map((r) => `releases/${r.slug}`);
           // getContent liefert bereits nur öffentlich sichtbare Videos.
           videoPaths = content.videos.filter((v) => v.slug).map((v) => `videos/${v.slug}`);
+          hasMusic = content.songs.length > 0 || releasePaths.length > 0;
         } catch {
           releasePaths = [];
           videoPaths = [];
+          hasMusic = false;
         }
 
         try {
@@ -39,6 +41,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         }
 
         const sectionPaths = [
+          ...(hasMusic ? ["musik"] : []),
           ...(videoPaths.length ? ["videos"] : []),
           ...(productPaths.length ? ["shop"] : []),
           ...(TOUR.length ? ["tour"] : []),
