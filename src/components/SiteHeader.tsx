@@ -141,13 +141,15 @@ export function SiteHeader() {
           >
             {user ? "Mein Konto" : "Login / Registrieren"}
           </Link>
-          <Link
-            to="/shop"
-            onClick={() => setOpen(false)}
-            className="mt-2 rounded-full bg-primary px-5 py-3 text-center text-base font-medium text-primary-foreground"
-          >
-            Merch
-          </Link>
+          {sections.hasShop && (
+            <Link
+              to="/shop"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-full bg-primary px-5 py-3 text-center text-base font-medium text-primary-foreground"
+            >
+              Merch
+            </Link>
+          )}
         </nav>
       )}
     </header>
