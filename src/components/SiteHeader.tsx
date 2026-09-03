@@ -84,12 +84,14 @@ export function SiteHeader() {
               <ShoppingBag className="size-4" /> {cart.count}
             </Link>
           )}
-          <Link
-            to="/shop"
-            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
-          >
-            Merch
-          </Link>
+          {sections.hasShop && (
+            <Link
+              to="/shop"
+              className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
+            >
+              Merch
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-1 lg:hidden">
           {cart.count > 0 && (
