@@ -1,8 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getContent } from "@/lib/content.functions";
 import { getShopCatalog } from "@/lib/shop.functions";
+import { TOUR } from "@/lib/data";
 
-const PATHS = ["", "musik", "videos", "shop", "tour", "ueber-mich", "kontakt"];
+/**
+ * Phase 17: Nur Bereiche mit echtem, öffentlichem Inhalt landen in der Sitemap.
+ * `/kontakt` ist bewusst noindex, `/tour` erscheint erst mit bestätigten Terminen.
+ */
+const BASE_PATHS = ["", "musik", "ueber-mich"];
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -33,7 +38,12 @@ export const Route = createFileRoute("/sitemap.xml")({
           productPaths = [];
         }
 
-        const all = [...PATHS, ...releasePaths, ...videoPaths, ...productPaths];
+        const sectionPaths = [
+          ...(videoPaths.length ? ["videos"] : []),
+          ...(productPaths.length ? ["shop"] : []),
+          ...(TOUR.length ? ["tour"] : []),
+        ];
+        const all = [...BASE_PATHS, ...sectionPaths, ...releasePaths, ...videoPaths, ...productPaths];
         const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${all
