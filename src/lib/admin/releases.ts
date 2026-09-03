@@ -120,5 +120,3 @@ export async function deleteRelease(id: string) {
   if (error) throw error;
 }
 
-/** Zentraler Upload aus der Medienbibliothek – es gibt nur dieses eine System. */
-export { uploadMedia } from "@/lib/admin/media";
