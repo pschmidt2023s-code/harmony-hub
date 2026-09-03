@@ -2,12 +2,19 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReleaseLanding } from "@/components/release/ReleaseLanding";
 import { contentQueryOptions, type SiteContent } from "@/lib/content";
-import { publishedReleases } from "@/lib/release";
+import { publishedReleases, upcomingReleases } from "@/lib/release";
 import { formatDate, type Release } from "@/lib/data";
 import { canonicalUrl, jsonLd, normalizeSettings, seoHead, socialImage } from "@/lib/seo";
 
-const findRelease = (content: SiteContent | undefined, slug: string): Release | null =>
-  content ? (publishedReleases(content.releases).find((r) => r.slug === slug) ?? null) : null;
+/**
+ * Öffentlich erreichbar sind erschienene Releases sowie offiziell angekündigte
+ * kommende Releases (Pre-Save-Seite). Entwürfe und archivierte Releases nicht.
+ */
+const findRelease = (content: SiteContent | undefined, slug: string): Release | null => {
+  if (!content) return null;
+  const pool = [...publishedReleases(content.releases), ...upcomingReleases(content.releases)];
+  return pool.find((r) => r.slug === slug) ?? null;
+};
 
 export const Route = createFileRoute("/releases/$slug")({
   loader: async ({ context, params }) => {
