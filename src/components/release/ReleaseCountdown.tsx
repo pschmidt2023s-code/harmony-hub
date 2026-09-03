@@ -49,6 +49,29 @@ export function ReleaseCountdown({
   if (parts.done) return null;
 
   const pad = (n: number) => String(n).padStart(2, "0");
+  const label = `Noch ${parts.days} Tage, ${parts.hours} Stunden und ${parts.minutes} Minuten bis zur Veröffentlichung`;
+
+  if (variant === "hero") {
+    const cells: { value: string; unit: string }[] = [
+      { value: String(parts.days), unit: parts.days === 1 ? "Tag" : "Tage" },
+      { value: pad(parts.hours), unit: "Std" },
+      { value: pad(parts.minutes), unit: "Min" },
+      ...(showSeconds ? [{ value: pad(parts.seconds), unit: "Sek" }] : []),
+    ];
+    return (
+      <div className={`flex flex-wrap gap-2 sm:gap-3 ${className}`} aria-label={label} role="timer">
+        {cells.map((c) => (
+          <div
+            key={c.unit}
+            className="glass min-w-[4.25rem] rounded-2xl px-3 py-3 text-center sm:min-w-[5.5rem] sm:px-4"
+          >
+            <div className="font-mono text-2xl font-bold tabular-nums text-primary sm:text-4xl">{c.value}</div>
+            <div className="mt-1 text-[10px] uppercase tracking-[0.28em] text-muted-foreground">{c.unit}</div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <span
