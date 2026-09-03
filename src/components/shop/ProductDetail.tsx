@@ -4,6 +4,7 @@ import { Download, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { Section } from "@/components/Section";
 import { useCart } from "@/lib/cart";
+import { WishlistButton } from "@/components/account/WishlistButton";
 import { money, type ShopProduct } from "@/lib/shop";
 import { cn } from "@/lib/utils";
 
@@ -81,6 +82,7 @@ export function ProductDetail({ product, canBuy = true }: { product: ShopProduct
             >
               <ShoppingBag className="size-4" /> In den Warenkorb
             </button>
+            <WishlistButton productId={product.id} name={product.name} />
             <Link
               to="/shop"
               className="rounded-full border border-border px-6 py-3 text-sm text-muted-foreground hover:text-foreground"

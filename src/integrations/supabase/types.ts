@@ -329,6 +329,10 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          locale: string
+          notify_account: boolean
+          notify_new_releases: boolean
+          notify_release_reminders: boolean
           updated_at: string
         }
         Insert: {
@@ -336,6 +340,10 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          locale?: string
+          notify_account?: boolean
+          notify_new_releases?: boolean
+          notify_release_reminders?: boolean
           updated_at?: string
         }
         Update: {
@@ -343,9 +351,42 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          locale?: string
+          notify_account?: boolean
+          notify_new_releases?: boolean
+          notify_release_reminders?: boolean
           updated_at?: string
         }
         Relationships: []
+      }
+      release_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          release_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          release_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          release_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "release_notifications_release_id_fkey"
+            columns: ["release_id"]
+            isOneToOne: false
+            referencedRelation: "releases"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       releases: {
         Row: {
@@ -681,6 +722,35 @@ export type Database = {
             columns: ["song_id"]
             isOneToOne: false
             referencedRelation: "songs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wishlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]

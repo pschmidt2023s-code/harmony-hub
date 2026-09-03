@@ -7,6 +7,7 @@ import { ShareButton } from "@/components/release/ShareButton";
 import type { SiteContent } from "@/lib/content";
 import { isUpcomingPublic, publishedReleases, releaseMoment } from "@/lib/release";
 import { ReleaseCountdown } from "@/components/release/ReleaseCountdown";
+import { ReleaseNotifyButton } from "@/components/account/ReleaseNotifyButton";
 import {
   releaseCredits,
   releaseGenres,
@@ -126,6 +127,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                     Auf {services[0]!.label} hören <ExternalLink className="size-4" />
                   </a>
                 )}
+                {upcoming && <ReleaseNotifyButton releaseId={release.id} />}
                 <ShareButton title={`${ARTIST.name} — ${release.title}`} text={release.description || undefined} />
               </div>
             </div>
