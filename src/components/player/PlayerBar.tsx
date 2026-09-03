@@ -199,7 +199,11 @@ export function PlayerBar() {
                 className="h-1 w-20 accent-[var(--primary)]"
               />
             </div>
-            <button className="hidden p-1 text-muted-foreground hover:text-foreground xl:block" aria-label="Queue">
+            <button
+              onClick={() => p.setQueueOpen(!p.queueOpen)}
+              className={cn("hidden p-1 text-muted-foreground transition-colors hover:text-foreground lg:block", p.queueOpen && "text-primary")}
+              aria-label="Warteschlange anzeigen"
+            >
               <ListMusic className="size-4" />
             </button>
             <button
