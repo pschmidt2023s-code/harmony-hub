@@ -40,26 +40,16 @@ export function SiteFooter() {
         <FooterCol
           title="Entdecken"
           links={[
-            { to: "/musik", label: "Musik" },
-            { to: "/videos", label: "Videos" },
-            { to: "/tour", label: "Tour" },
-            { to: "/shop", label: "Shop" },
+            ...(sections.hasMusic ? [{ to: "/musik", label: "Musik" }] : []),
+            ...(sections.hasVideos ? [{ to: "/videos", label: "Videos" }] : []),
+            ...(sections.hasTour ? [{ to: "/tour", label: "Live" }] : []),
+            ...(sections.hasShop ? [{ to: "/shop", label: "Shop" }] : []),
           ]}
         />
-        <FooterCol
-          title="Artist"
-          links={[
-            { to: "/ueber-mich", label: "Über mich" },
-            { to: "/kontakt", label: "Kontakt" },
-            { to: "/kontakt", label: "Booking" },
-            { to: "/kontakt", label: "Presse" },
-          ]}
-        />
+        <FooterCol title="Artist" links={[{ to: "/ueber-mich", label: "Über mich" }]} />
         <div>
           <p className="text-sm font-semibold">Newsletter</p>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Releases, Pre-Sales und Ticket-Vorverkauf zuerst.
-          </p>
+          <p className="mt-3 text-sm text-muted-foreground">Neue Releases zuerst.</p>
           <NewsletterForm
             className="mt-4 flex gap-2"
             inputClassName="glass min-w-0 flex-1 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
