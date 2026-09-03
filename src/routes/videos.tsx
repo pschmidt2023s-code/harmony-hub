@@ -47,6 +47,15 @@ function VideosPage() {
             </button>
           ))}
         </div>
+        {list.length === 0 && (
+          <div className="glass rounded-2xl px-6 py-14 text-center">
+            <p className="text-sm text-muted-foreground">
+              {data.videos.length === 0
+                ? "Aktuell sind keine Videos veröffentlicht."
+                : "Keine Videos in dieser Kategorie."}
+            </p>
+          </div>
+        )}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((v) => (
             <Link
