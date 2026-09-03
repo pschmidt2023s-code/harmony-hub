@@ -74,7 +74,9 @@ export const updateNotificationPrefs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => prefsInput.parse(data))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("profiles").update(data).eq("id", context.userId);
+    const patch: Record<string, boolean> = {};
+    for (const [key, value] of Object.entries(data)) if (typeof value === "boolean") patch[key] = value;
+    const { error } = await context.supabase.from("profiles").update(patch).eq("id", context.userId);
     if (error) throw error;
     return { ok: true };
   });
