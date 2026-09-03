@@ -100,6 +100,9 @@ export function toPlayerSong(row: SongRow, coverFallback?: string): Song {
     links: (row.links ?? {}) as Song["links"],
     lyrics: (row.lyrics ?? []) as unknown as Song["lyrics"],
     credits: (row.credits ?? []) as unknown as SongCredit[],
+    accessLevel: (row.access_level ?? "PUBLIC") === "EXCLUSIVE" ? "EXCLUSIVE" : "PUBLIC",
+    // Admin-Vorschau: der Editor spielt die eigene Datei ab, keine öffentliche Freigabe.
+    locked: false,
   };
 }
 
