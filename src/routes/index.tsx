@@ -46,13 +46,16 @@ function Index() {
   const { data } = useSuspenseQuery(contentQueryOptions);
   const { data: products } = useSuspenseQuery(shopQueryOptions);
   const release = newestRelease(data.releases);
+  const upcoming = upcomingReleases(data.releases);
+  // Das nächste angekündigte Release führt den Hero an, solange nichts Neues erschienen ist.
+  const heroUpcoming = upcoming[0] ?? null;
   const songs = songsByRecency(data.songs, data.releases);
 
   return (
     <>
-      <Hero release={release} songs={data.songs} />
+      <Hero release={release} upcoming={heroUpcoming} songs={data.songs} />
       <LatestMusic songs={songs} />
-      <UpcomingReleases releases={upcomingReleases(data.releases)} />
+      <UpcomingReleases releases={upcoming.filter((r) => r.id !== heroUpcoming?.id)} />
       <LatestVideos videos={videosByRecency(data.videos)} />
       <TourDates dates={TOUR} />
       <MerchHighlights products={products} />
