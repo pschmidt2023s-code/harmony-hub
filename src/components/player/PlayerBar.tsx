@@ -6,6 +6,7 @@ import {
   Pause,
   Play,
   Repeat,
+  Repeat1,
   Shuffle,
   SkipBack,
   SkipForward,
@@ -154,11 +155,17 @@ export function PlayerBar() {
               <SkipForward className="size-5" />
             </button>
             <button
-              onClick={p.toggleRepeat}
-              aria-label="Repeat"
-              className={cn("hidden p-2 text-muted-foreground transition-colors hover:text-foreground sm:block", p.repeat && "text-primary")}
+              onClick={p.cycleRepeat}
+              aria-label={
+                p.repeat === "track"
+                  ? "Wiederholung: aktueller Track"
+                  : p.repeat === "queue"
+                    ? "Wiederholung: Warteschlange"
+                    : "Wiederholung aus"
+              }
+              className={cn("hidden p-2 text-muted-foreground transition-colors hover:text-foreground sm:block", p.repeat !== "off" && "text-primary")}
             >
-              <Repeat className="size-4" />
+              {p.repeat === "track" ? <Repeat1 className="size-4" /> : <Repeat className="size-4" />}
             </button>
           </div>
 
@@ -192,7 +199,11 @@ export function PlayerBar() {
                 className="h-1 w-20 accent-[var(--primary)]"
               />
             </div>
-            <button className="hidden p-1 text-muted-foreground hover:text-foreground xl:block" aria-label="Queue">
+            <button
+              onClick={() => p.setQueueOpen(!p.queueOpen)}
+              className={cn("hidden p-1 text-muted-foreground transition-colors hover:text-foreground lg:block", p.queueOpen && "text-primary")}
+              aria-label="Warteschlange anzeigen"
+            >
               <ListMusic className="size-4" />
             </button>
             <button

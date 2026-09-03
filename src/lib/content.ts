@@ -14,7 +14,14 @@ const COVERS: Record<string, string> = {
 
 const cover = (key: string) => COVERS[key] ?? coverMidnight;
 
-export type SiteContent = { songs: Song[]; releases: Release[]; videos: Video[]; settings: PublicSiteSettings };
+export type SiteContent = {
+  songs: Song[];
+  /** Release-Day-Locked Tracks: sichtbar, aber ohne Audio (Phase 20). */
+  lockedSongs: Song[];
+  releases: Release[];
+  videos: Video[];
+  settings: PublicSiteSettings;
+};
 
 export const contentQueryOptions = queryOptions({
   queryKey: ["site-content"],
@@ -24,34 +31,41 @@ export const contentQueryOptions = queryOptions({
     const releaseCover = new Map(
       data.releases.map((r) => [r.id, r.cover_url || cover(r.cover_key)] as const),
     );
+    type Row = (typeof data)["songs"][number] | (typeof data)["lockedSongs"][number];
+    const toSong = (s: Row): Song => ({
+      id: s.id,
+      slug: s.slug || s.id,
+      title: s.title,
+      artist: s.artist || "TAYO",
+      album: s.album,
+      releaseId: s.release_id,
+      type: s.type as Song["type"],
+      // Fallback-Kette: Song-Artwork → Release-Artwork → lokales Asset
+      cover: s.cover_url || (s.release_id ? releaseCover.get(s.release_id) : undefined) || cover(s.cover_key),
+      audio: s.audio_url,
+      duration: s.duration,
+      description: s.description ?? "",
+      language: s.language ?? "",
+      genre: s.genre,
+      bpm: s.bpm,
+      key: s.song_key,
+      mood: s.mood,
+      songwriter: s.songwriter,
+      producer: s.producer,
+      isrc: s.isrc,
+      explicit: s.explicit,
+      links: s.links as unknown as Song["links"],
+      lyrics: (s.lyrics ?? []) as unknown as Song["lyrics"],
+      credits: (s.credits ?? []) as unknown as Song["credits"],
+      accessLevel: (s.access_level ?? "PUBLIC") === "EXCLUSIVE" ? "EXCLUSIVE" : "PUBLIC",
+      locked: Boolean(s.locked),
+    });
+
     return {
       settings: normalizeSettings(data.settings),
-      songs: data.songs.map((s) => ({
-        id: s.id,
-        slug: s.slug || s.id,
-        title: s.title,
-        artist: s.artist || "TAYO",
-        album: s.album,
-        releaseId: s.release_id,
-        type: s.type as Song["type"],
-        // Fallback-Kette: Song-Artwork → Release-Artwork → lokales Asset
-        cover: s.cover_url || (s.release_id ? releaseCover.get(s.release_id) : undefined) || cover(s.cover_key),
-        audio: s.audio_url,
-        duration: s.duration,
-        description: s.description ?? "",
-        language: s.language ?? "",
-        genre: s.genre,
-        bpm: s.bpm,
-        key: s.song_key,
-        mood: s.mood,
-        songwriter: s.songwriter,
-        producer: s.producer,
-        isrc: s.isrc,
-        explicit: s.explicit,
-        links: s.links as unknown as Song["links"],
-        lyrics: (s.lyrics ?? []) as unknown as Song["lyrics"],
-        credits: (s.credits ?? []) as unknown as Song["credits"],
-      })),
+      songs: data.songs.map(toSong),
+      lockedSongs: data.lockedSongs.map(toSong),
+
 
       releases: data.releases.map((r) => ({
         id: r.id,

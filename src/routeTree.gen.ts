@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BibliothekRouteImport } from './routes/bibliothek'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as MusikRouteImport } from './routes/musik'
@@ -66,6 +67,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BibliothekRoute = BibliothekRouteImport.update({
+  id: '/bibliothek',
+  path: '/bibliothek',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -299,6 +305,7 @@ const AuthenticatedAdminVideosIdPreviewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bibliothek': typeof BibliothekRoute
   '/checkout': typeof CheckoutRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
@@ -344,6 +351,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bibliothek': typeof BibliothekRoute
   '/checkout': typeof CheckoutRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
@@ -390,6 +398,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/bibliothek': typeof BibliothekRoute
   '/checkout': typeof CheckoutRoute
   '/kontakt': typeof KontaktRoute
   '/musik': typeof MusikRoute
@@ -437,6 +446,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/bibliothek'
     | '/checkout'
     | '/kontakt'
     | '/musik'
@@ -482,6 +492,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/bibliothek'
     | '/checkout'
     | '/kontakt'
     | '/musik'
@@ -527,6 +538,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/bibliothek'
     | '/checkout'
     | '/kontakt'
     | '/musik'
@@ -574,6 +586,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BibliothekRoute: typeof BibliothekRoute
   CheckoutRoute: typeof CheckoutRoute
   KontaktRoute: typeof KontaktRoute
   MusikRoute: typeof MusikRoute
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bibliothek': {
+      id: '/bibliothek'
+      path: '/bibliothek'
+      fullPath: '/bibliothek'
+      preLoaderRoute: typeof BibliothekRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -1002,6 +1022,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  BibliothekRoute: BibliothekRoute,
   CheckoutRoute: CheckoutRoute,
   KontaktRoute: KontaktRoute,
   MusikRoute: MusikRoute,

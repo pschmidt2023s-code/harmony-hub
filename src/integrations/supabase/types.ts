@@ -113,6 +113,60 @@ export type Database = {
         }
         Relationships: []
       }
+      play_history: {
+        Row: {
+          created_at: string
+          id: string
+          played_at: string
+          song_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          played_at?: string
+          song_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          played_at?: string
+          song_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      playback_positions: {
+        Row: {
+          created_at: string
+          duration_seconds: number
+          id: string
+          position_seconds: number
+          song_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          position_seconds?: number
+          song_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          position_seconds?: number
+          song_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       product_variants: {
         Row: {
           available: boolean
@@ -421,6 +475,7 @@ export type Database = {
       }
       songs: {
         Row: {
+          access_level: string
           album: string
           artist: string
           audio_url: string | null
@@ -451,6 +506,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          access_level?: string
           album: string
           artist?: string
           audio_url?: string | null
@@ -481,6 +537,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          access_level?: string
           album?: string
           artist?: string
           audio_url?: string | null

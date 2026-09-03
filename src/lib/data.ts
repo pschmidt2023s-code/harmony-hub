@@ -32,6 +32,10 @@ export type Song = {
   links: { spotify: string; apple: string; youtube: string; amazon: string; deezer: string };
   lyrics: { time: number; line: string }[];
   credits: { role: string; names: string }[];
+  /** Phase 20 — Zugriffsebene: öffentlich oder exklusiv (serverseitig durchgesetzt). */
+  accessLevel: "PUBLIC" | "EXCLUSIVE";
+  /** Wiedergabe gesperrt (exklusiv oder Release-Day-Locked) — kein Audio ausgeliefert. */
+  locked: boolean;
 };
 
 

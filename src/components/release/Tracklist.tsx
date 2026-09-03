@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Heart, Lock, Pause, Play } from "lucide-react";
+import { ChevronDown, Heart, ListPlus, Lock, Pause, Play } from "lucide-react";
 import { usePlayer } from "@/components/player/player-context";
 import { formatTime, type Song } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,9 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
         const active = p.current?.id === song.id;
         const isPlaying = active && p.playing;
         const lyrics = song.lyrics ?? [];
+        const credits = song.credits ?? [];
+        // Gesperrt: Release noch nicht erschienen ODER exklusiver Track ohne Freigabe.
+        const isLocked = locked || song.locked;
         const open = openLyrics === song.id;
 
         return (
@@ -27,10 +30,10 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
           >
             <div className="group grid grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 sm:py-4">
               <button
-                onClick={() => (locked ? undefined : active ? p.toggle() : p.play(song, tracks))}
-                disabled={locked}
+                onClick={() => (isLocked ? undefined : active ? p.toggle() : p.play(song, tracks.filter((t) => !t.locked)))}
+                disabled={isLocked}
                 aria-label={
-                  locked
+                  isLocked
                     ? `${song.title} ist noch nicht verfügbar`
                     : isPlaying
                       ? `${song.title} pausieren`
@@ -43,7 +46,7 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
                     : "text-muted-foreground hover:bg-primary hover:text-primary-foreground",
                 )}
               >
-                {locked ? (
+                {isLocked ? (
                   <Lock className="size-3.5" />
                 ) : isPlaying ? (
                   <Pause className="size-3.5" />
@@ -79,6 +82,15 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
               </div>
 
               <div className="flex shrink-0 items-center gap-3">
+                {!isLocked && (
+                  <button
+                    onClick={() => p.addToQueue(song)}
+                    aria-label={`${song.title} zur Warteschlange hinzufügen`}
+                    className="hidden min-h-11 min-w-11 place-items-center text-muted-foreground transition-colors hover:text-primary sm:grid"
+                  >
+                    <ListPlus className="size-4" />
+                  </button>
+                )}
                 <button
                   onClick={() => p.toggleFavorite(song.id)}
                   aria-label={`${song.title} zu Favoriten`}
@@ -104,6 +116,16 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
                 <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                   {lyrics.map((l) => l.line).join("\n")}
                 </p>
+                {credits.length > 0 && (
+                  <dl className="mt-4 grid gap-1 border-t border-border/40 pt-4 text-xs text-muted-foreground sm:grid-cols-2">
+                    {credits.map((c) => (
+                      <div key={`${c.role}-${c.names}`} className="flex gap-2">
+                        <dt className="font-medium text-foreground">{c.role}</dt>
+                        <dd>{c.names}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
               </div>
             )}
           </li>

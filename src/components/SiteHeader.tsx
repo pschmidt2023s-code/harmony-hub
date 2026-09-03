@@ -15,9 +15,13 @@ export function SiteHeader() {
    * Öffentliche Navigation: feste Bereiche der Website. Seiten ohne Inhalt
    * zeigen einen eigenen Empty State, statt aus dem Menü zu verschwinden.
    */
-  const NAV: { to: "/" | "/musik" | "/videos" | "/shop" | "/tour" | "/ueber-mich" | "/kontakt"; label: string }[] = [
+  const NAV: {
+    to: "/" | "/musik" | "/bibliothek" | "/videos" | "/shop" | "/tour" | "/ueber-mich" | "/kontakt";
+    label: string;
+  }[] = [
     { to: "/", label: "Start" },
     { to: "/musik", label: "Musik" },
+    { to: "/bibliothek", label: "Bibliothek" },
     { to: "/videos", label: "Videos" },
     { to: "/shop", label: "Shop" },
     { to: "/tour", label: "Tour" },

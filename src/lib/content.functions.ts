@@ -67,8 +67,39 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
     return false;
   };
 
+  /**
+   * Phase 20 — Access Level.
+   * EXCLUSIVE-Tracks werden öffentlich ohne Audio-URL ausgeliefert. Die Freigabe
+   * erfolgt ausschließlich serverseitig über `getUnlockedAudio` (angemeldete Fans).
+   */
+  const publicSong = <T extends { access_level?: string | null; audio_url: string | null }>(s: T) =>
+    (s.access_level ?? "PUBLIC") === "EXCLUSIVE"
+      ? { ...s, audio_url: null, locked: true as const }
+      : { ...s, locked: false as const };
+
+  /**
+   * Release-Day-Locked: Tracks eines öffentlich angekündigten, aber noch nicht
+   * erschienenen Releases dürfen als Titel sichtbar sein — niemals mit Audio
+   * oder Lyrics. Dieselbe zentrale Sichtbarkeitslogik (`isPublic`) entscheidet.
+   */
+  const announced = new Set(
+    releaseRows
+      .filter(
+        (r) =>
+          !r.is_public &&
+          ["Geplant", "Vorbestellung", "Veröffentlicht"].includes(r.status) &&
+          Date.parse(`${r.release_date}T00:00:00Z`) > now.getTime(),
+      )
+      .map((r) => r.id),
+  );
+
+  const lockedSongs = (songs.data ?? [])
+    .filter((s) => s.status === "Veröffentlicht" && s.release_id && announced.has(s.release_id))
+    .map((s) => ({ ...s, audio_url: null, lyrics: [], locked: true as const }));
+
   return {
-    songs: (songs.data ?? []).filter(songVisible),
+    songs: (songs.data ?? []).filter(songVisible).map(publicSong),
+    lockedSongs,
     releases: releaseRows,
     videos: (videos.data ?? []).filter(videoVisible),
     settings: settings.data ?? null,

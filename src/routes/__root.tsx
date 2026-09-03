@@ -17,6 +17,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { PlayerProvider } from "@/components/player/player-context";
 import { CartProvider } from "@/lib/cart";
 import { PlayerBar } from "@/components/player/PlayerBar";
+import { QueuePanel } from "@/components/player/QueuePanel";
 import { Toaster } from "@/components/ui/sonner";
 import { PWARegister } from "@/components/PWARegister";
 import { AccentProvider } from "@/components/AccentProvider";
@@ -149,6 +150,7 @@ function RootComponent() {
           <Outlet />
         </main>
         {!isAdmin && <SiteFooter />}
+        <QueuePanel />
         <PlayerBar />
         <Toaster position="bottom-center" />
         <PWARegister />
