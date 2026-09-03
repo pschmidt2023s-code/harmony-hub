@@ -424,7 +424,18 @@ export function ReleaseEditor({ mode, initial }: { mode: "new" | "edit"; initial
                   />
                 </Field>
               ))}
+              <Field label="Pre-Save Link">
+                <input
+                  value={links["presave"] ?? ""}
+                  placeholder="https://… (nur echte Pre-Save-Kampagne)"
+                  onChange={(e) => set("links", { ...links, presave: e.target.value } as never)}
+                  className={inputCls}
+                />
+              </Field>
             </Grid>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Ohne Pre-Save-Link wird auf der Release-Seite kein Pre-Save-Button angezeigt.
+            </p>
           </Card>
         )}
 

@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReleaseLanding } from "@/components/release/ReleaseLanding";
 import { contentQueryOptions, type SiteContent } from "@/lib/content";
-import { isUpcomingPublic, publishedReleases, upcomingReleases } from "@/lib/release";
+import { publishedReleases, upcomingReleases } from "@/lib/release";
 import { formatDate, type Release } from "@/lib/data";
 import { canonicalUrl, jsonLd, normalizeSettings, seoHead, socialImage } from "@/lib/seo";
 
@@ -50,7 +50,6 @@ export const Route = createFileRoute("/releases/$slug")({
       settings: st,
       image: release.cover,
       type: "music.album",
-      ...(isUpcomingPublic(release) ? { noindex: true } : {}),
     });
     return {
       ...head,

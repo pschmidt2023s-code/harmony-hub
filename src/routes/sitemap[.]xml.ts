@@ -20,8 +20,14 @@ export const Route = createFileRoute("/sitemap.xml")({
         let productPaths: string[] = [];
         try {
           const content = await getContent();
+          // Erschienene UND öffentlich angekündigte Releases sind indexierbar.
           releasePaths = content.releases
-            .filter((r) => r.is_public && r.slug)
+            .filter(
+              (r) =>
+                r.slug &&
+                (r.is_public ||
+                  ["Geplant", "Vorbestellung", "Veröffentlicht"].includes(r.status)),
+            )
             .map((r) => `releases/${r.slug}`);
           // getContent liefert bereits nur öffentlich sichtbare Videos.
           videoPaths = content.videos.filter((v) => v.slug).map((v) => `videos/${v.slug}`);

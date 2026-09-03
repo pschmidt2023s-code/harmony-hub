@@ -150,7 +150,7 @@ export const getMyDownloads = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const ids = await entitledProductIds(context.supabase as never, context.userId);
-    if (!ids.size) return [] as { key: string; product: string; label: string; cover: string | null }[];
+    if (!ids.size) return [] as { key: string; productId: string; product: string; label: string; cover: string | null }[];
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [products, variants] = await Promise.all([
@@ -160,15 +160,16 @@ export const getMyDownloads = createServerFn({ method: "GET" })
     if (products.error) throw products.error;
     if (variants.error) throw variants.error;
 
-    const out: { key: string; product: string; label: string; cover: string | null }[] = [];
+    const out: { key: string; productId: string; product: string; label: string; cover: string | null }[] = [];
     for (const p of products.data ?? []) {
-      if (p.digital_asset_url) out.push({ key: `product:${p.id}`, product: p.name, label: p.name, cover: p.image_url });
+      if (p.digital_asset_url) out.push({ key: `product:${p.id}`, productId: p.id, product: p.name, label: p.name, cover: p.image_url });
     }
     for (const v of variants.data ?? []) {
       if (!v.digital_asset_url) continue;
       const product = (products.data ?? []).find((p) => p.id === v.product_id);
       out.push({
         key: `variant:${v.id}`,
+        productId: v.product_id,
         product: product?.name ?? v.product_id,
         label: v.name,
         cover: v.image_url ?? product?.image_url ?? null,

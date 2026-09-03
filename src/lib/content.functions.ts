@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
+import { zonedMidnight } from "@/lib/release";
 
 /**
  * Öffentliche Sichtbarkeit wird IMMER serverseitig (Serverzeit) bestimmt.
@@ -9,7 +10,8 @@ import type { Database } from "@/integrations/supabase/types";
  * Alles andere (Entwurf, Produktionsstatus, Archiviert) ist nicht öffentlich.
  */
 function isPublic(r: { status: string; release_date: string; publish_at: string | null }, now: Date) {
-  const dateReached = Date.parse(`${r.release_date}T00:00:00Z`) <= now.getTime();
+  // Datum ohne Uhrzeit = Mitternacht in der Release-Zeitzone (Europe/Berlin), nicht UTC.
+  const dateReached = zonedMidnight(r.release_date).getTime() <= now.getTime();
   if (r.status === "Veröffentlicht") return dateReached;
   if (r.status === "Geplant" && r.publish_at) return Date.parse(r.publish_at) <= now.getTime();
   return false;
@@ -62,7 +64,7 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
   const videoVisible = (v: { status: string; publish_at: string | null; video_date: string }) => {
     const t = now.getTime();
     if (v.status === "Veröffentlicht")
-      return v.publish_at ? Date.parse(v.publish_at) <= t : Date.parse(`${v.video_date}T00:00:00Z`) <= t;
+      return v.publish_at ? Date.parse(v.publish_at) <= t : zonedMidnight(v.video_date).getTime() <= t;
     if (v.status === "Geplant" && v.publish_at) return Date.parse(v.publish_at) <= t;
     return false;
   };
@@ -88,7 +90,7 @@ export const getContent = createServerFn({ method: "GET" }).handler(async () => 
         (r) =>
           !r.is_public &&
           ["Geplant", "Vorbestellung", "Veröffentlicht"].includes(r.status) &&
-          Date.parse(`${r.release_date}T00:00:00Z`) > now.getTime(),
+          zonedMidnight(r.release_date).getTime() > now.getTime(),
       )
       .map((r) => r.id),
   );
