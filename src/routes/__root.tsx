@@ -114,6 +114,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
+  // Header/Footer richten sich nach dem echten Content – deshalb wird er auf
+  // jeder Route serverseitig geladen, damit SSR und Client identisch rendern.
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(contentQueryOptions),
+      context.queryClient.ensureQueryData(shopCatalogQueryOptions),
+    ]);
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
