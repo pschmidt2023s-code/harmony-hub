@@ -154,11 +154,17 @@ export function PlayerBar() {
               <SkipForward className="size-5" />
             </button>
             <button
-              onClick={p.toggleRepeat}
-              aria-label="Repeat"
-              className={cn("hidden p-2 text-muted-foreground transition-colors hover:text-foreground sm:block", p.repeat && "text-primary")}
+              onClick={p.cycleRepeat}
+              aria-label={
+                p.repeat === "track"
+                  ? "Wiederholung: aktueller Track"
+                  : p.repeat === "queue"
+                    ? "Wiederholung: Warteschlange"
+                    : "Wiederholung aus"
+              }
+              className={cn("hidden p-2 text-muted-foreground transition-colors hover:text-foreground sm:block", p.repeat !== "off" && "text-primary")}
             >
-              <Repeat className="size-4" />
+              {p.repeat === "track" ? <Repeat1 className="size-4" /> : <Repeat className="size-4" />}
             </button>
           </div>
 
