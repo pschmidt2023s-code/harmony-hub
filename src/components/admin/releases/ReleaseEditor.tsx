@@ -23,12 +23,12 @@ import {
   slugifyTitle,
   STREAMING_SERVICES,
   uniqueSlug,
-  uploadMedia,
   type ReleaseRow,
   type SongRow,
 } from "@/lib/admin/releases";
 import { supabase } from "@/integrations/supabase/client";
 import { MediaPicker } from "@/components/admin/media/MediaPicker";
+import { uploadMedia } from "@/lib/admin/media";
 
 const TABS = [
   { id: "overview", label: "Übersicht" },

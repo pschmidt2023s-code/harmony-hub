@@ -23,11 +23,11 @@ import {
   isReleasePublic,
   slugifyTitle,
   STREAMING_SERVICES,
-  uploadMedia,
 } from "@/lib/admin/releases";
 import { formatDate, formatTime, type Song } from "@/lib/data";
 import { usePlayer } from "@/components/player/player-context";
 import { MediaPicker } from "@/components/admin/media/MediaPicker";
+import { uploadMedia } from "@/lib/admin/media";
 
 const TABS = [
   { id: "overview", label: "Übersicht" },
