@@ -18,6 +18,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         let releasePaths: string[] = [];
         let videoPaths: string[] = [];
         let productPaths: string[] = [];
+        let hasMusic = false;
         try {
           const content = await getContent();
           releasePaths = content.releases
