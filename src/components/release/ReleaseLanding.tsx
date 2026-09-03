@@ -16,7 +16,6 @@ import {
   totalDuration,
 } from "@/lib/release-detail";
 import { useAccentSource } from "@/lib/accent-override";
-import { Countdown } from "@/components/home/Countdown";
 import { ARTIST, formatDate, formatTime, type Release } from "@/lib/data";
 import { money, shopQueryOptions } from "@/lib/shop";
 
@@ -41,16 +40,11 @@ export function ReleaseLanding({ release, content }: { release: Release; content
     player.play(tracks[0]!, tracks);
   };
 
-  const hasPublishedMusic = content.songs.length > 0 || publishedReleases(content.releases).length > 0;
-
   const more = publishedReleases(content.releases).filter((r) => r.id !== release.id).slice(0, 3);
-
-  // Noch nicht erschienen -> Pre-Save-Ansicht mit Countdown statt "Erschienen".
-  const upcoming = !release.isPublic;
 
   const details: { label: string; value: string }[] = [
     { label: "Typ", value: release.type },
-    { label: upcoming ? "Erscheint am" : "Erschienen", value: formatDate(release.date) },
+    { label: "Erschienen", value: formatDate(release.date) },
     ...(tracks.length ? [{ label: "Tracks", value: String(tracks.length) }] : []),
     ...(runtime ? [{ label: "Laufzeit", value: formatTime(runtime) }] : []),
     ...(genres.length ? [{ label: "Genre", value: genres.join(", ") }] : []),
@@ -73,10 +67,10 @@ export function ReleaseLanding({ release, content }: { release: Release; content
 
         <div className="mx-auto max-w-6xl px-5 pb-14 pt-28 md:px-8 md:pb-20 md:pt-36">
           <Link
-            to={hasPublishedMusic ? "/musik" : "/"}
+            to="/musik"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
           >
-            <ArrowLeft className="size-4" /> Zurück
+            <ArrowLeft className="size-4" /> Zurück zur Musik
           </Link>
 
           <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:items-end md:gap-12">
@@ -91,10 +85,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
             </div>
 
             <div className="min-w-0 animate-fade-up">
-              <p className="text-xs uppercase tracking-[0.4em] text-primary">
-                {release.type}
-                {upcoming ? " · Pre-Save" : ""}
-              </p>
+              <p className="text-xs uppercase tracking-[0.4em] text-primary">{release.type}</p>
               <h1 className="mt-3 break-words text-4xl font-extrabold uppercase leading-[0.95] sm:text-6xl md:text-7xl">
                 {release.title}
               </h1>
@@ -102,8 +93,6 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                 {ARTIST.name} · {formatDate(release.date)}
                 {tracks.length > 0 && ` · ${tracks.length} ${tracks.length === 1 ? "Track" : "Tracks"}`}
               </p>
-
-              {upcoming && <Countdown date={release.date} className="mt-7" />}
 
               <div className="mt-8 flex flex-wrap gap-3">
                 {tracks.length > 0 && (

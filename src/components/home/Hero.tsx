@@ -3,7 +3,6 @@ import { ArrowUpRight, Play } from "lucide-react";
 import heroFallback from "@/assets/hero-tayo.jpg";
 import { usePlayer } from "@/components/player/player-context";
 import { ARTIST, formatDate, type Release, type Song } from "@/lib/data";
-import { Countdown } from "@/components/home/Countdown";
 
 
 /**
@@ -12,12 +11,9 @@ import { Countdown } from "@/components/home/Countdown";
  */
 export function Hero({
   release,
-  upcoming = null,
   songs,
 }: {
   release: Release | null;
-  /** Nächstes angekündigtes Release – führt den Hero an, solange es aussteht. */
-  upcoming?: Release | null;
   songs: Song[];
 }) {
   const player = usePlayer();
@@ -25,13 +21,11 @@ export function Hero({
   const queue = releaseSongs.length ? releaseSongs : songs;
   const playable = queue[0];
 
-  const hero = upcoming ?? release;
-
   return (
     <section className="relative isolate flex min-h-[72svh] flex-col justify-end overflow-hidden sm:min-h-[80svh] md:min-h-[88svh]">
       <img
-        src={hero?.cover ?? heroFallback}
-        alt={hero ? `Cover ${hero.title}` : "TAYO Porträt"}
+        src={release?.cover ?? heroFallback}
+        alt={release ? `Cover ${release.title}` : "TAYO Porträt"}
         width={1600}
         height={1600}
         fetchPriority="high"
@@ -48,34 +42,7 @@ export function Hero({
       <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-[image:var(--gradient-fade)]" />
 
       <div className="mx-auto w-full max-w-7xl px-5 pb-16 pt-32 sm:pb-20 md:px-8 md:pb-28 md:pt-44">
-        {upcoming ? (
-          <>
-            <p className="animate-fade-in text-[11px] uppercase tracking-[0.4em] text-primary sm:text-xs sm:tracking-[0.5em]">
-              {upcoming.type} · Pre-Save
-            </p>
-            <h1 className="mt-4 max-w-3xl animate-fade-up text-[clamp(2.75rem,12vw,7rem)] font-extrabold uppercase leading-[0.92]">
-              {upcoming.title}
-            </h1>
-            <p className="mt-4 animate-fade-up text-xs uppercase tracking-[0.25em] text-muted-foreground">
-              {formatDate(upcoming.date)} · {ARTIST.name}
-            </p>
-            {upcoming.description && (
-              <p className="mt-5 max-w-lg animate-fade-up text-base text-muted-foreground">
-                {upcoming.description}
-              </p>
-            )}
-            <Countdown date={upcoming.date} className="mt-8 animate-fade-up" />
-            <div className="mt-8 flex animate-fade-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Link
-                to="/releases/$slug"
-                params={{ slug: upcoming.slug }}
-                className="glow flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03] sm:w-auto"
-              >
-                Pre-Save <ArrowUpRight className="size-4" />
-              </Link>
-            </div>
-          </>
-        ) : release ? (
+        {release ? (
           <>
             <p className="animate-fade-in text-[11px] uppercase tracking-[0.4em] text-primary sm:text-xs sm:tracking-[0.5em]">
               {release.type} · {release.status}

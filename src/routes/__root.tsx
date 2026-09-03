@@ -9,8 +9,6 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { contentQueryOptions } from "@/lib/content";
-import { shopCatalogQueryOptions } from "@/lib/shop";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -116,14 +114,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
-  // Header/Footer richten sich nach dem echten Content – deshalb wird er auf
-  // jeder Route serverseitig geladen, damit SSR und Client identisch rendern.
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(contentQueryOptions),
-      context.queryClient.ensureQueryData(shopCatalogQueryOptions),
-    ]);
-  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

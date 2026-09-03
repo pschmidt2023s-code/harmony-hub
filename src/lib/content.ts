@@ -2,7 +2,6 @@ import { queryOptions } from "@tanstack/react-query";
 import coverMidnight from "@/assets/cover-midnight.jpg";
 import coverNeon from "@/assets/cover-neon.jpg";
 import coverSmoke from "@/assets/cover-smoke.jpg";
-import coverLowProfile from "@/assets/cover-low-profile.jpg";
 import { getContent } from "./content.functions";
 import type { Release, Song, Video } from "./data";
 import { normalizeSettings, type PublicSiteSettings } from "./seo";
@@ -11,7 +10,6 @@ const COVERS: Record<string, string> = {
   midnight: coverMidnight,
   neon: coverNeon,
   smoke: coverSmoke,
-  "low-profile": coverLowProfile,
 };
 
 const cover = (key: string) => COVERS[key] ?? coverMidnight;
