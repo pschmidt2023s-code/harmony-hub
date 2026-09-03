@@ -2,15 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SOCIAL_LINKS } from "@/lib/data";
-import { usePublicSections } from "@/lib/public-nav";
 
 const ICONS = { instagram: Instagram, youtube: Youtube, tiktok: Music2 } as const;
 
 export function SiteFooter() {
   // Nur tatsächlich hinterlegte Profile anzeigen – keine erfundenen Links.
   const socials = SOCIAL_LINKS.filter((s) => s.url);
-  // Footer folgt demselben Content-Stand wie die Navigation.
-  const sections = usePublicSections();
 
   return (
     <footer className="safe-bottom border-t border-border/60 pb-28 pt-14 sm:pt-16">
@@ -43,13 +40,19 @@ export function SiteFooter() {
         <FooterCol
           title="Entdecken"
           links={[
-            ...(sections.hasMusic ? [{ to: "/musik", label: "Musik" }] : []),
-            ...(sections.hasVideos ? [{ to: "/videos", label: "Videos" }] : []),
-            ...(sections.hasTour ? [{ to: "/tour", label: "Live" }] : []),
-            ...(sections.hasShop ? [{ to: "/shop", label: "Shop" }] : []),
+            { to: "/musik", label: "Musik" },
+            { to: "/videos", label: "Videos" },
+            { to: "/tour", label: "Live" },
+            { to: "/shop", label: "Shop" },
           ]}
         />
-        <FooterCol title="Artist" links={[{ to: "/ueber-mich", label: "Über mich" }]} />
+        <FooterCol
+          title="Artist"
+          links={[
+            { to: "/ueber-mich", label: "Über mich" },
+            { to: "/kontakt", label: "Kontakt" },
+          ]}
+        />
         <div>
           <p className="text-sm font-semibold">Newsletter</p>
           <p className="mt-3 text-sm text-muted-foreground">Neue Releases zuerst.</p>
