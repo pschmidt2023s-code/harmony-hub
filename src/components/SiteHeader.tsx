@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/cart";
-import { usePublicSections } from "@/lib/public-nav";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const cart = useCart();
-  const sections = usePublicSections();
 
   /**
    * Öffentliche Navigation: feste Bereiche der Website. Seiten ohne Inhalt
@@ -84,7 +82,7 @@ export function SiteHeader() {
               <ShoppingBag className="size-4" /> {cart.count}
             </Link>
           )}
-          {true && (
+          {(
             <Link
               to="/shop"
               className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
@@ -141,7 +139,7 @@ export function SiteHeader() {
           >
             {user ? "Mein Konto" : "Login / Registrieren"}
           </Link>
-          {true && (
+          {(
             <Link
               to="/shop"
               onClick={() => setOpen(false)}
