@@ -110,14 +110,14 @@ export const PRODUCTS: Product[] = [
   { id: "p4", name: "Vinyl + Hoodie Bundle", category: "Bundle", price: 109, image: merchHoodie, variants: ["S", "M", "L", "XL"], badge: "Save 20%", stock: 25 },
 ];
 
-export const TOUR = [
-  { date: "2026-09-18", city: "Berlin", venue: "Kesselhaus", status: "Ausverkauft" },
-  { date: "2026-09-22", city: "Hamburg", venue: "Uebel & Gefährlich", status: "Tickets" },
-  { date: "2026-09-27", city: "Köln", venue: "Gebäude 9", status: "Tickets" },
-  { date: "2026-10-04", city: "München", venue: "Strom", status: "Tickets" },
-  { date: "2026-10-11", city: "Wien", venue: "Flex", status: "Wenige Tickets" },
-  { date: "2026-10-18", city: "Zürich", venue: "Mascotte", status: "Tickets" },
-];
+export type TourDate = { date: string; city: string; venue: string; status: string };
+
+/**
+ * Live-Termine. Es sind aktuell keine Shows bestätigt — deshalb bewusst leer.
+ * Sobald hier echte Termine stehen, blenden Navigation, Homepage-Sektion,
+ * Footer und Sitemap die Tour automatisch wieder ein.
+ */
+export const TOUR: TourDate[] = [];
 
 export function formatTime(seconds: number) {
   const m = Math.floor(seconds / 60);

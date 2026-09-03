@@ -4,22 +4,28 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/cart";
-
-const NAV = [
-  { to: "/", label: "Start" },
-  { to: "/musik", label: "Musik" },
-  { to: "/videos", label: "Videos" },
-  { to: "/shop", label: "Shop" },
-  { to: "/tour", label: "Tour" },
-  { to: "/ueber-mich", label: "Über" },
-  { to: "/kontakt", label: "Kontakt" },
-] as const;
+import { usePublicSections } from "@/lib/public-nav";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const cart = useCart();
+  const sections = usePublicSections();
+
+  /**
+   * Phase 17: Die öffentliche Navigation zeigt ausschließlich Bereiche mit
+   * echtem, veröffentlichtem Inhalt. Kommen später Videos, Produkte oder
+   * Tourdaten dazu, erscheinen die Einträge automatisch wieder.
+   */
+  const NAV: { to: "/" | "/musik" | "/videos" | "/shop" | "/tour" | "/ueber-mich"; label: string }[] = [
+    { to: "/", label: "Start" },
+    ...(sections.hasMusic ? ([{ to: "/musik", label: "Musik" }] as const) : []),
+    ...(sections.hasVideos ? ([{ to: "/videos", label: "Videos" }] as const) : []),
+    ...(sections.hasShop ? ([{ to: "/shop", label: "Shop" }] as const) : []),
+    ...(sections.hasTour ? ([{ to: "/tour", label: "Tour" }] as const) : []),
+    { to: "/ueber-mich", label: "Über" },
+  ];
 
   // Menü bei Escape schließen und Hintergrund-Scroll sperren, solange es offen ist.
   useEffect(() => {
@@ -78,12 +84,14 @@ export function SiteHeader() {
               <ShoppingBag className="size-4" /> {cart.count}
             </Link>
           )}
-          <Link
-            to="/shop"
-            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
-          >
-            Merch
-          </Link>
+          {sections.hasShop && (
+            <Link
+              to="/shop"
+              className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-105"
+            >
+              Merch
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-1 lg:hidden">
           {cart.count > 0 && (
@@ -133,13 +141,15 @@ export function SiteHeader() {
           >
             {user ? "Mein Konto" : "Login / Registrieren"}
           </Link>
-          <Link
-            to="/shop"
-            onClick={() => setOpen(false)}
-            className="mt-2 rounded-full bg-primary px-5 py-3 text-center text-base font-medium text-primary-foreground"
-          >
-            Merch
-          </Link>
+          {sections.hasShop && (
+            <Link
+              to="/shop"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-full bg-primary px-5 py-3 text-center text-base font-medium text-primary-foreground"
+            >
+              Merch
+            </Link>
+          )}
         </nav>
       )}
     </header>
