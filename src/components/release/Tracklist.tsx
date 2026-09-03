@@ -119,9 +119,9 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
                 {credits.length > 0 && (
                   <dl className="mt-4 grid gap-1 border-t border-border/40 pt-4 text-xs text-muted-foreground sm:grid-cols-2">
                     {credits.map((c) => (
-                      <div key={`${c.role}-${c.name}`} className="flex gap-2">
+                      <div key={`${c.role}-${c.names}`} className="flex gap-2">
                         <dt className="font-medium text-foreground">{c.role}</dt>
-                        <dd>{c.name}</dd>
+                        <dd>{c.names}</dd>
                       </div>
                     ))}
                   </dl>
