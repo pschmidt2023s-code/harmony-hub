@@ -14,7 +14,14 @@ const COVERS: Record<string, string> = {
 
 const cover = (key: string) => COVERS[key] ?? coverMidnight;
 
-export type SiteContent = { songs: Song[]; releases: Release[]; videos: Video[]; settings: PublicSiteSettings };
+export type SiteContent = {
+  songs: Song[];
+  /** Release-Day-Locked Tracks: sichtbar, aber ohne Audio (Phase 20). */
+  lockedSongs: Song[];
+  releases: Release[];
+  videos: Video[];
+  settings: PublicSiteSettings;
+};
 
 export const contentQueryOptions = queryOptions({
   queryKey: ["site-content"],
