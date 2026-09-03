@@ -2,12 +2,17 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ReleaseLanding } from "@/components/release/ReleaseLanding";
 import { contentQueryOptions, type SiteContent } from "@/lib/content";
-import { publishedReleases } from "@/lib/release";
+import { isUpcomingPublic, publishedReleases, upcomingReleases } from "@/lib/release";
 import { formatDate, type Release } from "@/lib/data";
 import { canonicalUrl, jsonLd, normalizeSettings, seoHead, socialImage } from "@/lib/seo";
 
+// Öffentlich erreichbar sind erschienene UND öffentlich angekündigte Releases.
 const findRelease = (content: SiteContent | undefined, slug: string): Release | null =>
-  content ? (publishedReleases(content.releases).find((r) => r.slug === slug) ?? null) : null;
+  content
+    ? ([...publishedReleases(content.releases), ...upcomingReleases(content.releases)].find(
+        (r) => r.slug === slug,
+      ) ?? null)
+    : null;
 
 export const Route = createFileRoute("/releases/$slug")({
   loader: async ({ context, params }) => {
@@ -38,7 +43,15 @@ export const Route = createFileRoute("/releases/$slug")({
       release.description?.trim() ||
       `${release.type} von ${release.artist || st.artist_name}, erschienen am ${formatDate(release.date)}.`;
     const image = socialImage(release.cover, st.default_og_image);
-    const head = seoHead({ title, description, path, settings: st, image: release.cover, type: "music.album" });
+    const head = seoHead({
+      title,
+      description,
+      path,
+      settings: st,
+      image: release.cover,
+      type: "music.album",
+      ...(isUpcomingPublic(release) ? { noindex: true } : {}),
+    });
     return {
       ...head,
       scripts: [
