@@ -279,11 +279,7 @@ export function ReleaseLanding({ release, content }: { release: Release; content
           </Block>
         )}
 
-        {products.length > 0 && (
-          <Block title="Deine Downloads">
-            <ReleaseDownloads productIds={products.map((p) => p.id)} />
-          </Block>
-        )}
+        {products.length > 0 && <ReleaseDownloads productIds={products.map((p) => p.id)} />}
 
         {more.length > 0 && (
           <Block title="Mehr von TAYO">

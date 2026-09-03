@@ -32,7 +32,9 @@ export function ReleaseDownloads({ productIds }: { productIds: string[] }) {
   };
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <section className="min-w-0">
+      <h2 className="mb-6 text-xs uppercase tracking-[0.4em] text-muted-foreground">Deine Downloads</h2>
+      <div className="grid gap-3 sm:grid-cols-2">
       {items.map((d) => (
         <button
           key={d.key}
@@ -51,6 +53,7 @@ export function ReleaseDownloads({ productIds }: { productIds: string[] }) {
           </span>
         </button>
       ))}
-    </div>
+      </div>
+    </section>
   );
 }
