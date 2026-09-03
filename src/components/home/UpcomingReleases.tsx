@@ -12,7 +12,7 @@ export function UpcomingReleases({ releases }: { releases: Release[] }) {
   if (!releases.length) return null;
 
   // Zeitpunkt erreicht -> Content neu laden, damit die zentrale Visibility-Logik greift.
-  const refresh = () => void queryClient.invalidateQueries({ queryKey: ["content"] });
+  const refresh = () => void queryClient.invalidateQueries({ queryKey: ["site-content"] });
 
   return (
     <Section eyebrow="Release Kalender" title="Kommende Releases">
