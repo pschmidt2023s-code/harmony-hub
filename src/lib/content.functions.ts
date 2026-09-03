@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
+import { zonedMidnight } from "@/lib/release";
 
 /**
  * Öffentliche Sichtbarkeit wird IMMER serverseitig (Serverzeit) bestimmt.
