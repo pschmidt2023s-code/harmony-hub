@@ -9,6 +9,8 @@ const ICONS = { instagram: Instagram, youtube: Youtube, tiktok: Music2 } as cons
 export function SiteFooter() {
   // Nur tatsächlich hinterlegte Profile anzeigen – keine erfundenen Links.
   const socials = SOCIAL_LINKS.filter((s) => s.url);
+  // Footer folgt demselben Content-Stand wie die Navigation.
+  const sections = usePublicSections();
 
   return (
     <footer className="safe-bottom border-t border-border/60 pb-28 pt-14 sm:pt-16">
