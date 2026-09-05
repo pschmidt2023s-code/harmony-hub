@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 export function SongRow({ song, list, index }: { song: Song; list: Song[]; index: number }) {
   const p = usePlayer();
   const active = p.current?.id === song.id;
+  const canPlay = p.canPlay(song);
 
   return (
     <div
@@ -16,7 +17,8 @@ export function SongRow({ song, list, index }: { song: Song; list: Song[]; index
     >
       <button
         onClick={() => p.play(song, list)}
-        aria-label={`${song.title} abspielen`}
+        disabled={!canPlay}
+        aria-label={canPlay ? `${song.title} abspielen` : `${song.title} ist nicht verfügbar`}
         className="relative size-12 shrink-0 overflow-hidden rounded-lg"
       >
         <img src={song.cover} alt="" width={800} height={800} loading="lazy" className="size-full object-cover" />

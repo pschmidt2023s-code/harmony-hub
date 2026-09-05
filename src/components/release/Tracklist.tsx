@@ -17,7 +17,7 @@ export function Tracklist({ tracks, locked = false }: { tracks: Song[]; locked?:
         const lyrics = song.lyrics ?? [];
         const credits = song.credits ?? [];
         // Gesperrt: Release noch nicht erschienen ODER exklusiver Track ohne Freigabe.
-        const isLocked = locked || song.locked;
+        const isLocked = locked || !p.canPlay(song);
         const open = openLyrics === song.id;
 
         return (
