@@ -71,17 +71,66 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [queueOpen, setQueueOpen] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
-  const timer = useRef<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   // Shuffle-Zyklus: bereits gespielte Positionen, damit kein Track doppelt kommt.
   const playedCycle = useRef<Set<string>>(new Set());
   const history = useRef<number[]>([]);
   const progressRef = useRef(0);
   const currentRef = useRef<Song | null>(null);
   const userRef = useRef<string | null>(null);
+  const advanceRef = useRef<(auto: boolean) => void>(() => undefined);
 
   const current = started ? (queue[index] ?? null) : null;
   progressRef.current = progress;
   userRef.current = userId;
+
+  // Genau eine Audio-Engine für den globalen Player. Der sichtbare Zustand wird
+  // ausschließlich über die nativen Medienereignisse synchronisiert.
+  useEffect(() => {
+    const audio = new Audio();
+    audio.preload = "metadata";
+    audio.playsInline = true;
+    audio.volume = 1;
+    audio.muted = false;
+    audioRef.current = audio;
+
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    const onTimeUpdate = () => {
+      const next = Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
+      progressRef.current = next;
+      setProgress(next);
+    };
+    const onEnded = () => {
+      setPlaying(false);
+      advanceRef.current(true);
+    };
+    const onError = () => {
+      setPlaying(false);
+      setProgress(0);
+      console.error("Audio playback failed", audio.error?.message ?? "Unknown media error");
+    };
+
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("playing", onPlay);
+    audio.addEventListener("pause", onPause);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("ended", onEnded);
+    audio.addEventListener("error", onError);
+
+    return () => {
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("playing", onPlay);
+      audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("error", onError);
+      audioRef.current = null;
+    };
+  }, []);
 
   // Standard-Queue mit der verfügbaren Diskografie füllen (nur abspielbare Tracks).
   useEffect(() => {
@@ -90,11 +139,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const advance = useCallback(
     (auto: boolean) => {
-      setProgress(0);
       setIndex((i) => {
         if (!queue.length) return i;
-        if (auto && repeat === "track") return i;
+        if (auto && repeat === "track") {
+          const audio = audioRef.current;
+          if (audio) {
+            audio.currentTime = 0;
+            void audio.play().catch((error: unknown) => {
+              setPlaying(false);
+              console.error("Audio playback failed", error);
+            });
+          }
+          return i;
+        }
         history.current.push(i);
+        let target = i;
         if (shuffle) {
           const cycle = playedCycle.current;
           cycle.add(queue[i]?.id ?? "");
@@ -104,49 +163,68 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             pool = queue.map((s, n) => ({ s, n })).filter(({ n }) => n !== i);
           }
           if (!pool.length) return i;
-          return pool[Math.floor(Math.random() * pool.length)]!.n;
+          target = pool[Math.floor(Math.random() * pool.length)]?.n ?? i;
+        } else {
+          const nextIndex = i + 1;
+          if (nextIndex >= queue.length) {
+            if (repeat === "queue" || !auto) target = 0;
+            else {
+              setPlaying(false);
+              return i;
+            }
+          } else target = nextIndex;
         }
-        const nextIndex = i + 1;
-        if (nextIndex >= queue.length) {
-          if (repeat === "queue" || !auto) return 0;
+
+        const song = queue[target];
+        const audio = audioRef.current;
+        if (!song?.audio || !audio) {
           setPlaying(false);
           return i;
         }
-        return nextIndex;
+        audio.pause();
+        audio.currentTime = 0;
+        audio.src = song.audio;
+        audio.load();
+        setProgress(0);
+        void audio.play().catch((error: unknown) => {
+          setPlaying(false);
+          console.error("Audio playback failed", error);
+        });
+        return target;
       });
     },
     [queue, shuffle, repeat],
   );
+  advanceRef.current = advance;
 
   const next = useCallback(() => advance(false), [advance]);
 
   const prev = useCallback(() => {
-    setProgress(0);
     // Innerhalb der ersten Sekunden zum vorherigen Track, sonst an den Anfang.
-    if (progressRef.current > 5) return;
+    if (progressRef.current > 5) {
+      const audio = audioRef.current;
+      if (audio) audio.currentTime = 0;
+      setProgress(0);
+      return;
+    }
     setIndex((i) => {
       const back = history.current.pop();
-      if (typeof back === "number") return back;
-      return queue.length ? (i - 1 + queue.length) % queue.length : i;
+      const target = typeof back === "number" ? back : queue.length ? (i - 1 + queue.length) % queue.length : i;
+      const song = queue[target];
+      const audio = audioRef.current;
+      if (!song?.audio || !audio) return i;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = song.audio;
+      audio.load();
+      setProgress(0);
+      void audio.play().catch((error: unknown) => {
+        setPlaying(false);
+        console.error("Audio playback failed", error);
+      });
+      return target;
     });
   }, [queue.length]);
-
-  useEffect(() => {
-    if (!playing || !current) return;
-    timer.current = window.setInterval(() => {
-      setProgress((p) => {
-        if (p + 0.25 >= current.duration) {
-          if (repeat === "track") return 0;
-          window.setTimeout(() => advance(true), 0);
-          return 0;
-        }
-        return p + 0.25;
-      });
-    }, 250);
-    return () => {
-      if (timer.current) window.clearInterval(timer.current);
-    };
-  }, [playing, current, repeat, advance]);
 
   // Favoriten aus dem Fan-Account laden und bei Login/Logout synchron halten.
   useEffect(() => {
@@ -246,7 +324,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       upNext,
       canPlay: playable,
       play: (song, nextQueue) => {
-        if (!playable(song)) return;
+        if (!playable(song) || !song.audio) return;
         const list = (nextQueue ?? queue).filter(playable);
         const i = Math.max(0, list.findIndex((s) => s.id === song.id));
         playedCycle.current = new Set();
@@ -255,17 +333,50 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setIndex(i);
         setStarted(true);
         setProgress(0);
-        setPlaying(true);
+        const audio = audioRef.current;
+        if (!audio) return;
+        audio.pause();
+        audio.currentTime = 0;
+        audio.src = song.audio;
+        audio.load();
+        audio.volume = Math.min(1, Math.max(0, volume));
+        audio.muted = false;
+        void audio.play().catch((error: unknown) => {
+          setPlaying(false);
+          console.error("Audio playback failed", error);
+        });
       },
       toggle: () => {
-        if (!current && !queue.length) return;
+        const audio = audioRef.current;
+        if (!audio || !current?.audio) return;
         setStarted(true);
-        setPlaying((p) => !p);
+        if (audio.paused) {
+          void audio.play().catch((error: unknown) => {
+            setPlaying(false);
+            console.error("Audio playback failed", error);
+          });
+        } else {
+          audio.pause();
+        }
       },
       next,
       prev,
-      seek: setProgress,
-      setVolume,
+      seek: (value) => {
+        const audio = audioRef.current;
+        if (!audio || !Number.isFinite(value)) return;
+        const duration = Number.isFinite(audio.duration) ? audio.duration : current?.duration ?? 0;
+        audio.currentTime = Math.min(Math.max(0, value), duration);
+        setProgress(audio.currentTime);
+      },
+      setVolume: (value) => {
+        const nextVolume = Math.min(1, Math.max(0, Number.isFinite(value) ? value : 1));
+        const audio = audioRef.current;
+        if (audio) {
+          audio.volume = nextVolume;
+          audio.muted = false;
+        }
+        setVolume(nextVolume);
+      },
       toggleShuffle: () =>
         setShuffle((s) => {
           playedCycle.current = new Set();
