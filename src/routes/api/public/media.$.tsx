@@ -9,7 +9,7 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute("/api/public/media/$")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
+      GET: async ({ params, request }) => {
         const path = String((params as { _splat?: string })._splat ?? "");
         if (!path || path.includes("..")) return new Response("Not found", { status: 404 });
 
@@ -18,15 +18,29 @@ export const Route = createFileRoute("/api/public/media/$")({
           .map(encodeURIComponent)
           .join("/")}`;
         const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-        const upstream = await fetch(url, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+        const range = request.headers.get("range");
+        const upstream = await fetch(url, {
+          headers: {
+            apikey: key,
+            Authorization: `Bearer ${key}`,
+            ...(range ? { Range: range } : {}),
+          },
+        });
         if (!upstream.ok || !upstream.body) return new Response("Not found", { status: 404 });
 
+        const headers = new Headers({
+          "content-type": upstream.headers.get("content-type") ?? "application/octet-stream",
+          "cache-control": "public, max-age=3600, s-maxage=86400",
+          "accept-ranges": upstream.headers.get("accept-ranges") ?? "bytes",
+        });
+        const contentRange = upstream.headers.get("content-range");
+        const contentLength = upstream.headers.get("content-length");
+        if (contentRange) headers.set("content-range", contentRange);
+        if (contentLength) headers.set("content-length", contentLength);
+
         return new Response(upstream.body, {
-          status: 200,
-          headers: {
-            "content-type": upstream.headers.get("content-type") ?? "application/octet-stream",
-            "cache-control": "public, max-age=3600, s-maxage=86400",
-          },
+          status: upstream.status,
+          headers,
         });
       },
     },

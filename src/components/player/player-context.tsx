@@ -54,7 +54,7 @@ type PlayerState = {
 const PlayerContext = createContext<PlayerState | null>(null);
 
 /** Gesperrte Tracks (exklusiv oder Release-Day-Locked) gelangen nie in die Queue. */
-const playable = (s: Song) => !s.locked;
+const playable = (s: Song) => !s.locked && Boolean(s.audio);
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const { data: content } = useQuery(contentQueryOptions);
@@ -64,7 +64,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [volume, setVolume] = useState(0.8);
+  const [volume, setVolume] = useState(1);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState<RepeatMode>("off");
   const [expanded, setExpanded] = useState(false);
