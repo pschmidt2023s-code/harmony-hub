@@ -89,7 +89,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "metadata";
-    audio.playsInline = true;
+    audio.setAttribute("playsinline", "");
     audio.volume = 1;
     audio.muted = false;
     audioRef.current = audio;
@@ -224,7 +224,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       });
       return target;
     });
-  }, [queue.length]);
+  }, [queue]);
 
   // Favoriten aus dem Fan-Account laden und bei Login/Logout synchron halten.
   useEffect(() => {
