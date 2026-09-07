@@ -127,6 +127,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.addEventListener("playing", onPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
     audio.addEventListener("ended", onEnded);
     audio.addEventListener("error", onError);
 
