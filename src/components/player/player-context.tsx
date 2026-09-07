@@ -103,6 +103,16 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       progressRef.current = next;
       setProgress(next);
     };
+    // "Weiterhören": erst nach dem Laden der Metadaten ist ein Sprung möglich.
+    const onLoadedMetadata = () => {
+      const target = pendingSeek.current;
+      pendingSeek.current = null;
+      if (target == null || !Number.isFinite(target) || target <= 0) return;
+      const duration = Number.isFinite(audio.duration) ? audio.duration : target;
+      audio.currentTime = Math.min(Math.max(0, target), Math.max(0, duration - 1));
+      progressRef.current = audio.currentTime;
+      setProgress(audio.currentTime);
+    };
     const onEnded = () => {
       setPlaying(false);
       advanceRef.current(true);
