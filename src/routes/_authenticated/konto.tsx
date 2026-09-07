@@ -228,8 +228,7 @@ function KontoPage() {
                               song={song}
                               hint={`${formatTime(position)} / ${formatTime(song.duration)}`}
                               onPlay={() => {
-                                player.play(song, playable);
-                                player.seek(position);
+                                player.play(song, playable, position);
                               }}
                             />
                           ))}
