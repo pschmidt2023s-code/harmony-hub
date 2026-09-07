@@ -337,7 +337,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       userId,
       upNext,
       canPlay: playable,
-      play: (song, nextQueue) => {
+      play: (song, nextQueue, startAt) => {
         if (!playable(song) || !song.audio) return;
         const list = (nextQueue ?? queue).filter(playable);
         const i = Math.max(0, list.findIndex((s) => s.id === song.id));
@@ -346,7 +346,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setQueue(list.length ? list : [song]);
         setIndex(i);
         setStarted(true);
-        setProgress(0);
+        const resume = Number.isFinite(startAt ?? NaN) && (startAt ?? 0) > 0 ? (startAt as number) : 0;
+        pendingSeek.current = resume || null;
+        setProgress(resume);
+        progressRef.current = resume;
         const audio = audioRef.current;
         if (!audio) return;
         audio.pause();
@@ -378,6 +381,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       seek: (value) => {
         const audio = audioRef.current;
         if (!audio || !Number.isFinite(value)) return;
+        if (audio.readyState < 1) {
+          // Metadaten fehlen noch — Sprung nachholen, sobald sie geladen sind.
+          pendingSeek.current = value;
+          setProgress(Math.max(0, value));
+          return;
+        }
         const duration = Number.isFinite(audio.duration) ? audio.duration : current?.duration ?? 0;
         audio.currentTime = Math.min(Math.max(0, value), duration);
         setProgress(audio.currentTime);
