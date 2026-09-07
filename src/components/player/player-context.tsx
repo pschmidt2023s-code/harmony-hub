@@ -32,7 +32,7 @@ type PlayerState = {
   userId: string | null;
   /** Kommende Tracks der aktuellen Warteschlange. */
   upNext: Song[];
-  play: (song: Song, queue?: Song[]) => void;
+  play: (song: Song, queue?: Song[], startAt?: number) => void;
   toggle: () => void;
   next: () => void;
   prev: () => void;
@@ -79,6 +79,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const currentRef = useRef<Song | null>(null);
   const userRef = useRef<string | null>(null);
   const advanceRef = useRef<(auto: boolean) => void>(() => undefined);
+  // Gewünschte Startposition ("Weiterhören"), sobald die Metadaten geladen sind.
+  const pendingSeek = useRef<number | null>(null);
 
   const current = started ? (queue[index] ?? null) : null;
   progressRef.current = progress;
@@ -101,6 +103,16 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       progressRef.current = next;
       setProgress(next);
     };
+    // "Weiterhören": erst nach dem Laden der Metadaten ist ein Sprung möglich.
+    const onLoadedMetadata = () => {
+      const target = pendingSeek.current;
+      pendingSeek.current = null;
+      if (target == null || !Number.isFinite(target) || target <= 0) return;
+      const duration = Number.isFinite(audio.duration) ? audio.duration : target;
+      audio.currentTime = Math.min(Math.max(0, target), Math.max(0, duration - 1));
+      progressRef.current = audio.currentTime;
+      setProgress(audio.currentTime);
+    };
     const onEnded = () => {
       setPlaying(false);
       advanceRef.current(true);
@@ -115,6 +127,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.addEventListener("playing", onPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
     audio.addEventListener("ended", onEnded);
     audio.addEventListener("error", onError);
 
@@ -126,6 +139,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       audio.removeEventListener("playing", onPlay);
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
       audio.removeEventListener("ended", onEnded);
       audio.removeEventListener("error", onError);
       audioRef.current = null;
@@ -183,6 +197,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
         audio.pause();
         audio.currentTime = 0;
+        pendingSeek.current = null;
         audio.src = song.audio;
         audio.load();
         setProgress(0);
@@ -215,6 +230,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (!song?.audio || !audio) return i;
       audio.pause();
       audio.currentTime = 0;
+      pendingSeek.current = null;
       audio.src = song.audio;
       audio.load();
       setProgress(0);
@@ -323,7 +339,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       userId,
       upNext,
       canPlay: playable,
-      play: (song, nextQueue) => {
+      play: (song, nextQueue, startAt) => {
         if (!playable(song) || !song.audio) return;
         const list = (nextQueue ?? queue).filter(playable);
         const i = Math.max(0, list.findIndex((s) => s.id === song.id));
@@ -332,7 +348,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setQueue(list.length ? list : [song]);
         setIndex(i);
         setStarted(true);
-        setProgress(0);
+        const resume = Number.isFinite(startAt ?? NaN) && (startAt ?? 0) > 0 ? (startAt as number) : 0;
+        pendingSeek.current = resume || null;
+        setProgress(resume);
+        progressRef.current = resume;
         const audio = audioRef.current;
         if (!audio) return;
         audio.pause();
@@ -364,6 +383,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       seek: (value) => {
         const audio = audioRef.current;
         if (!audio || !Number.isFinite(value)) return;
+        if (audio.readyState < 1) {
+          // Metadaten fehlen noch — Sprung nachholen, sobald sie geladen sind.
+          pendingSeek.current = value;
+          setProgress(Math.max(0, value));
+          return;
+        }
         const duration = Number.isFinite(audio.duration) ? audio.duration : current?.duration ?? 0;
         audio.currentTime = Math.min(Math.max(0, value), duration);
         setProgress(audio.currentTime);

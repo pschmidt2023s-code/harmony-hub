@@ -80,8 +80,7 @@ function LibraryPage() {
                   song={song}
                   hint={`Weiter bei ${formatTime(position)} von ${formatTime(song.duration)}`}
                   onPlay={() => {
-                    player.play(song, playable);
-                    player.seek(position);
+                    player.play(song, playable, position);
                   }}
                 />
               ))}
