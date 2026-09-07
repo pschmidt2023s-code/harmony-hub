@@ -197,6 +197,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
         audio.pause();
         audio.currentTime = 0;
+        pendingSeek.current = null;
         audio.src = song.audio;
         audio.load();
         setProgress(0);
@@ -229,6 +230,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (!song?.audio || !audio) return i;
       audio.pause();
       audio.currentTime = 0;
+      pendingSeek.current = null;
       audio.src = song.audio;
       audio.load();
       setProgress(0);
