@@ -32,7 +32,7 @@ type PlayerState = {
   userId: string | null;
   /** Kommende Tracks der aktuellen Warteschlange. */
   upNext: Song[];
-  play: (song: Song, queue?: Song[]) => void;
+  play: (song: Song, queue?: Song[], startAt?: number) => void;
   toggle: () => void;
   next: () => void;
   prev: () => void;
@@ -79,6 +79,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const currentRef = useRef<Song | null>(null);
   const userRef = useRef<string | null>(null);
   const advanceRef = useRef<(auto: boolean) => void>(() => undefined);
+  // Gewünschte Startposition ("Weiterhören"), sobald die Metadaten geladen sind.
+  const pendingSeek = useRef<number | null>(null);
 
   const current = started ? (queue[index] ?? null) : null;
   progressRef.current = progress;
