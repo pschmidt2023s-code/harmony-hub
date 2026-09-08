@@ -49,11 +49,15 @@ export function ReleaseCountdown({
   if (parts.done) return null;
 
   const pad = (n: number) => String(n).padStart(2, "0");
-  const label = `Noch ${parts.days} Tage, ${parts.hours} Stunden und ${parts.minutes} Minuten bis zur Veröffentlichung`;
+  // Unter 24 Stunden entfallen die Tage komplett – kein "0 Tage".
+  const withDays = parts.days > 0;
+  const label = withDays
+    ? `Noch ${parts.days} Tage, ${parts.hours} Stunden und ${parts.minutes} Minuten bis zur Veröffentlichung`
+    : `Noch ${parts.hours} Stunden und ${parts.minutes} Minuten bis zur Veröffentlichung`;
 
   if (variant === "hero") {
     const cells: { value: string; unit: string }[] = [
-      { value: String(parts.days), unit: parts.days === 1 ? "Tag" : "Tage" },
+      ...(withDays ? [{ value: String(parts.days), unit: parts.days === 1 ? "Tag" : "Tage" }] : []),
       { value: pad(parts.hours), unit: "Std" },
       { value: pad(parts.minutes), unit: "Min" },
       ...(showSeconds ? [{ value: pad(parts.seconds), unit: "Sek" }] : []),
@@ -76,10 +80,14 @@ export function ReleaseCountdown({
   return (
     <span
       className={`inline-flex flex-wrap items-baseline gap-x-2 gap-y-1 font-mono text-xs uppercase tabular-nums tracking-[0.18em] text-primary ${className}`}
-      aria-label={`Noch ${parts.days} Tage, ${parts.hours} Stunden und ${parts.minutes} Minuten bis zur Veröffentlichung`}
+      aria-label={label}
     >
-      <span>{parts.days} Tage</span>
-      <span aria-hidden className="text-muted-foreground">·</span>
+      {withDays && (
+        <>
+          <span>{parts.days} {parts.days === 1 ? "Tag" : "Tage"}</span>
+          <span aria-hidden className="text-muted-foreground">·</span>
+        </>
+      )}
       <span>{pad(parts.hours)} Std</span>
       <span aria-hidden className="text-muted-foreground">·</span>
       <span>{pad(parts.minutes)} Min</span>
