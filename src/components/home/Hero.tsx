@@ -1,31 +1,44 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Play } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { ArrowUpRight, ExternalLink, Play } from "lucide-react";
 import heroFallback from "@/assets/hero-tayo.jpg";
 import { usePlayer } from "@/components/player/player-context";
+import { ReleaseCountdown } from "@/components/release/ReleaseCountdown";
+import { releaseMoment } from "@/lib/release";
 import { ARTIST, formatDate, type Release, type Song } from "@/lib/data";
 
-
 /**
- * Cinematischer Hero. Zeigt das neueste veröffentlichte Release aus der Datenbank
- * oder – wenn es noch keins gibt – einen sauberen TAYO-Fallback ohne erfundene Daten.
+ * Cinematischer Hero mit klarer Journey: ein kommendes Release ist der
+ * wichtigste Inhalt (Countdown + "Release entdecken"), sonst das neueste
+ * veröffentlichte Release. Ohne Release: sauberer TAYO-Fallback.
  */
 export function Hero({
   release,
+  upcoming = null,
   songs,
 }: {
   release: Release | null;
+  upcoming?: Release | null;
   songs: Song[];
 }) {
   const player = usePlayer();
-  const releaseSongs = release ? songs.filter((s) => s.album === release.title) : [];
+  const queryClient = useQueryClient();
+  const featured = upcoming ?? release;
+  const isUpcoming = Boolean(upcoming);
+
+  const releaseSongs = featured && !isUpcoming ? songs.filter((s) => s.album === featured.title) : [];
   const queue = releaseSongs.length ? releaseSongs : songs;
-  const playable = queue[0];
+  const playable = isUpcoming ? undefined : queue[0];
+  // Pre-Save nur mit echtem, hinterlegtem Link.
+  const preSaveUrl = featured
+    ? ((featured.links ?? {}) as Record<string, string>)["presave"]?.trim() || null
+    : null;
 
   return (
     <section className="relative isolate flex min-h-[72svh] flex-col justify-end overflow-hidden sm:min-h-[80svh] md:min-h-[88svh]">
       <img
-        src={release?.cover ?? heroFallback}
-        alt={release ? `Cover ${release.title}` : "TAYO Porträt"}
+        src={featured?.cover ?? heroFallback}
+        alt={featured ? `Cover ${featured.title}` : "TAYO Porträt"}
         width={1600}
         height={1600}
         fetchPriority="high"
@@ -42,38 +55,72 @@ export function Hero({
       <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-[image:var(--gradient-fade)]" />
 
       <div className="mx-auto w-full max-w-7xl px-5 pb-16 pt-32 sm:pb-20 md:px-8 md:pb-28 md:pt-44">
-        {release ? (
+        {featured ? (
           <>
             <p className="animate-fade-in text-[11px] uppercase tracking-[0.4em] text-primary sm:text-xs sm:tracking-[0.5em]">
-              {release.type} · {release.status}
+              {isUpcoming ? `Neues Release · ${formatDate(featured.date)}` : `${featured.type} · ${featured.status}`}
             </p>
             <h1 className="mt-4 max-w-3xl animate-fade-up text-[clamp(2.75rem,12vw,7rem)] font-extrabold uppercase leading-[0.92]">
-              {release.title}
+              {featured.title}
             </h1>
-            <p className="mt-4 animate-fade-up text-xs uppercase tracking-[0.25em] text-muted-foreground">
-              {formatDate(release.date)} · {release.tracks} {release.tracks === 1 ? "Track" : "Tracks"} · {ARTIST.name}
-            </p>
-            {release.description && (
+            {isUpcoming ? (
+              <ReleaseCountdown
+                className="mt-6 animate-fade-up"
+                variant="hero"
+                target={releaseMoment(featured)}
+                onExpire={() => void queryClient.invalidateQueries({ queryKey: ["site-content"] })}
+              />
+            ) : (
+              <p className="mt-4 animate-fade-up text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                {formatDate(featured.date)} · {featured.tracks} {featured.tracks === 1 ? "Track" : "Tracks"} ·{" "}
+                {ARTIST.name}
+              </p>
+            )}
+            {featured.description && (
               <p className="mt-5 max-w-lg animate-fade-up text-base text-muted-foreground">
-                {release.description}
+                {featured.description}
               </p>
             )}
             <div className="mt-9 flex animate-fade-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              {playable && (
-                <button
-                  onClick={() => player.play(playable, queue)}
-                  className="glow flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03] sm:w-auto"
-                >
-                  <Play className="size-4" /> Jetzt hören
-                </button>
+              {isUpcoming ? (
+                <>
+                  <Link
+                    to="/releases/$slug"
+                    params={{ slug: featured.slug }}
+                    className="glow flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03] sm:w-auto"
+                  >
+                    Release entdecken <ArrowUpRight className="size-4" />
+                  </Link>
+                  {preSaveUrl && (
+                    <a
+                      href={preSaveUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="glass flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors hover:text-primary sm:w-auto"
+                    >
+                      Pre-Save <ExternalLink className="size-4" />
+                    </a>
+                  )}
+                </>
+              ) : (
+                <>
+                  {playable && (
+                    <button
+                      onClick={() => player.play(playable, queue)}
+                      className="glow flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03] sm:w-auto"
+                    >
+                      <Play className="size-4" /> Jetzt hören
+                    </button>
+                  )}
+                  <Link
+                    to="/releases/$slug"
+                    params={{ slug: featured.slug }}
+                    className="glass flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors hover:text-primary sm:w-auto"
+                  >
+                    Release ansehen <ArrowUpRight className="size-4" />
+                  </Link>
+                </>
               )}
-              <Link
-                to="/releases/$slug"
-                params={{ slug: release.slug }}
-                className="glass flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors hover:text-primary sm:w-auto"
-              >
-                Release ansehen <ArrowUpRight className="size-4" />
-              </Link>
             </div>
           </>
         ) : (

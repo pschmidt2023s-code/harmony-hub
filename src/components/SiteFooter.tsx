@@ -2,12 +2,14 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { SOCIAL_LINKS } from "@/lib/data";
+import { usePublicSections } from "@/lib/public-nav";
 
 const ICONS = { instagram: Instagram, youtube: Youtube, tiktok: Music2 } as const;
 
 export function SiteFooter() {
   // Nur tatsächlich hinterlegte Profile anzeigen – keine erfundenen Links.
   const socials = SOCIAL_LINKS.filter((s) => s.url);
+  const sections = usePublicSections();
 
   return (
     <footer className="safe-bottom border-t border-border/60 pb-28 pt-14 sm:pt-16">
@@ -42,13 +44,14 @@ export function SiteFooter() {
           links={[
             { to: "/musik", label: "Musik" },
             { to: "/videos", label: "Videos" },
-            { to: "/tour", label: "Live" },
             { to: "/shop", label: "Shop" },
+            ...(sections.hasTour ? [{ to: "/tour", label: "Live" }] : []),
           ]}
         />
         <FooterCol
           title="Artist"
           links={[
+            { to: "/konto", label: "Mein Konto" },
             { to: "/ueber-mich", label: "Über mich" },
             { to: "/kontakt", label: "Kontakt" },
           ]}
