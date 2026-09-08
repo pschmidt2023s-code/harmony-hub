@@ -47,12 +47,16 @@ function Index() {
   const { data: products } = useSuspenseQuery(shopQueryOptions);
   const release = newestRelease(data.releases);
   const songs = songsByRecency(data.songs, data.releases);
+  // Das nächste angekündigte Release ist der wichtigste Inhalt und steht im Hero;
+  // in der Kalender-Sektion erscheint es daher nicht noch einmal.
+  const upcoming = upcomingReleases(data.releases);
+  const [featuredUpcoming, ...restUpcoming] = upcoming;
 
   return (
     <>
-      <Hero release={release} songs={data.songs} />
+      <Hero release={release} upcoming={featuredUpcoming ?? null} songs={data.songs} />
       <LatestMusic songs={songs} />
-      <UpcomingReleases releases={upcomingReleases(data.releases)} />
+      <UpcomingReleases releases={restUpcoming} />
       <LatestVideos videos={videosByRecency(data.videos)} />
       <TourDates dates={TOUR} />
       <MerchHighlights products={products} />

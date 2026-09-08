@@ -42,13 +42,14 @@ export function SiteFooter() {
           links={[
             { to: "/musik", label: "Musik" },
             { to: "/videos", label: "Videos" },
-            { to: "/tour", label: "Live" },
             { to: "/shop", label: "Shop" },
+            ...(sections.hasTour ? [{ to: "/tour", label: "Live" }] : []),
           ]}
         />
         <FooterCol
           title="Artist"
           links={[
+            { to: "/konto", label: "Mein Konto" },
             { to: "/ueber-mich", label: "Über mich" },
             { to: "/kontakt", label: "Kontakt" },
           ]}
