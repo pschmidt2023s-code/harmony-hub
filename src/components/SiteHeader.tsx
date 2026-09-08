@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/cart";
+import { usePublicSections } from "@/lib/public-nav";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,6 +16,7 @@ export function SiteHeader() {
    * Öffentliche Navigation: feste Bereiche der Website. Seiten ohne Inhalt
    * zeigen einen eigenen Empty State, statt aus dem Menü zu verschwinden.
    */
+  const sections = usePublicSections();
   const NAV: {
     to: "/" | "/musik" | "/bibliothek" | "/videos" | "/shop" | "/tour" | "/ueber-mich" | "/kontakt";
     label: string;
@@ -24,7 +26,7 @@ export function SiteHeader() {
     { to: "/bibliothek", label: "Bibliothek" },
     { to: "/videos", label: "Videos" },
     { to: "/shop", label: "Shop" },
-    { to: "/tour", label: "Tour" },
+    ...(sections.hasTour ? ([{ to: "/tour", label: "Tour" }] as const) : []),
     { to: "/ueber-mich", label: "Über" },
     { to: "/kontakt", label: "Kontakt" },
   ];
