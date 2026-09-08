@@ -114,6 +114,16 @@ export function ReleaseLanding({ release, content }: { release: Release; content
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
+                {upcoming && preSaveUrl && (
+                  <a
+                    href={preSaveUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="glow inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+                  >
+                    Pre-Save <ExternalLink className="size-4" />
+                  </a>
+                )}
                 {tracks.length > 0 && !upcoming && (
                   <button
                     onClick={playRelease}
@@ -131,16 +141,6 @@ export function ReleaseLanding({ release, content }: { release: Release; content
                     className="glass inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium transition-colors hover:text-primary"
                   >
                     Auf {services[0]!.label} hören <ExternalLink className="size-4" />
-                  </a>
-                )}
-                {upcoming && preSaveUrl && (
-                  <a
-                    href={preSaveUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="glow inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
-                  >
-                    Pre-Save <ExternalLink className="size-4" />
                   </a>
                 )}
                 {preOrderProduct && (
