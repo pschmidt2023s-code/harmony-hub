@@ -24,6 +24,13 @@ type PlayerState = {
   playing: boolean;
   progress: number;
   volume: number;
+  muted: boolean;
+  /** Tatsächliche Länge aus dem Audioelement (Fallback: Songdaten). */
+  duration: number;
+  /** Audio puffert gerade. */
+  buffering: boolean;
+  /** Audioquelle konnte nicht geladen werden. */
+  error: boolean;
   shuffle: boolean;
   repeat: RepeatMode;
   expanded: boolean;
@@ -38,6 +45,7 @@ type PlayerState = {
   prev: () => void;
   seek: (value: number) => void;
   setVolume: (value: number) => void;
+  toggleMute: () => void;
   toggleShuffle: () => void;
   cycleRepeat: () => void;
   setExpanded: (value: boolean) => void;
