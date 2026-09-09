@@ -24,6 +24,13 @@ type PlayerState = {
   playing: boolean;
   progress: number;
   volume: number;
+  muted: boolean;
+  /** Tatsächliche Länge aus dem Audioelement (Fallback: Songdaten). */
+  duration: number;
+  /** Audio puffert gerade. */
+  buffering: boolean;
+  /** Audioquelle konnte nicht geladen werden. */
+  error: boolean;
   shuffle: boolean;
   repeat: RepeatMode;
   expanded: boolean;
@@ -38,6 +45,7 @@ type PlayerState = {
   prev: () => void;
   seek: (value: number) => void;
   setVolume: (value: number) => void;
+  toggleMute: () => void;
   toggleShuffle: () => void;
   cycleRepeat: () => void;
   setExpanded: (value: boolean) => void;
@@ -65,6 +73,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [buffering, setBuffering] = useState(false);
+  const [error, setError] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState<RepeatMode>("off");
   const [expanded, setExpanded] = useState(false);
@@ -96,8 +108,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audio.muted = false;
     audioRef.current = audio;
 
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
+    const onPlay = () => {
+      setPlaying(true);
+      setBuffering(false);
+      setError(false);
+    };
+    const onPause = () => {
+      setPlaying(false);
+      setBuffering(false);
+    };
+    const onWaiting = () => setBuffering(true);
+    const onCanPlay = () => setBuffering(false);
     const onTimeUpdate = () => {
       const next = Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
       progressRef.current = next;
@@ -105,6 +126,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     };
     // "Weiterhören": erst nach dem Laden der Metadaten ist ein Sprung möglich.
     const onLoadedMetadata = () => {
+      setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
       const target = pendingSeek.current;
       pendingSeek.current = null;
       if (target == null || !Number.isFinite(target) || target <= 0) return;
@@ -115,13 +137,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     };
     const onEnded = () => {
       setPlaying(false);
+      setBuffering(false);
       advanceRef.current(true);
     };
     const onError = () => {
       setPlaying(false);
+      setBuffering(false);
       setProgress(0);
+      setError(true);
       console.error("Audio playback failed", audio.error?.message ?? "Unknown media error");
     };
+
+    audio.addEventListener("waiting", onWaiting);
+    audio.addEventListener("canplay", onCanPlay);
 
     audio.addEventListener("play", onPlay);
     audio.addEventListener("playing", onPlay);
