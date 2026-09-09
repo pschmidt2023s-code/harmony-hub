@@ -73,6 +73,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [buffering, setBuffering] = useState(false);
+  const [error, setError] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState<RepeatMode>("off");
   const [expanded, setExpanded] = useState(false);
