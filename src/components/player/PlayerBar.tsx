@@ -182,16 +182,22 @@ export function PlayerBar() {
               aria-label="Position wählen"
               onClick={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
-                p.seek(((e.clientX - rect.left) / rect.width) * song.duration);
+                p.seek(((e.clientX - rect.left) / rect.width) * total);
               }}
             >
               <Waveform progress={ratio} />
             </button>
             <span className="w-9 text-[11px] tabular-nums text-muted-foreground">
-              {formatTime(song.duration)}
+              {formatTime(total)}
             </span>
             <div className="hidden items-center gap-2 lg:flex">
-              <Volume2 className="size-4 text-muted-foreground" />
+              <button
+                onClick={p.toggleMute}
+                aria-label={p.muted ? "Ton einschalten" : "Stumm schalten"}
+                className="grid place-items-center text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {p.muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+              </button>
               <input
                 type="range"
                 min={0}
