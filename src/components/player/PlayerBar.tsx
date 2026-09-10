@@ -11,6 +11,7 @@ import {
   SkipBack,
   SkipForward,
   Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useEffect } from "react";
 import { usePlayer } from "./player-context";
