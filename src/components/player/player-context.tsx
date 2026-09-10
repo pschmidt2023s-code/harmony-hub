@@ -386,12 +386,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         progressRef.current = resume;
         const audio = audioRef.current;
         if (!audio) return;
+        setError(false);
+        setBuffering(true);
+        setDuration(0);
         audio.pause();
         audio.currentTime = 0;
         audio.src = song.audio;
         audio.load();
         audio.volume = Math.min(1, Math.max(0, volume));
-        audio.muted = false;
+        audio.muted = muted;
         void audio.play().catch((error: unknown) => {
           setPlaying(false);
           console.error("Audio playback failed", error);
