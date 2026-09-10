@@ -124,7 +124,9 @@ export function PlayerBar() {
             )}
             <div className="min-w-0">
               <p className="truncate text-xs font-semibold sm:text-sm">{song.title}</p>
-              <p className="truncate text-xs text-muted-foreground">{song.album}</p>
+              <p className="truncate text-xs text-muted-foreground" aria-live="polite">
+                {p.error ? "Titel konnte nicht geladen werden" : p.buffering ? "Lädt …" : song.album}
+              </p>
             </div>
             <button
               onClick={() => p.toggleFavorite(song.id)}
