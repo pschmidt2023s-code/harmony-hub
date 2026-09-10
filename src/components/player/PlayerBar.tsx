@@ -55,7 +55,8 @@ export function PlayerBar() {
 
   if (!p.current) return null;
   const song = p.current;
-  const ratio = p.progress / song.duration;
+  const total = p.duration > 0 ? p.duration : song.duration;
+  const ratio = total > 0 ? p.progress / total : 0;
 
   return (
     <div
