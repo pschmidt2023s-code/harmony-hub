@@ -11,6 +11,7 @@ import {
   SkipBack,
   SkipForward,
   Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useEffect } from "react";
 import { usePlayer } from "./player-context";
@@ -54,7 +55,8 @@ export function PlayerBar() {
 
   if (!p.current) return null;
   const song = p.current;
-  const ratio = p.progress / song.duration;
+  const total = p.duration > 0 ? p.duration : song.duration;
+  const ratio = total > 0 ? p.progress / total : 0;
 
   return (
     <div
@@ -122,7 +124,9 @@ export function PlayerBar() {
             )}
             <div className="min-w-0">
               <p className="truncate text-xs font-semibold sm:text-sm">{song.title}</p>
-              <p className="truncate text-xs text-muted-foreground">{song.album}</p>
+              <p className="truncate text-xs text-muted-foreground" aria-live="polite">
+                {p.error ? "Titel konnte nicht geladen werden" : p.buffering ? "Lädt …" : song.album}
+              </p>
             </div>
             <button
               onClick={() => p.toggleFavorite(song.id)}
@@ -178,16 +182,22 @@ export function PlayerBar() {
               aria-label="Position wählen"
               onClick={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
-                p.seek(((e.clientX - rect.left) / rect.width) * song.duration);
+                p.seek(((e.clientX - rect.left) / rect.width) * total);
               }}
             >
               <Waveform progress={ratio} />
             </button>
             <span className="w-9 text-[11px] tabular-nums text-muted-foreground">
-              {formatTime(song.duration)}
+              {formatTime(total)}
             </span>
             <div className="hidden items-center gap-2 lg:flex">
-              <Volume2 className="size-4 text-muted-foreground" />
+              <button
+                onClick={p.toggleMute}
+                aria-label={p.muted ? "Ton einschalten" : "Stumm schalten"}
+                className="grid place-items-center text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {p.muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+              </button>
               <input
                 type="range"
                 min={0}

@@ -34,7 +34,7 @@ export function SongRow({ song, list, index }: { song: Song; list: Song[]; index
           )}
         </p>
         <p className="truncate text-xs text-muted-foreground">
-          {song.album} · {song.genre}
+          {!canPlay && !song.locked ? "Keine Audiodatei hinterlegt" : `${song.album} · ${song.genre}`}
         </p>
       </div>
       <p className="hidden text-xs text-muted-foreground sm:block">{song.bpm} BPM</p>

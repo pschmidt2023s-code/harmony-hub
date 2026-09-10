@@ -359,6 +359,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       playing,
       progress,
       volume,
+      muted,
+      duration: duration || current?.duration || 0,
+      buffering,
+      error,
       shuffle,
       repeat,
       expanded,
@@ -382,12 +386,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         progressRef.current = resume;
         const audio = audioRef.current;
         if (!audio) return;
+        setError(false);
+        setBuffering(true);
+        setDuration(0);
         audio.pause();
         audio.currentTime = 0;
         audio.src = song.audio;
         audio.load();
         audio.volume = Math.min(1, Math.max(0, volume));
-        audio.muted = false;
+        audio.muted = muted;
         void audio.play().catch((error: unknown) => {
           setPlaying(false);
           console.error("Audio playback failed", error);
@@ -429,6 +436,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           audio.muted = false;
         }
         setVolume(nextVolume);
+        setMuted(false);
+      },
+      toggleMute: () => {
+        const audio = audioRef.current;
+        const nextMuted = !muted;
+        if (audio) audio.muted = nextMuted;
+        setMuted(nextMuted);
       },
       toggleShuffle: () =>
         setShuffle((s) => {
@@ -473,6 +487,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       playing,
       progress,
       volume,
+      muted,
+      duration,
+      buffering,
+      error,
       shuffle,
       repeat,
       expanded,
