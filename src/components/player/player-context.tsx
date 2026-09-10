@@ -433,6 +433,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           audio.muted = false;
         }
         setVolume(nextVolume);
+        setMuted(false);
+      },
+      toggleMute: () => {
+        const audio = audioRef.current;
+        const nextMuted = !muted;
+        if (audio) audio.muted = nextMuted;
+        setMuted(nextMuted);
       },
       toggleShuffle: () =>
         setShuffle((s) => {
